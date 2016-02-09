@@ -45,4 +45,13 @@ class Comments implements Iterator
     return isset($this->comments[$this->iterator_index]);
   }
   
+  // ===================
+  // = Process Comment =
+  // ===================
+  
+  public function process()
+  {
+    
+  }
+  
 }
