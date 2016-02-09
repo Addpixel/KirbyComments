@@ -92,12 +92,12 @@ class Comments implements Iterator
       return '';
     }
   }
-   
+  
   public function honeypotName()
   {
     
   }
-   
+  
   public function sessionName()
   {
     
