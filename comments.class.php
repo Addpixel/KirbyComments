@@ -63,4 +63,13 @@ class Comments implements Iterator
     return count($this->comments) == 0;
   }
   
+  // ========
+  // = Form =
+  // ========
+  
+  public function nextCommentId()
+  {
+    return count($this->stored_comments);
+  }
+  
 }
