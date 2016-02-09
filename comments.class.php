@@ -72,4 +72,43 @@ class Comments implements Iterator
     return count($this->stored_comments);
   }
   
+  public function hasSend()
+  {
+    
+  }
+  
+  public function value($name)
+  {
+    
+  }
+   
+  public function honeypotName()
+  {
+    
+  }
+   
+  public function sessionName()
+  {
+    
+  }
+  
+  public function sessionId()
+  {
+    
+  }
+  
+  public function previewName()
+  {
+    
+  }
+   
+  public function validePreview()
+  {
+    
+  }
+  
+  public function submitName()
+  {
+    
+  }
 }
