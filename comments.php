@@ -98,31 +98,37 @@ class Comments implements Iterator
   
   public function honeypotName()
   {
-    
+    // TODO: replace this demo data with real stuff
+    return 'honeypot';
   }
   
-  public function sessionName()
+  public function sessionIdName()
   {
-    
+    // TODO: replace this demo data with real stuff
+    return 'session_id';
   }
   
   public function sessionId()
   {
-    
+    // TODO: replace this demo data with real stuff
+    return 'APX_FLORIAN_PIRCHER_5BT_2016';
   }
   
   public function previewName()
   {
-    
+    // TODO: replace this demo data with real stuff
+    return 'preview';
   }
    
   public function validePreview()
   {
-    
+    // TODO: replace this demo data with real stuff
+    return false;
   }
   
   public function submitName()
   {
-    
+    // TODO: replace this demo data with real stuff
+    return 'submit';
   }
 }
