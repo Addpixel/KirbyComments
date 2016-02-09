@@ -79,9 +79,9 @@ class Comments implements Iterator
     return count($this->stored_comments);
   }
   
-  public function hasSend()
+  public function hasSubmit()
   {
-    
+    return isset($_POST['submit']);
   }
   
   public function value($name)
