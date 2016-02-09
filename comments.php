@@ -13,13 +13,11 @@ class Comments implements Iterator
   );
   private $iterator_index;
   private $comments;
-  private $stored_comments;
   
   function __construct($page)
   {
     $this->iterator_index = 0;
     $this->comments = array();
-    $this->stored_comments = array();
   }
   
   // ============
@@ -76,7 +74,12 @@ class Comments implements Iterator
   
   public function nextCommentId()
   {
-    return count($this->stored_comments);
+    $stored_comments = array_filter($this->comments, function ($x)
+    {
+      return $x->isPreview() === false;
+    });
+    
+    return count($stored_comments);
   }
   
   public function userHasSubmitted()
