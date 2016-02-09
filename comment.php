@@ -78,6 +78,19 @@ class Comment
     $this->is_preview = $is_preview === true;
   }
   
+  public static function from_post($id, $datetime = null, $is_preview = false)
+  {
+    return new Comment(
+      $id,
+      $_POST['name'],
+      $_POST['email'],
+      $_POST['website'],
+      $_POST['message'],
+      ($datetime == null) ? (new DateTime()) : $datetime,
+      isset($_POST['submit'])
+    );
+  }
+  
   public function id()
   {
     return $this->id;
