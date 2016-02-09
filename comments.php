@@ -1,5 +1,8 @@
 <?php
 
+include_once('comment.php');
+include_once('commentstatus.php');
+
 /**
  * Comments
  */
