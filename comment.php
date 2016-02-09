@@ -100,7 +100,7 @@ class Comment
   
   public function message()
   {
-    return $this->message;
+    return strip_tags(markdown($this->message), '<p><br><a><em><strong><code><pre>');
   }
   
   public function date($format='Y-m-d')
