@@ -43,7 +43,7 @@ class Comments implements Iterator
     $this->iterator_index += 1;
   }
   
-  function valide()
+  function valid()
   {
     return isset($this->comments[$this->iterator_index]);
   }
