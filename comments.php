@@ -86,7 +86,11 @@ class Comments implements Iterator
   
   public function value($name)
   {
-    
+    if (isset($_POST['preview'])) {
+      return strip_tags(htmlentities(trim($_POST[$name])));
+    } else {
+      return '';
+    }
   }
    
   public function honeypotName()
