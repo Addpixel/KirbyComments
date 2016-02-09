@@ -54,7 +54,7 @@ class Comment
   function __construct($id, $name, $email, $website, $message, $date, $is_preview = false)
   {
     if (gettype($id) !== 'integer') {
-      throw new Exception('The id of a comment must be of the type integer'., 300);
+      throw new Exception('The id of a comment must be of the type integer.', 300);
     } else if ($id <= 0) {
       throw new Exception('The id of a comment must be bigger than 0.', 301);
     } else if (preg_match('/^\s*$/', $name)) {
