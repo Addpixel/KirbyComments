@@ -43,7 +43,7 @@ class Comment
    *
    * @var \DateTime
    */
-  private $date;
+  private $datetime;
   /**
    * Whether the comment is just a preview and has not been stored yet.
    *
@@ -51,7 +51,7 @@ class Comment
    */
   private $is_preview;
   
-  function __construct($id, $name, $email, $website, $message, $date, $is_preview = false)
+  function __construct($id, $name, $email, $website, $message, $datetime, $is_preview = false)
   {
     if (gettype($id) !== 'integer') {
       throw new Exception('The id of a comment must be of the type integer.', 300);
@@ -69,12 +69,12 @@ class Comment
       throw new Exception('The message must not be empty.', 204);
     }
     
-    $this->id      = $id;
-    $this->name    = trim(strip_tags($name));
-    $this->email   = trim(strip_tags($email));
-    $this->website = trim(strip_tags($website));
-    $this->message = trim($message);
-    $this->date    = $date;
+    $this->id         = $id;
+    $this->name       = trim(strip_tags($name));
+    $this->email      = trim(strip_tags($email));
+    $this->website    = trim(strip_tags($website));
+    $this->message    = trim($message);
+    $this->datetime   = $datetime;
     $this->is_preview = $is_preview === true;
   }
   
