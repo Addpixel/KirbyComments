@@ -1,2 +1,9 @@
 <?php
 
+/**
+ * Comments
+ */
+class Comments
+{
+  
+}
