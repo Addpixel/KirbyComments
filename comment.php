@@ -51,9 +51,31 @@ class Comment
    */
   private $is_preview;
   
-  function __construct()
+  function __construct($id, $name, $email, $website, $message, $date, $is_preview = false)
   {
+    if (gettype($id) !== 'integer') {
+      throw new Exception('The id of a comment must be of the type integer'., 300);
+    } else if ($id <= 0) {
+      throw new Exception('The id of a comment must be bigger than 0.', 301);
+    } else if (preg_match('/^\s*$/', $name)) {
+      throw new Exception('The name field is required.', 200);
+    } else if (c::get('comments.require.email', false) && preg_match('/^\s*$/', $email)) {
+      throw new Exception('The e-mail address field is required.', 201);
+    } else if (c::get('comments.require.email', false) && !v::email($email)) {
+      throw new Exception('The e-mail address is not valid.', 202);
+    } else if (preg_match('/^\s*javascript:/i', $website)) {
+      throw new Exception('The website address may not contain JavaScript code.', 203);
+    } else if (preg_match('/^\s*$/m', $message)) {
+      throw new Exception('The message must not be empty.', 204);
+    }
     
+    $this->id      = $id;
+    $this->name    = trim(strip_tags($name));
+    $this->email   = trim(strip_tags($email));
+    $this->website = trim(strip_tags($website));
+    $this->message = trim($message);
+    $this->date    = $date;
+    $this->is_preview = $is_preview === true;
   }
   
   public function id()
