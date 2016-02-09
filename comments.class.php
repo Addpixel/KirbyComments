@@ -54,4 +54,13 @@ class Comments implements Iterator
     
   }
   
+  // =================
+  // = Comments List =
+  // =================
+  
+  public function isEmpty()
+  {
+    return count($this->comments) == 0;
+  }
+  
 }
