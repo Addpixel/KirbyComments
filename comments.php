@@ -9,7 +9,7 @@ include_once('commentstatus.php');
 class Comments implements Iterator
 {
   private $defaults = array(
-    'comments.honeypot.key' => 'subject'
+    'comments.names.honeypot' => 'subject'
   );
   private $iterator_index;
   private $comments;
