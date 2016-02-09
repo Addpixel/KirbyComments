@@ -70,10 +70,10 @@ class Comment
     }
     
     $this->id         = $id;
-    $this->name       = trim(strip_tags($name));
-    $this->email      = trim(strip_tags($email));
-    $this->website    = trim(strip_tags($website));
-    $this->message    = trim($message);
+    $this->name       = htmlspecialchars(trim(strip_tags($name)));
+    $this->email      = htmlspecialchars(trim(strip_tags($email)));
+    $this->website    = htmlspecialchars(trim(strip_tags($website)));
+    $this->message    = htmlspecialchars(trim(strip_tags($message)));
     $this->datetime   = $datetime;
     $this->is_preview = $is_preview === true;
   }
