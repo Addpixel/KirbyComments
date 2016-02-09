@@ -5,6 +5,9 @@
  */
 class Comments implements Iterator
 {
+  private $defaults = array(
+    'comments.honeypot.key' => 'subject'
+  );
   private $iterator_index;
   private $comments;
   private $stored_comments;
