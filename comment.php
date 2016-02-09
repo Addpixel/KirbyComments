@@ -76,6 +76,9 @@ class Comment
     $this->message    = htmlspecialchars(trim(strip_tags($message)));
     $this->datetime   = $datetime;
     $this->is_preview = $is_preview === true;
+    
+    if ($this->email   == '') { $this->email   = null; }
+    if ($this->website == '') { $this->website = null; }
   }
   
   public static function from_post($id, $datetime = null, $is_preview = false)
