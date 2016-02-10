@@ -58,7 +58,7 @@ class Comments implements Iterator
           Comments::option('comments_page.template'),
           array(
             'title' => Comments::option('comments_page.title'),
-            'date' => $now
+            'date' => $now->format('Y-m-d H:i:s')
           )
         );
       } catch (Exception $e) {
