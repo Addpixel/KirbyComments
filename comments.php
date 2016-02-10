@@ -79,7 +79,7 @@ class Comments implements Iterator
   
   public static function option($name)
   {
-    return c::get("comments.$name", $defaults[$name]);
+    return c::get("comments.$name", Comments::$defaults[$name]);
   }
   
   // ============
