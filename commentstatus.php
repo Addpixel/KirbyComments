@@ -13,11 +13,12 @@ class CommentsStatus
     'dev_error'    => 200,
     'user_error'   => 300
   );
-  private $exception = null;
+  private $exception;
   
-  function __construct($code)
+  function __construct($code, $exception = null)
   {
     $this->code = $code;
+    $this->exception = $exception;
   }
   
   public function getCode()

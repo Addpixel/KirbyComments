@@ -52,14 +52,18 @@ class Comments implements Iterator
         }
       }
     } else {
-      $comments_page = $page->children()->create(
-        Comments::option('comments_page.dirname'),
-        Comments::option('comments_page.template'),
-        array(
-          'title' => Comments::option('comments_page.title'),
-          'date' => $now
-        )
-      );
+      try {
+        $comments_page = $page->children()->create(
+          Comments::option('comments_page.dirname'),
+          Comments::option('comments_page.template'),
+          array(
+            'title' => Comments::option('comments_page.title'),
+            'date' => $now
+          )
+        );
+      } catch (Exception $e) {
+        $this->status = new CommentsStatus(200, $e);
+      }
     }
     
     if (isset($_POST['preview']) || isset($_POST['submit'])) {
