@@ -1,0 +1,11 @@
+System Error
+  100  Id must be int.
+  101  Id must be > 0.
+Dev Error
+  200  Could not create comments dir.
+User Error
+  300  Name must not be empty.
+  301  E-Mail must no be empty (if activated).
+  302  E-Mail must be valide (if activated).
+  303  Website address must not contain JavaScript code.
+  304  Message must not be empty.
