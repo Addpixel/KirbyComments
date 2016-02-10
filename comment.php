@@ -73,7 +73,7 @@ class Comment
     $this->name       = htmlspecialchars(trim(strip_tags($name)));
     $this->email      = htmlspecialchars(trim(strip_tags($email)));
     $this->website    = htmlspecialchars(trim(strip_tags($website)));
-    $this->message    = htmlspecialchars(trim(strip_tags($message)));
+    $this->message    = trim($message);
     $this->datetime   = $datetime;
     $this->is_preview = $is_preview === true;
     
