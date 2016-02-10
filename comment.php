@@ -59,9 +59,9 @@ class Comment
       throw new Exception('The id of a comment must be bigger than 0.', 301);
     } else if (preg_match('/^\s*$/', $name)) {
       throw new Exception('The name field is required.', 200);
-    } else if (c::get('comments.require.email', false) && preg_match('/^\s*$/', $email)) {
+    } else if (Comments::option('require.email') && preg_match('/^\s*$/', $email)) {
       throw new Exception('The e-mail address field is required.', 201);
-    } else if (c::get('comments.require.email', false) && !v::email($email)) {
+    } else if (Comments::option('require.email') && !v::email($email)) {
       throw new Exception('The e-mail address is not valid.', 202);
     } else if (preg_match('/^\s*javascript:/i', $website)) {
       throw new Exception('The website address may not contain JavaScript code.', 203);
@@ -85,12 +85,12 @@ class Comment
   {
     return new Comment(
       $id,
-      $_POST['name'],
-      $_POST['email'],
-      $_POST['website'],
-      $_POST['message'],
+      $_POST[Comments::option('form.name')],
+      $_POST[Comments::option('form.email')],
+      $_POST[Comments::option('form.website')],
+      $_POST[Comments::option('form.message')],
       $datetime,
-      isset($_POST['submit'])
+      isset($_POST[Comments::option('form.submit')])
     );
   }
   
@@ -116,7 +116,7 @@ class Comment
   
   public function message()
   {
-    return strip_tags(markdown($this->message), '<p><br><a><em><strong><code><pre>');
+    return strip_tags(markdown($this->message), Comments::option('allowed_tags'));
   }
   
   public function date($format='Y-m-d')

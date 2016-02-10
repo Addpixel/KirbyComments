@@ -8,8 +8,20 @@ include_once('commentstatus.php');
  */
 class Comments implements Iterator
 {
-  private $defaults = array(
-    'comments.names.honeypot' => 'subject'
+  private static $defaults = array(
+    'comments_page.title'    => 'Comments',
+    'comments_page.dirname'  => 'comments',
+    'comments_page.template' => 'comments',
+    'form.submit'            => 'submit',
+    'form.preview'           => 'preview',
+    'form.name'              => 'name',
+    'form.email'             => 'email',
+    'form.website'           => 'website',
+    'from.message'           => 'message',
+    'form.honeypot'          => 'subject', 
+    'form.session_id'        => 'session_id',
+    'require.email'          => false,
+    'allowed_tags'           => '<p><br><a><em><strong><code><pre>'
   );
   private $status;
   private $iterator_index;
@@ -55,6 +67,15 @@ class Comments implements Iterator
     }
     
     session_start();
+  }
+  
+  // ===========
+  // = Options =
+  // ===========
+  
+  public static function option($name)
+  {
+    return c::get("comments.$name", $defaults[$name]);
   }
   
   // ============
@@ -121,12 +142,12 @@ class Comments implements Iterator
   
   public function userHasSubmitted()
   {
-    return isset($_POST['submit']);
+    return isset($_POST[Comments::option('form.submit')]);
   }
   
   public function value($name)
   {
-    if (isset($_POST['preview'])) {
+    if (isset($_POST[Comments::option('form.preview')])) {
       return strip_tags(htmlentities(trim($_POST[$name])));
     } else {
       return '';
@@ -136,13 +157,13 @@ class Comments implements Iterator
   public function honeypotName()
   {
     // TODO: replace this demo data with real stuff
-    return 'honeypot';
+    return Comments::option('form.honeypot');
   }
   
   public function sessionIdName()
   {
     // TODO: replace this demo data with real stuff
-    return 'session_id';
+    return Comments::option('form.session_id');
   }
   
   public function sessionId()
@@ -154,7 +175,7 @@ class Comments implements Iterator
   public function previewName()
   {
     // TODO: replace this demo data with real stuff
-    return 'preview';
+    return Comments::option('form.preview');
   }
    
   public function validePreview()
@@ -166,6 +187,6 @@ class Comments implements Iterator
   public function submitName()
   {
     // TODO: replace this demo data with real stuff
-    return 'submit';
+    return Comments::option('form.submit');
   }
 }
