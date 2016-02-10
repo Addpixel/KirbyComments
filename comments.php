@@ -1,7 +1,7 @@
 <?php
 
 include_once('comment.php');
-include_once('CommentsStatus.php');
+include_once('commentsstatus.php');
 
 /**
  * Comments
