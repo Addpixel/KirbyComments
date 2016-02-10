@@ -38,13 +38,13 @@ class Comments implements Iterator
     if ($comments_page != null) {
       foreach ($comments_page->children() as $comment_page) {
         try {
-          $comments[] = new Comment(
+          $this->comments[] = new Comment(
             intval($page->cid()),
             strval($page->name()),
             strval($page->email()),
             strval($page->website()),
             strval($page->message()),
-            new DateTime($page->datetime())
+            new DateTime($page->date('Y-m-d H:i:s'))
           );
         } catch (Exception $e) {
           $this->status = new CommentsStatus(102);
@@ -55,6 +55,7 @@ class Comments implements Iterator
     if (isset($_POST['preview']) || isset($_POST['submit'])) {
       $comments_page = $page->find('comments');
       $new_comment = Comment::from_post(count($comments), $now, true);
+      $new_comment_id = count($this->comments) + 1;
       
       if ($comments_page == null) {
         try {
@@ -70,6 +71,25 @@ class Comments implements Iterator
           $this->status = new CommentsStatus(200, $e);
         }
       }
+      
+      try {
+        $new_comment_page = $comments_page->children()->create(
+          "$new_comment_id-".Comments::option('comment_page.dirname'),
+          Comments::option('comment_page.template'),
+          array(
+            'cid'     => $new_comment_id,
+            'date'    => $new_comment->date('Y-m-d H:i:s'),
+            'name'    => $new_comment->name(),
+            'email'   => $new_comment->email(),
+            'website' => $new_comment->website(),
+            'message' => $new_comment->message()
+          )
+        );
+      } catch (Exception $e) {
+        $this->status = new CommentsStatus(201, $e);
+      }
+      
+      $this->comments[] = $new_comment;
     }
     
     session_start();
