@@ -57,7 +57,7 @@ class Comment
       throw new Exception('The id of a comment must be of the type integer.', 100);
     } else if ($id <= 0) {
       throw new Exception('The id of a comment must be bigger than 0.', 101);
-    } else if (preg_match('/^\s*$/', $name)) {
+    } else if (trim($name) == '') {
       throw new Exception('The name field is required.', 300);
     } else if (Comments::option('require.email') && preg_match('/^\s*$/', $email)) {
       throw new Exception('The e-mail address field is required.', 301);
@@ -65,7 +65,7 @@ class Comment
       throw new Exception('The e-mail address is not valid.', 302);
     } else if (preg_match('/^\s*javascript:/i', $website)) {
       throw new Exception('The website address may not contain JavaScript code.', 303);
-    } else if (preg_match('/^\s*$/m', $message)) {
+    } else if (trim($message) == '') {
       throw new Exception('The message must not be empty.', 304);
     }
     
