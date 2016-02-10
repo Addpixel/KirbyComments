@@ -1,7 +1,7 @@
 <?php
 
 include_once('comment.php');
-include_once('commentstatus.php');
+include_once('CommentsStatus.php');
 
 /**
  * Comments
@@ -29,7 +29,7 @@ class Comments implements Iterator
   
   function __construct($page)
   {
-    $this->status = new CommentStatus(0);
+    $this->status = new CommentsStatus(0);
     $this->iterator_index = 0;
     $this->comments = array();
     
@@ -48,7 +48,7 @@ class Comments implements Iterator
             new DateTime($page->datetime())
           );
         } catch (Exception $e) {
-          $this->status = new CommentStatus(100);
+          $this->status = new CommentsStatus(100);
         }
       }
     } else {

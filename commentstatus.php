@@ -3,7 +3,7 @@
 /**
  * Status
  */
-class CommentStatus
+class CommentsStatus
 {
   private $code;
   static private $domain_size = 100;
@@ -38,8 +38,8 @@ class CommentStatus
   public function isUserError()
   {
     $code = $this->code;
-    $user_domain = CommentStatus::$domains['user_error'];
-    $size = CommentStatus::$domain_size;
+    $user_domain = CommentsStatus::$domains['user_error'];
+    $size = CommentsStatus::$domain_size;
     
     return $code >= $user_domain && $code < $user_domain + $size;
   }
