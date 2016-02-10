@@ -17,7 +17,7 @@ class Comments implements Iterator
     'form.name'              => 'name',
     'form.email'             => 'email',
     'form.website'           => 'website',
-    'from.message'           => 'message',
+    'form.message'           => 'message',
     'form.honeypot'          => 'subject', 
     'form.session_id'        => 'session_id',
     'require.email'          => false,
@@ -57,7 +57,14 @@ class Comments implements Iterator
     if ($is_preview || $is_submit) {
       $comments_page = $page->find('comments');
       $new_comment_id = count($this->comments) + 1;
-      $new_comment = Comment::from_post($new_comment_id, $now, $is_preview);
+      $new_comment = null;
+      
+      try {
+        $new_comment = Comment::from_post($new_comment_id, $now);
+      } catch (Exception $e) {
+        $this->status = new CommentsStatus(202, $e);
+        return;
+      }
       
       if ($comments_page == null) {
         try {
@@ -71,6 +78,7 @@ class Comments implements Iterator
           );
         } catch (Exception $e) {
           $this->status = new CommentsStatus(200, $e);
+          return;
         }
       }
       
@@ -89,6 +97,7 @@ class Comments implements Iterator
         );
       } catch (Exception $e) {
         $this->status = new CommentsStatus(201, $e);
+        return;
       }
       
       $this->comments[] = $new_comment;

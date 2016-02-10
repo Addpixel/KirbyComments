@@ -81,7 +81,7 @@ class Comment
     if ($this->website == '') { $this->website = null; }
   }
   
-  public static function from_post($id, $datetime, $is_preview)
+  public static function from_post($id, $datetime)
   {
     return new Comment(
       $id,
@@ -90,7 +90,7 @@ class Comment
       $_POST[Comments::option('form.website')],
       $_POST[Comments::option('form.message')],
       $datetime,
-      isset($_POST[Comments::option('form.submit')])
+      isset($_POST[Comments::option('form.preview')])
     );
   }
   

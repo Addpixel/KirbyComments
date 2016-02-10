@@ -5,6 +5,7 @@ System Error
 Dev Error
   200  Could not create comments dir or comments file.
   201  Could not create comment dir or comment file.
+  202  $_POST is invalide.
 User Error
   300  Name must not be empty.
   301  E-Mail must no be empty (if activated).
