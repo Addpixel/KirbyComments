@@ -119,6 +119,11 @@ class Comment
     return strip_tags(markdown($this->message), Comments::option('allowed_tags'));
   }
   
+  public function rawMessage()
+  {
+    return $this->message;
+  }
+  
   public function date($format='Y-m-d')
   {
     return date($format, $this->date);

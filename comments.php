@@ -97,7 +97,7 @@ class Comments implements Iterator
               'name'    => $new_comment->name(),
               'email'   => $new_comment->email(),
               'website' => $new_comment->website(),
-              'message' => $new_comment->message()
+              'message' => $new_comment->rawMessage()
             )
           );
         } catch (Exception $e) {
@@ -173,13 +173,11 @@ class Comments implements Iterator
   
   public function honeypotName()
   {
-    // TODO: replace this demo data with real stuff
     return Comments::option('form.honeypot');
   }
   
   public function sessionIdName()
   {
-    // TODO: replace this demo data with real stuff
     return Comments::option('form.session_id');
   }
   
@@ -191,7 +189,6 @@ class Comments implements Iterator
   
   public function previewName()
   {
-    // TODO: replace this demo data with real stuff
     return Comments::option('form.preview');
   }
    
@@ -202,7 +199,6 @@ class Comments implements Iterator
   
   public function submitName()
   {
-    // TODO: replace this demo data with real stuff
     return Comments::option('form.submit');
   }
   
