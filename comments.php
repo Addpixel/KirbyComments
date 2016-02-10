@@ -34,40 +34,40 @@ class Comments implements Iterator
     $this->comments = array();
     
     $now = new DateTime();
-    $comments_page = $page->find('comments');
-    
-    if ($comments_page != null) {
-      foreach ($comments_page->children() as $comment_page) {
-        try {
-          $comments[] = new Comment(
-            intval($page->cid()),
-            strval($page->name()),
-            strval($page->email()),
-            strval($page->website()),
-            strval($page->message()),
-            new DateTime($page->datetime())
-          );
-        } catch (Exception $e) {
-          $this->status = new CommentsStatus(100);
-        }
-      }
-    } else {
-      try {
-        $comments_page = $page->children()->create(
-          Comments::option('comments_page.dirname'),
-          Comments::option('comments_page.template'),
-          array(
-            'title' => Comments::option('comments_page.title'),
-            'date' => $now->format('Y-m-d H:i:s')
-          )
-        );
-      } catch (Exception $e) {
-        $this->status = new CommentsStatus(200, $e);
-      }
-    }
     
     if (isset($_POST['preview']) || isset($_POST['submit'])) {
+      $comments_page = $page->find('comments');
       $new_comment = Comment::from_post(count($comments), $now, true);
+      
+      if ($comments_page != null) {
+        foreach ($comments_page->children() as $comment_page) {
+          try {
+            $comments[] = new Comment(
+              intval($page->cid()),
+              strval($page->name()),
+              strval($page->email()),
+              strval($page->website()),
+              strval($page->message()),
+              new DateTime($page->datetime())
+            );
+          } catch (Exception $e) {
+            $this->status = new CommentsStatus(100);
+          }
+        }
+      } else {
+        try {
+          $comments_page = $page->children()->create(
+            Comments::option('comments_page.dirname'),
+            Comments::option('comments_page.template'),
+            array(
+              'title' => Comments::option('comments_page.title'),
+              'date' => $now->format('Y-m-d H:i:s')
+            )
+          );
+        } catch (Exception $e) {
+          $this->status = new CommentsStatus(200, $e);
+        }
+      }
     }
     
     session_start();
@@ -80,35 +80,6 @@ class Comments implements Iterator
   public static function option($name)
   {
     return c::get("comments.$name", Comments::$defaults[$name]);
-  }
-  
-  // ============
-  // = Iterator =
-  // ============
-  
-  function rewind()
-  {
-    $this->iterator_index = 0;
-  }
-  
-  function current()
-  {
-    return $this->comments[$this->iterator_index];
-  }
-  
-  function key()
-  {
-    return $this->iterator_index;
-  }
-  
-  function next()
-  {
-    $this->iterator_index += 1;
-  }
-  
-  function valid()
-  {
-    return isset($this->comments[$this->iterator_index]);
   }
   
   // ===================
@@ -191,5 +162,34 @@ class Comments implements Iterator
   {
     // TODO: replace this demo data with real stuff
     return Comments::option('form.submit');
+  }
+  
+  // ============
+  // = Iterator =
+  // ============
+  
+  function rewind()
+  {
+    $this->iterator_index = 0;
+  }
+  
+  function current()
+  {
+    return $this->comments[$this->iterator_index];
+  }
+  
+  function key()
+  {
+    return $this->iterator_index;
+  }
+  
+  function next()
+  {
+    $this->iterator_index += 1;
+  }
+  
+  function valid()
+  {
+    return isset($this->comments[$this->iterator_index]);
   }
 }
