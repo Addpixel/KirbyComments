@@ -84,22 +84,24 @@ class Comments implements Iterator
         }
       }
       
-      try {
-        $new_comment_page = $comments_page->children()->create(
-          "$new_comment_id-".Comments::option('comment_page.dirname'),
-          Comments::option('comment_page.template'),
-          array(
-            'cid'     => $new_comment_id,
-            'date'    => $new_comment->date('Y-m-d H:i:s'),
-            'name'    => $new_comment->name(),
-            'email'   => $new_comment->email(),
-            'website' => $new_comment->website(),
-            'message' => $new_comment->message()
-          )
-        );
-      } catch (Exception $e) {
-        $this->status = new CommentsStatus(201, $e);
-        return;
+      if ($is_submit) {
+        try {
+          $new_comment_page = $comments_page->children()->create(
+            "$new_comment_id-".Comments::option('comment_page.dirname'),
+            Comments::option('comment_page.template'),
+            array(
+              'cid'     => $new_comment_id,
+              'date'    => $new_comment->date('Y-m-d H:i:s'),
+              'name'    => $new_comment->name(),
+              'email'   => $new_comment->email(),
+              'website' => $new_comment->website(),
+              'message' => $new_comment->message()
+            )
+          );
+        } catch (Exception $e) {
+          $this->status = new CommentsStatus(201, $e);
+          return;
+        }
       }
       
       $this->comments[] = $new_comment;
