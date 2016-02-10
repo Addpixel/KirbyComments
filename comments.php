@@ -12,6 +12,8 @@ class Comments implements Iterator
     'comments_page.title'    => 'Comments',
     'comments_page.dirname'  => 'comments',
     'comments_page.template' => 'comments',
+    'comment_page.dirname'   => 'comment',
+    'comment_page.template'  => 'comment',
     'form.submit'            => 'submit',
     'form.preview'           => 'preview',
     'form.name'              => 'name',
