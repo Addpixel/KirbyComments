@@ -135,7 +135,7 @@ class Comments implements Iterator
       return $x->isPreview() === false;
     });
     
-    return count($stored_comments);
+    return count($stored_comments) + 1;
   }
   
   public function userHasSubmitted()
