@@ -1,6 +1,7 @@
 System Error
   100  Id must be int.
   101  Id must be > 0.
+  103  Could not create Comment from page.
 Dev Error
   200  Could not create comments dir.
 User Error
