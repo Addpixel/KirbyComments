@@ -28,12 +28,14 @@ class Comments implements Iterator
   private $status;
   private $iterator_index;
   private $comments;
+  private $valid_preview;
   
   function __construct($page)
   {
     $this->status = new CommentsStatus(0);
     $this->iterator_index = 0;
     $this->comments = array();
+    $this->valid_preview = false;
     
     $is_preview = isset($_POST[Comments::option('form.preview')]);
     $is_submit  = isset($_POST[Comments::option('form.submit')]);
@@ -105,6 +107,10 @@ class Comments implements Iterator
       }
       
       $this->comments[] = $new_comment;
+      
+      if ($is_preview) {
+        $this->valid_preview = true;
+      }
     }
     
     session_start();
@@ -189,10 +195,9 @@ class Comments implements Iterator
     return Comments::option('form.preview');
   }
    
-  public function validePreview()
+  public function validPreview()
   {
-    // TODO: replace this demo data with real stuff
-    return false;
+    return $this->valid_preview;
   }
   
   public function submitName()
