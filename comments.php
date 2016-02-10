@@ -33,6 +33,8 @@ class Comments implements Iterator
     $this->iterator_index = 0;
     $this->comments = array();
     
+    $is_preview = isset($_POST[Comments::option('form.preview')]);
+    $is_submit  = isset($_POST[Comments::option('form.submit')]);
     $now = new DateTime();
     
     if ($comments_page != null) {
@@ -52,10 +54,10 @@ class Comments implements Iterator
       }
     }
     
-    if (isset($_POST['preview']) || isset($_POST['submit'])) {
+    if ($is_preview || $is_submit) {
       $comments_page = $page->find('comments');
-      $new_comment = Comment::from_post(count($comments), $now, true);
       $new_comment_id = count($this->comments) + 1;
+      $new_comment = Comment::from_post($new_comment_id, $now, $is_preview);
       
       if ($comments_page == null) {
         try {
