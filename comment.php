@@ -81,7 +81,7 @@ class Comment
     if ($this->website == '') { $this->website = null; }
   }
   
-  public static function from_post($id, $datetime = null, $is_preview = false)
+  public static function from_post($id, $datetime, $is_preview)
   {
     return new Comment(
       $id,
@@ -89,7 +89,7 @@ class Comment
       $_POST['email'],
       $_POST['website'],
       $_POST['message'],
-      ($datetime == null) ? (new DateTime()) : $datetime,
+      $datetime,
       isset($_POST['submit'])
     );
   }
