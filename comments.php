@@ -11,13 +11,50 @@ class Comments implements Iterator
   private $defaults = array(
     'comments.names.honeypot' => 'subject'
   );
+  private $status;
   private $iterator_index;
   private $comments;
   
   function __construct($page)
   {
+    $this->status = new CommentStatus(0);
     $this->iterator_index = 0;
     $this->comments = array();
+    
+    $now = new DateTime();
+    $comments_page = $page->find('comments');
+    
+    if ($comments_page != null) {
+      foreach ($comments_page->children() as $comment_page) {
+        try {
+          $comments[] = new Comment(
+            intval($page->cid()),
+            strval($page->name()),
+            strval($page->email()),
+            strval($page->website()),
+            strval($page->message()),
+            new DateTime($page->datetime())
+          );
+        } catch (Exception $e) {
+          $this->status = new CommentStatus(100);
+        }
+      }
+    } else {
+      $comments_page = $page->children()->create(
+        Comments::option('comments_page.dirname'),
+        Comments::option('comments_page.template'),
+        array(
+          'title' => Comments::option('comments_page.title'),
+          'date' => $now
+        )
+      );
+    }
+    
+    if (isset($_POST['preview']) || isset($_POST['submit'])) {
+      $new_comment = Comment::from_post(count($comments), $now, true);
+    }
+    
+    session_start();
   }
   
   // ============
