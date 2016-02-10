@@ -47,7 +47,7 @@ class Comments implements Iterator
             new DateTime($page->datetime())
           );
         } catch (Exception $e) {
-          $this->status = new CommentsStatus(103);
+          $this->status = new CommentsStatus(102);
         }
       }
     }
