@@ -54,19 +54,19 @@ class Comment
   function __construct($id, $name, $email, $website, $message, $datetime, $is_preview = false)
   {
     if (gettype($id) !== 'integer') {
-      throw new Exception('The id of a comment must be of the type integer.', 300);
+      throw new Exception('The id of a comment must be of the type integer.', 100);
     } else if ($id <= 0) {
-      throw new Exception('The id of a comment must be bigger than 0.', 301);
+      throw new Exception('The id of a comment must be bigger than 0.', 101);
     } else if (preg_match('/^\s*$/', $name)) {
-      throw new Exception('The name field is required.', 200);
+      throw new Exception('The name field is required.', 300);
     } else if (Comments::option('require.email') && preg_match('/^\s*$/', $email)) {
-      throw new Exception('The e-mail address field is required.', 201);
+      throw new Exception('The e-mail address field is required.', 301);
     } else if (Comments::option('require.email') && !v::email($email)) {
-      throw new Exception('The e-mail address is not valid.', 202);
+      throw new Exception('The e-mail address is not valid.', 302);
     } else if (preg_match('/^\s*javascript:/i', $website)) {
-      throw new Exception('The website address may not contain JavaScript code.', 203);
+      throw new Exception('The website address may not contain JavaScript code.', 303);
     } else if (preg_match('/^\s*$/m', $message)) {
-      throw new Exception('The message must not be empty.', 204);
+      throw new Exception('The message must not be empty.', 304);
     }
     
     $this->id         = $id;

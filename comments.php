@@ -113,8 +113,7 @@ class Comments implements Iterator
   
   public function process()
   {
-    // TODO: Return Real Status
-    return new CommentStatus(0);
+    return $this->status;
   }
   
   // =================
