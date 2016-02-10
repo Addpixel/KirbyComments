@@ -39,27 +39,27 @@ class Comments implements Iterator
     
     $is_preview = isset($_POST[Comments::option('form.preview')]);
     $is_submit  = isset($_POST[Comments::option('form.submit')]);
+    $comments_page = $page->find('comments');
     $now = new DateTime();
     
     if ($comments_page != null) {
       foreach ($comments_page->children() as $comment_page) {
         try {
           $this->comments[] = new Comment(
-            intval($page->cid()),
-            strval($page->name()),
-            strval($page->email()),
-            strval($page->website()),
-            strval($page->message()),
+            intval($comment_page->cid()),
+            strval($comment_page->name()),
+            strval($comment_page->email()),
+            strval($comment_page->website()),
+            strval($comment_page->message()),
             new DateTime($page->date('Y-m-d H:i:s'))
           );
         } catch (Exception $e) {
-          $this->status = new CommentsStatus(102);
+          $this->status = new CommentsStatus(102, $e);
         }
       }
     }
     
     if ($is_preview || $is_submit) {
-      $comments_page = $page->find('comments');
       $new_comment_id = count($this->comments) + 1;
       $new_comment = null;
       
