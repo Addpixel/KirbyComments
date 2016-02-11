@@ -126,7 +126,7 @@ class Comment
   
   public function date($format='Y-m-d')
   {
-    return date($format, $this->datetime);
+    return $this->datetime->format($format);
   }
   
   public function isPreview()
