@@ -39,10 +39,7 @@ class Comments implements Iterator
     $this->comments = array();
     $this->valid_preview = false;
     
-    $is_preview = isset($_POST[Comments::option('form.preview')]);
-    $is_submit  = isset($_POST[Comments::option('form.submit')]);
-    $comments_page = $page->find('comments');
-    $now = new DateTime();
+    $comments_page = $this->page->find('comments');
     
     if ($comments_page != null) {
       foreach ($comments_page->children() as $comment_page) {
@@ -58,60 +55,6 @@ class Comments implements Iterator
         } catch (Exception $e) {
           $this->status = new CommentsStatus(102, $e);
         }
-      }
-    }
-    
-    if ($is_preview || $is_submit) {
-      $new_comment_id = count($this->comments) + 1;
-      $new_comment = null;
-      
-      try {
-        $new_comment = Comment::from_post($new_comment_id, $now);
-      } catch (Exception $e) {
-        $this->status = new CommentsStatus($e->getCode(), $e);
-        return;
-      }
-      
-      if ($comments_page == null) {
-        try {
-          $comments_page = $page->children()->create(
-            Comments::option('comments_page.dirname'),
-            Comments::option('comments_page.template'),
-            array(
-              'title' => Comments::option('comments_page.title'),
-              'date' => $now->format('Y-m-d H:i:s')
-            )
-          );
-        } catch (Exception $e) {
-          $this->status = new CommentsStatus(200, $e);
-          return;
-        }
-      }
-      
-      if ($is_submit) {
-        try {
-          $new_comment_page = $comments_page->children()->create(
-            "$new_comment_id-".Comments::option('comment_page.dirname'),
-            Comments::option('comment_page.template'),
-            array(
-              'cid'     => $new_comment_id,
-              'date'    => $new_comment->date('Y-m-d H:i:s'),
-              'name'    => $new_comment->name(),
-              'email'   => $new_comment->email(),
-              'website' => $new_comment->website(),
-              'message' => $new_comment->rawMessage()
-            )
-          );
-        } catch (Exception $e) {
-          $this->status = new CommentsStatus(201, $e);
-          return;
-        }
-      }
-      
-      $this->comments[] = $new_comment;
-      
-      if ($is_preview) {
-        $this->valid_preview = true;
       }
     }
     
@@ -133,6 +76,70 @@ class Comments implements Iterator
   
   public function process()
   {
+    if ($this->status->isError()) { return $this->status; }
+    
+    $is_preview = isset($_POST[Comments::option('form.preview')]);
+    $is_submit  = isset($_POST[Comments::option('form.submit')]);
+    $comments_page = $this->page->find('comments');
+    $now = new DateTime();
+    
+    if ($is_preview || $is_submit) {
+      $new_comment_id = count($this->comments) + 1;
+      $new_comment = null;
+      
+      try {
+        $new_comment = Comment::from_post($new_comment_id, $now);
+      } catch (Exception $e) {
+        return new CommentsStatus($e->getCode(), $e);
+      }
+      
+      if ($comments_page == null) {
+        // No comments page has been created yet. Create the comments subpage.
+        try {
+          $comments_page = $this->page->children()->create(
+            Comments::option('comments_page.dirname'),
+            Comments::option('comments_page.template'),
+            array(
+              'title' => Comments::option('comments_page.title'),
+              'date'  => $now->format('Y-m-d H:i:s')
+            )
+          );
+        } catch (Exception $e) {
+          return new CommentsStatus(200, $e);
+        }
+      }
+      
+      if ($is_submit) {
+        // The commentator is happy with the preview and has submitted the
+        // comment to be published on the website.
+        try {
+          $new_comment_page = $comments_page->children()->create(
+            "$new_comment_id-".Comments::option('comment_page.dirname')."-$new_comment_id",
+            Comments::option('comment_page.template'),
+            array(
+              'cid'     => $new_comment_id,
+              'date'    => $new_comment->date('Y-m-d H:i:s'),
+              'name'    => $new_comment->name(),
+              'email'   => $new_comment->email(),
+              'website' => $new_comment->website(),
+              'message' => $new_comment->rawMessage()
+            )
+          );
+        } catch (Exception $e) {
+          return new CommentsStatus(201, $e);
+        }
+      }
+      
+      // Add the new comment to the current list of comments.
+      $this->comments[] = $new_comment;
+      
+      if ($is_preview) {
+        // This is a valid preview, because any illegal data would have obliged
+        // this function to retun a `CommentsStatus` instance.
+        $this->valid_preview = true;
+      }
+    }
+    
     return $this->status;
   }
   
