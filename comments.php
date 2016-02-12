@@ -25,6 +25,7 @@ class Comments implements Iterator
     'require.email'          => false,
     'allowed_tags'           => '<p><br><a><em><strong><code><pre>'
   );
+  private $page;
   private $status;
   private $iterator_index;
   private $comments;
@@ -32,6 +33,7 @@ class Comments implements Iterator
   
   function __construct($page)
   {
+    $this->page = $page;
     $this->status = new CommentsStatus(0);
     $this->iterator_index = 0;
     $this->comments = array();
