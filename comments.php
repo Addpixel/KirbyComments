@@ -66,7 +66,7 @@ class Comments implements Iterator
       try {
         $new_comment = Comment::from_post($new_comment_id, $now);
       } catch (Exception $e) {
-        $this->status = new CommentsStatus(202, $e);
+        $this->status = new CommentsStatus($e->getCode(), $e);
         return;
       }
       

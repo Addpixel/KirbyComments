@@ -28,7 +28,11 @@ class CommentsStatus
   
   public function getMessage()
   {
-    return "[Status code {$this->code}]";
+    if ($this->exception != null) {
+      return $this->getException()->getMessage();
+    }
+    
+    return "Status with code {$this->code}.";
   }
   
   public function getException()
@@ -42,6 +46,6 @@ class CommentsStatus
     $user_domain = CommentsStatus::$domains['user_error'];
     $size = CommentsStatus::$domain_size;
     
-    return $code >= $user_domain && $code < $user_domain + $size;
+    return ($code >= $user_domain) && ($code < ($user_domain + $size));
   }
 }
