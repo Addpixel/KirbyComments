@@ -45,12 +45,12 @@ class Comments implements Iterator
       foreach ($comments_page->children() as $comment_page) {
         try {
           $this->comments[] = new Comment(
-            intval($comment_page->cid()),
-            strval($comment_page->name()),
-            strval($comment_page->email()),
-            strval($comment_page->website()),
-            strval($comment_page->message()),
-            new DateTime($comment_page->date('Y-m-d H:i:s'))
+            intval(strval($comment_page->cid())),
+                   strval($comment_page->name()),
+                   strval($comment_page->email()),
+                   strval($comment_page->website()),
+                   strval($comment_page->message()),
+             new DateTime($comment_page->date('Y-m-d H:i:s'))
           );
         } catch (Exception $e) {
           $this->status = new CommentsStatus(102, $e);
