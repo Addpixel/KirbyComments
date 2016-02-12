@@ -149,7 +149,7 @@ class Comments implements Iterator
   
   public function isEmpty()
   {
-    return count($this->comments) == 0;
+    return count($this->comments) === 0;
   }
   
   // ========
