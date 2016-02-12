@@ -48,4 +48,9 @@ class CommentsStatus
     
     return ($code >= $user_domain) && ($code < ($user_domain + $size));
   }
+  
+  public function isError()
+  {
+    return $this->code >= CommentsStatus::$domain_size;
+  }
 }
