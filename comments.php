@@ -23,6 +23,7 @@ class Comments implements Iterator
     'form.honeypot'          => 'subject', 
     'form.session_id'        => 'session_id',
     'require.email'          => false,
+    'use.honeypot'           => true,
     'allowed_tags'           => '<p><br><a><em><strong><code><pre>'
   );
   private $page;
@@ -183,6 +184,11 @@ class Comments implements Iterator
   public function honeypotName()
   {
     return Comments::option('form.honeypot');
+  }
+  
+  public function isUsingHoneypot()
+  {
+    return Comments::option('use.honeypot');
   }
   
   public function sessionIdName()
