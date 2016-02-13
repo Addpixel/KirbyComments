@@ -11,3 +11,4 @@ User Error
   302  E-Mail must be valide (if activated).
   303  Website address must not contain JavaScript code.
   304  Message must not be empty.
+  305  Session is invalide.
