@@ -51,7 +51,7 @@ class Comments implements Iterator
                    strval($comment_page->name()),
                    strval($comment_page->email()),
                    strval($comment_page->website()),
-                   strval($comment_page->message()),
+                   strval($comment_page->text()),
              new DateTime($comment_page->date('Y-m-d H:i:s'))
           );
         } catch (Exception $e) {
@@ -144,7 +144,7 @@ class Comments implements Iterator
             'name'    => $new_comment->name(),
             'email'   => $new_comment->email(),
             'website' => $new_comment->website(),
-            'message' => $new_comment->rawMessage()
+            'text'    => $new_comment->rawMessage()
           )
         );
       } catch (Exception $e) {
