@@ -82,16 +82,17 @@ class Comments implements Iterator
     
     $is_preview = isset($_POST[Comments::option('form.preview')]);
     $is_submit  = isset($_POST[Comments::option('form.submit')]);
-    
-    if (!$is_submit && !$is_preview) { return $this->status; }
+    $is_send    = $is_preview || $is_submit;
     
     // Check Session.ID == POST.Session.ID
     
-    $session_id = $_SESSION[Comments::option('session.key')];
-    $post_session_id = $_POST[Comments::option('form.session_id')];
+    if ($is_send) {
+      $session_id = $_SESSION[Comments::option('session.key')];
+      $post_session_id = $_POST[Comments::option('form.session_id')];
     
-    if ($session_id !== $post_session_id) {
-      return new CommentsStatus(305);
+      if ($session_id !== $post_session_id) {
+        return new CommentsStatus(305);
+      }
     }
     
     // Generate new Session ID
@@ -100,6 +101,8 @@ class Comments implements Iterator
     $_SESSION[Comments::option('session.key')] = $new_session_id;
     
     // Session is Valid
+    
+    if (!$is_send) { return $this->status; }
     
     $comments_page = $this->page->find('comments');
     $now = new DateTime();
