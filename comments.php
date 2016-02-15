@@ -51,6 +51,7 @@ class Comments implements Iterator
       foreach ($comments_page->children() as $comment_page) {
         try {
           $this->comments[] = new Comment(
+                          $page,
             intval(strval($comment_page->cid())),
                    strval($comment_page->name()),
                    strval($comment_page->email()),
