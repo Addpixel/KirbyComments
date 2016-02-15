@@ -26,7 +26,10 @@ class Comments implements Iterator
     'session.key'            => 'comments',
     'require.email'          => false,
     'use.honeypot'           => true,
-    'allowed_tags'           => '<p><br><a><em><strong><code><pre>'
+    'allowed_tags'           => '<p><br><a><em><strong><code><pre>',
+    'email.to'               => array('kirby-comments@leuchtschirm.com'),
+    'email.subject'          => 'New Comment by {{ comment.user.name }}',
+    'setup.page.title_key'   => 'title'
   );
   private $page;
   private $status;
