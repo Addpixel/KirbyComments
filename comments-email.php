@@ -10,11 +10,11 @@ class CommentsEmail
   public $message;
   private $comment;
   
-  function __construct($comment)
+  function __construct($to, $subject, $comment)
   {
     $this->comment = $comment;
-    $this->to = Comments::option('email.to');
-    $this->subject = $this->format(Comments::option('email.subject'));
+    $this->to = $to;
+    $this->subject = $this->format($subject);
     $this->message = strip_tags($comment->message());
   }
   
