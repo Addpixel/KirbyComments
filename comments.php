@@ -156,6 +156,16 @@ class Comments implements Iterator
       } catch (Exception $e) {
         return new CommentsStatus(201, $e);
       }
+      
+      if (Comments::option('use.email')) {
+        // Send Email Notification
+        $email = new CommentsEmail(
+          Comments::option('email.to'),
+          Comments::option('email.subject'),
+          $new_comment
+        );
+        $email->send();
+      }
     }
     
     // Add the new comment to the current list of comments.
