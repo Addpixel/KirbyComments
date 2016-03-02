@@ -36,6 +36,23 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for a email notification is undefined. |
 | `setup.page.title_key` | string | `"title"` | The key/name of the title of a page. This is used to access the title of a page for email notifications. |
 
+## Email Placeholders
+
+The email body (email.template.txt) and subject (option: `email.subject`) can contain placeholders, which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
+
+```
+You’ve received a new comment on “{{ page.title }}” by {{ comment.user.name }}.
+```
+
+| Name | Description |
+|---|---|
+| `comment.user.name`| Name of the commentator. |
+| `comment.user.email` | Email address of the commentator. |
+| `comment.user.website` | Website address of the commentator. |
+| `comment.message` | Message, that the commentator has posted. |
+| `page.title` | Title of the page the comment was posted on. |
+| `page.url` | URL of the page the comment was posted on. |
+
 ## Status Codes
 
 | Domain | Code | Description |
