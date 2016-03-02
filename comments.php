@@ -233,6 +233,11 @@ class Comments implements Iterator
     return Comments::option('use.honeypot');
   }
   
+  public function requiresEmailAddress()
+  {
+    return Comments::option('require.email');
+  }
+  
   public function messageMaxlength()
   {
     return Comments::option('max_character_count');
