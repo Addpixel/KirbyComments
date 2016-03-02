@@ -28,6 +28,7 @@ class Comments implements Iterator
     'use.honeypot'           => true,
     'use.email'              => true,
     'allowed_tags'           => '<p><br><a><em><strong><code><pre>',
+    'max_character_count'    => 1000,
     'email.to'               => array('kirby-comments@leuchtschirm.com'),
     'email.subject'          => 'New Comment on {{ page.title }}',
     'email.undefined-value'  => '(not specified)',
@@ -98,7 +99,7 @@ class Comments implements Iterator
       $post_session_id = $_POST[Comments::option('form.session_id')];
     
       if ($session_id !== $post_session_id) {
-        return new CommentsStatus(305);
+        return new CommentsStatus(300);
       }
     }
     
@@ -230,6 +231,11 @@ class Comments implements Iterator
   public function isUsingHoneypot()
   {
     return Comments::option('use.honeypot');
+  }
+  
+  public function messageMaxlength()
+  {
+    return Comments::option('max_character_count');
   }
   
   public function sessionIdName()

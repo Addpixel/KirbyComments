@@ -8,9 +8,10 @@ Dev Error
   202  Could not read email template file.
   203  Could not send email.
 User Error
-  300  Name must not be empty.
-  301  E-Mail must no be empty (if activated).
-  302  E-Mail must be valide (if activated).
-  303  Website address must not contain JavaScript code.
-  304  Message must not be empty.
-  305  Session is invalide.
+  300  Session is invalide.
+  301  Name must not be empty.
+  302  E-Mail must no be empty (if activated).
+  303  E-Mail must be valide (if activated).
+  304  Website address must not contain JavaScript code.
+  305  Message must not be empty.
+  306  Message is to long.

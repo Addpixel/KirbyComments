@@ -63,18 +63,21 @@ class Comment
   {
     if (gettype($id) !== 'integer') {
       throw new Exception('The id of a comment must be of the type integer.', 100);
-    } else if ($id <= 0) {
+    } elseif ($id <= 0) {
       throw new Exception('The id of a comment must be bigger than 0.', 101);
-    } else if (trim($name) == '') {
-      throw new Exception('The name field is required.', 300);
-    } else if (Comments::option('require.email') && preg_match('/^\s*$/', $email)) {
-      throw new Exception('The e-mail address field is required.', 301);
-    } else if (Comments::option('require.email') && !v::email($email)) {
-      throw new Exception('The e-mail address is not valid.', 302);
-    } else if (preg_match('/^\s*javascript:/i', $website)) {
-      throw new Exception('The website address may not contain JavaScript code.', 303);
-    } else if (trim($message) == '') {
-      throw new Exception('The message must not be empty.', 304);
+    } elseif (trim($name) == '') {
+      throw new Exception('The name field is required.', 301);
+    } elseif (Comments::option('require.email') && preg_match('/^\s*$/', $email)) {
+      throw new Exception('The e-mail address field is required.', 302);
+    } elseif (Comments::option('require.email') && !v::email($email)) {
+      throw new Exception('The e-mail address is not valid.', 303);
+    } elseif (preg_match('/^\s*javascript:/i', $website)) {
+      throw new Exception('The website address may not contain JavaScript code.', 304);
+    } elseif (trim($message) == '') {
+      throw new Exception('The message must not be empty.', 305);
+    } elseif (strlen($message) > Comments::option('max_character_count')) {
+      var_dump($message, strlen($message));
+      throw new Exception('The message is to long. (A maximum of '.Comments::option('max_character_count').' characters is allowed.)', 306);
     }
     
     $this->content_page = $content_page;
