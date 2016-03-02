@@ -8,6 +8,7 @@ class CommentsEmail
   public $to;
   public $subject;
   public $message;
+  private $status;
   private $comment;
   
   function __construct($to, $subject, $comment)
@@ -16,6 +17,7 @@ class CommentsEmail
     $this->to = $to;
     $this->subject = $this->format($subject);
     $this->message = strip_tags($comment->message());
+    $this->status = new CommentsStatus(0);
   }
   
   public function format($x)
@@ -37,6 +39,19 @@ class CommentsEmail
   
   public function send()
   {
+    $template = file_get_contents(__DIR__.'/email.template.txt');
     
+    if ($template === false) {
+      return new CommentsStatus(202);
+    }
+    
+    $body = $this->format($template);
+    $headers = 'Content-type: text/plain; charset=utf-8';
+    
+    if (!mail($this->to, $this->subject, $body, $headers)) {
+      return new CommentsStatus(203);
+    }
+    
+    return $this->status;
   }
 }
