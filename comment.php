@@ -90,10 +90,10 @@ class Comment
     if ($this->website == '') { $this->website = null; }
   }
   
-  public static function from_post($id, $datetime)
+  public static function from_post($content_page, $id, $datetime)
   {
     return new Comment(
-      $page,
+      $content_page,
       $id,
       $_POST[Comments::option('form.name')],
       $_POST[Comments::option('form.email')],

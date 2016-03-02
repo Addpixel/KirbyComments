@@ -52,7 +52,7 @@ class Comments implements Iterator
       foreach ($comments_page->children() as $comment_page) {
         try {
           $this->comments[] = new Comment(
-                          $page,
+                          $this->page,
             intval(strval($comment_page->cid())),
                    strval($comment_page->name()),
                    strval($comment_page->email()),
@@ -116,7 +116,7 @@ class Comments implements Iterator
     $new_comment = null;
     
     try {
-      $new_comment = Comment::from_post($new_comment_id, $now);
+      $new_comment = Comment::from_post($this->page, $new_comment_id, $now);
     } catch (Exception $e) {
       return new CommentsStatus($e->getCode(), $e);
     }
