@@ -1,4 +1,4 @@
-You've received a new comment on your page “{{ page.title }}” ({{ page.url }}).
+You’ve received a new comment on your page “{{ page.title }}” ({{ page.url }}).
 
 Commentator: {{ comment.user.name }}
 Email Address: {{ comment.user.email }}
