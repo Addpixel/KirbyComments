@@ -1,7 +1,8 @@
 <?php
 
 include_once('comment.php');
-include_once('commentsstatus.php');
+include_once('comments-email.php');
+include_once('comments-status.php');
 
 /**
  * Comments
@@ -25,7 +26,13 @@ class Comments implements Iterator
     'session.key'            => 'comments',
     'require.email'          => false,
     'use.honeypot'           => true,
-    'allowed_tags'           => '<p><br><a><em><strong><code><pre>'
+    'use.email'              => true,
+    'allowed_tags'           => '<p><br><a><em><strong><code><pre>',
+    'max_character_count'    => 1000,
+    'email.to'               => array('kirby-comments@leuchtschirm.com'),
+    'email.subject'          => 'New Comment on {{ page.title }}',
+    'email.undefined-value'  => '(not specified)',
+    'setup.page.title_key'   => 'title'
   );
   private $page;
   private $status;
@@ -47,6 +54,7 @@ class Comments implements Iterator
       foreach ($comments_page->children() as $comment_page) {
         try {
           $this->comments[] = new Comment(
+                          $this->page,
             intval(strval($comment_page->cid())),
                    strval($comment_page->name()),
                    strval($comment_page->email()),
@@ -91,7 +99,7 @@ class Comments implements Iterator
       $post_session_id = $_POST[Comments::option('form.session_id')];
     
       if ($session_id !== $post_session_id) {
-        return new CommentsStatus(305);
+        return new CommentsStatus(300);
       }
     }
     
@@ -110,7 +118,7 @@ class Comments implements Iterator
     $new_comment = null;
     
     try {
-      $new_comment = Comment::from_post($new_comment_id, $now);
+      $new_comment = Comment::from_post($this->page, $new_comment_id, $now);
     } catch (Exception $e) {
       return new CommentsStatus($e->getCode(), $e);
     }
@@ -149,6 +157,20 @@ class Comments implements Iterator
         );
       } catch (Exception $e) {
         return new CommentsStatus(201, $e);
+      }
+      
+      if (Comments::option('use.email')) {
+        // Send Email Notification
+        $email = new CommentsEmail(
+          Comments::option('email.to'),
+          Comments::option('email.subject'),
+          $new_comment
+        );
+        $email_status = $email->send();
+        
+        if ($email_status->getCode() != 0) {
+          $this->status = $email_status;
+        }
       }
     }
     
@@ -209,6 +231,11 @@ class Comments implements Iterator
   public function isUsingHoneypot()
   {
     return Comments::option('use.honeypot');
+  }
+  
+  public function messageMaxlength()
+  {
+    return Comments::option('max_character_count');
   }
   
   public function sessionIdName()
