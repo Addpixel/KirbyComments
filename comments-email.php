@@ -33,7 +33,13 @@ class CommentsEmail
     
     return preg_replace_callback('/\{\{\s*(\S+)\s*\}\}/', function ($matches) use ($placeholders)
     {
-      return $placeholders[$matches[1]];
+      $identifer = $matches[1];
+      
+      if (isset($placeholders[$identifer])) {
+        return $placeholders[$identifer];
+      } else {
+        return Comments::option('email.undefined-value');
+      }
     }, $x);
   }
   

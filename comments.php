@@ -30,6 +30,7 @@ class Comments implements Iterator
     'allowed_tags'           => '<p><br><a><em><strong><code><pre>',
     'email.to'               => array('kirby-comments@leuchtschirm.com'),
     'email.subject'          => 'New Comment by {{ comment.user.name }}',
+    'email.undefined-value'  => '(not specified)',
     'setup.page.title_key'   => 'title'
   );
   private $page;
