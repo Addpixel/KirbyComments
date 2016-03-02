@@ -105,7 +105,7 @@ class Comments implements Iterator
     
     // Generate new Session ID
     
-    $new_session_id = md5(c::get('license').uniqid('comments_session_id'));
+    $new_session_id = md5(uniqid('comments_session_id').c::get('license'));
     $_SESSION[Comments::option('session.key')] = $new_session_id;
     
     // Session is Valid
