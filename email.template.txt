@@ -1,7 +1,8 @@
-Hello!
+You've received a new comment on your page “{{ page.title }}” ({{ page.url }}).
 
-You've received a new comment by {{ comment.user.name }} on your page {{ page.title }} ({{ page.url }}).
+Commentator: {{ comment.user.name }}
+Email Address: {{ comment.user.email }}
+Website: {{ comment.user.website }}
 
----
+Message:
 {{ comment.message }}
----
