@@ -33,7 +33,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `max_character_count` | integer | `1000` | Maximum number of characters in the message. |
 | `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. |
 | `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of a email notification. |
-| `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for a email notiofication is undefined. |
+| `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for a email notification is undefined. |
 | `setup.page.title_key` | string | `"title"` | The key/name of the title of a page. This is used to access the title of a page for email notifications. |
 
 ## Status Codes
