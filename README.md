@@ -3,7 +3,7 @@
 ## Status Codes
 
 | Domain | Code | Description |
-|--|--|--|
+|---|---|---|
 | – | 0 | Success |
 | System | 100 | ID must be of type `"int"`. |
 | System | 101 | ID must be greater than 0. |
