@@ -54,8 +54,10 @@ class CommentsEmail
     $body = $this->format($template);
     $headers = 'Content-type: text/plain; charset=utf-8';
     
-    if (!mail($this->to, $this->subject, $body, $headers)) {
-      return new CommentsStatus(203);
+    foreach ($this->to as $to) {
+      if (!mail($to, $this->subject, $body, $headers)) {
+        return new CommentsStatus(203);
+      }
     }
     
     return $this->status;
