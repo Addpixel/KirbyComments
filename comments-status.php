@@ -5,14 +5,34 @@
  */
 class CommentsStatus
 {
+  /**
+   * The status code.
+   *
+   * @var integer
+   */
   private $code;
+  /**
+   * The size of a individual status-domain.
+   *
+   * @var integer
+   */
   static private $domain_size = 100;
+  /**
+   * Defines the individual status-domains.
+   *
+   * @var array
+   */
   static private $domains = array(
     'no_error'     => 0,
     'system_error' => 100,
     'dev_error'    => 200,
     'user_error'   => 300
   );
+  /**
+   * The exception the status is based on.
+   *
+   * @var Exception
+   */
   private $exception;
   
   function __construct($code, $exception = null)

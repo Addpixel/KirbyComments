@@ -9,6 +9,11 @@ include_once('comments-status.php');
  */
 class Comments implements Iterator
 {
+  /**
+   * All default values linked to their options-keys.
+   *
+   * @var array
+   */
   private static $defaults = array(
     'comments_page.title'    => 'Comments',
     'comments_page.dirname'  => 'comments',
@@ -34,10 +39,35 @@ class Comments implements Iterator
     'email.undefined-value'  => '(not specified)',
     'setup.page.title_key'   => 'title'
   );
+  /**
+   * The Kirby page the comments object is about.
+   *
+   * @var Page
+   */
   private $page;
+  /**
+   * The status of the comments.
+   *
+   * @var CommentsStatus
+   */
   private $status;
+  /**
+   * The index of the iterator.
+   *
+   * @var integer
+   */
   private $iterator_index;
+  /**
+   * An array of comments on $this->page (published and unpublished).
+   *
+   * @var array
+   */
   private $comments;
+  /**
+   * Whether the current comment preview is valid.
+   *
+   * @var string
+   */
   private $valid_preview;
   
   function __construct($page)
