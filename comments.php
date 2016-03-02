@@ -164,7 +164,11 @@ class Comments implements Iterator
           Comments::option('email.subject'),
           $new_comment
         );
-        $email->send();
+        $email_status = $email->send();
+        
+        if ($email_status->getCode() != 0) {
+          $this->status = $email_status;
+        }
       }
     }
     
