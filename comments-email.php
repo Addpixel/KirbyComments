@@ -5,10 +5,35 @@
  */
 class CommentsEmail
 {
+  /**
+   * A list of the recipients. An array of email addresses/strings.
+   *
+   * @var array
+   */
   public $to;
+  /**
+   * The subject of the email.
+   *
+   * @var string
+   */
   public $subject;
+  /**
+   * The message of the email. May contain placeholders.
+   *
+   * @var string
+   */
   public $message;
+  /**
+   * The status of the email.
+   *
+   * @var CommentsStatus
+   */
   private $status;
+  /**
+   * The comment about which this the email informs.
+   *
+   * @var Comment
+   */
   private $comment;
   
   function __construct($to, $subject, $comment)

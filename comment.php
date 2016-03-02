@@ -50,7 +50,6 @@ class Comment
    * @var bool
    */
   private $is_preview;
-  
   /**
    * The content page (the page with the comment and not the page of the 
    * comment).
