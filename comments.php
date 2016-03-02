@@ -2,7 +2,7 @@
 
 include_once('comment.php');
 include_once('comments-email.php');
-include_once('commentsstatus.php');
+include_once('comments-status.php');
 
 /**
  * Comments
