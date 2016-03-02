@@ -1,5 +1,41 @@
 # Kirby Comments
 
+## Options
+
+Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your config.php.
+
+```php
+// Example
+c::set('comments.use.email', true);
+c::set('comments.email.to', array('my-email@address.com'));
+```
+
+| Name | Type | Default | Description |
+|---|---|---|---|
+| `comments_page.title` | string | `"Comments"` | Title of a comments page. |
+| `comments_page.dirname` | string | `"comments"` | Name of the folder of a comments page. |
+| `comments_page.templat` | string | `"comments"` | Name of the template of a comments page. |
+| `comment_page.dirname` | string | `"comment"` | Name of the folder of a comment page. |
+| `comment_page.template` | string | `"comment"` | Name of the template of a comment page. |
+| `form.submit` | string | `"submit"` | POST name of the submit button. |
+| `form.preview` | string | `"preview"` | POST name of the preview button. |
+| `form.name` | string | `"name"` | POST name of the name field. |
+| `form.email` | string | `"email"` | POST name of the email address field. |
+| `form.website` | string | `"website"` | POST name of the website address field. |
+| `form.message` | string | `"message"` | POST name of the message field. |
+| `form.honeypot` | string | `"subject",` | POST name of the honeypot field. |
+| `form.session_id` | string | `"session_id"` | POST name of the session id field. |
+| `session.key` | string | `"comments"` | Name of a comments session. |
+| `require.email` | bool | `false` | Whether the email field is required. |
+| `use.honeypot` | bool | `true` | Whether the system should use a honeypot. |
+| `use.email` | bool | `false` | Whether the system should send email notifications. |
+| `allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | All HTML tags that are allowed in a comment’s message. |
+| `max_character_count` | integer | `1000` | Maximum number of characters in the message. |
+| `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. |
+| `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of a email notification. |
+| `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for a email notiofication is undefined. |
+| `setup.page.title_key` | string | `"title"` | The key/name of the title of a page. This is used to access the title of a page for email notifications. |
+
 ## Status Codes
 
 | Domain | Code | Description |
