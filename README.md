@@ -41,7 +41,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | Domain | Code | Description |
 |---|---|---|
 | – | 0 | Success |
-| System | 100 | ID must be of type `"int"`. |
+| System | 100 | ID must be of type `"integer"`. |
 | System | 101 | ID must be greater than 0. |
 | System | 102 | Could not create `Comment` from page. |
 | Developer | 200 | Could not create comments page. |
