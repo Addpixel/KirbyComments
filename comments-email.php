@@ -27,7 +27,7 @@ class CommentsEmail
       'comment.user.email' => $this->comment->email(),
       'comment.user.website' => $this->comment->website(),
       'comment.message' => strip_tags($this->comment->message()),
-      'page.name' => $this->comment->content_page->{Comments::option('setup.page.title_key')}(),
+      'page.title' => $this->comment->content_page->{Comments::option('setup.page.title_key')}(),
       'page.url' => $this->comment->content_page->url()
     );
     
