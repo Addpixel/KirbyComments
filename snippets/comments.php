@@ -51,7 +51,7 @@
     
     <?php if ($comments->isUsingHoneypot()): ?>
       <div style="display: none" hidden>
-        <input type="text" name="<?php echo $comments->honeypotName() ?>" value="">
+        <input type="text" name="<?php echo $comments->honeypotName() ?>" value="<?php echo $comments->value($comments->honeypotName()) ?>">
       </div>
     <?php endif ?>
     

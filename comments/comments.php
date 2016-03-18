@@ -34,6 +34,7 @@ class Comments implements Iterator
     'use.email'              => false,
     'allowed_tags'           => '<p><br><a><em><strong><code><pre>',
     'max_character_count'    => 1000,
+    'human-honeypot-value'   => '',
     'email.to'               => array(),
     'email.subject'          => 'New Comment on {{ page.title }}',
     'email.undefined-value'  => '(not specified)',

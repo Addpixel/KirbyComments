@@ -49,6 +49,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `use.email` | bool | `false` | Whether the system should send email notifications. |
 | `allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | All HTML tags that are allowed in a comment’s message. |
 | `max_character_count` | integer | `1000` | Maximum number of characters in the message. |
+| `human-honeypot-value` | string | `""` | Value of an empty honeypot field. |
 | `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. |
 | `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of a email notification. |
 | `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for a email notification is undefined. |
@@ -93,3 +94,4 @@ You’ve received a new comment on “{{ page.title }}” by {{ comment.user.nam
 | User | 307 | Website address is too long. |
 | User | 308 | Message field must not be empty. |
 | User | 309 | Message is too long. |
+| User | 310 | Commentator must be human. |
