@@ -1,11 +1,27 @@
 # Kirby Comments
 
+File based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell.
+
+## Installation
+
+1. Move the folder “comments” to site/plugins.
+2. Move all files inside of “snippets” to site/snippets.
+
+## Usage
+
+To use the comments snippet, include it on the page where the comments and the comments form should appear on.
+
+```php
+<div class="comments">
+  <?php snippet('comments') ?>
+</div>
+```
+
 ## Options
 
 Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your config.php.
 
 ```php
-// Example
 c::set('comments.use.email', true);
 c::set('comments.email.to', array('my-email@address.com'));
 ```
@@ -38,7 +54,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 
 ## Email Placeholders
 
-The email body (email.template.txt) and subject (option: `email.subject`) can contain placeholders, which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
+The email body (email.template.txt) and subject (option: `email.subject`) can contain placeholders which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
 
 ```
 You’ve received a new comment on “{{ page.title }}” by {{ comment.user.name }}.
