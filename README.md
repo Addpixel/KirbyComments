@@ -2,6 +2,11 @@
 
 File based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell.
 
+## Installation
+
+1. Move the folder “comments” to site/plugins.
+2. Move all files inside of “snippets” to site/snippets.
+
 ## Options
 
 Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your config.php.
