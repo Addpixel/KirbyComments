@@ -5,7 +5,7 @@
 Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your config.php.
 
 ```php
-// Example
+// Examples
 c::set('comments.use.email', true);
 c::set('comments.email.to', array('my-email@address.com'));
 ```
