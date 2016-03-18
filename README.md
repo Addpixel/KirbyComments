@@ -2,6 +2,8 @@
 
 File based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell.
 
+<img src="screenshots/form.png" srcset="screenshots/form.png 1x, screenshots/form@2x.png 2x">
+
 ## Installation
 
 1. Move the folder “comments” to site/plugins.
