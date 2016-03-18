@@ -15,11 +15,11 @@ class Comments implements Iterator
    * @var array
    */
   private static $defaults = array(
-    'comments_page.title'    => 'Comments',
-    'comments_page.dirname'  => 'comments',
-    'comments_page.template' => 'comments',
-    'comment_page.dirname'   => 'comment',
-    'comment_page.template'  => 'comment',
+    'comments-page.title'    => 'Comments',
+    'comments-page.dirname'  => 'comments',
+    'comments-page.template' => 'comments',
+    'comment-page.dirname'   => 'comment',
+    'comment-page.template'  => 'comment',
     'form.submit'            => 'submit',
     'form.preview'           => 'preview',
     'form.name'              => 'name',
@@ -33,7 +33,7 @@ class Comments implements Iterator
     'use.honeypot'           => true,
     'use.email'              => false,
     'allowed_tags'           => '<p><br><a><em><strong><code><pre>',
-    'max_character_count'    => 1000,
+    'max-character-count'    => 1000,
     'human-honeypot-value'   => '',
     'email.to'               => array(),
     'email.subject'          => 'New Comment on {{ page.title }}',
@@ -158,10 +158,10 @@ class Comments implements Iterator
       // No comments page has been created yet. Create the comments subpage.
       try {
         $comments_page = $this->page->children()->create(
-          Comments::option('comments_page.dirname'),
-          Comments::option('comments_page.template'),
+          Comments::option('comments-page.dirname'),
+          Comments::option('comments-page.template'),
           array(
-            'title' => Comments::option('comments_page.title'),
+            'title' => Comments::option('comments-page.title'),
             'date'  => $now->format('Y-m-d H:i:s')
           )
         );
@@ -175,8 +175,8 @@ class Comments implements Iterator
       // comment to be published on the website.
       try {
         $new_comment_page = $comments_page->children()->create(
-          "$new_comment_id-".Comments::option('comment_page.dirname')."-$new_comment_id",
-          Comments::option('comment_page.template'),
+          "$new_comment_id-".Comments::option('comment-page.dirname')."-$new_comment_id",
+          Comments::option('comment-page.template'),
           array(
             'cid'     => $new_comment_id,
             'date'    => $new_comment->date('Y-m-d H:i:s'),
@@ -271,7 +271,7 @@ class Comments implements Iterator
   
   public function messageMaxlength()
   {
-    return Comments::option('max_character_count');
+    return Comments::option('max-character-count');
   }
   
   public function sessionIdName()

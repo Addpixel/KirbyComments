@@ -30,11 +30,11 @@ c::set('comments.email.to', array('my-email@address.com'));
 
 | Name | Type | Default | Description |
 |---|---|---|---|
-| `comments_page.title` | string | `"Comments"` | Title of a comments page. |
-| `comments_page.dirname` | string | `"comments"` | Name of the folder of a comments page. |
-| `comments_page.templat` | string | `"comments"` | Name of the template of a comments page. |
-| `comment_page.dirname` | string | `"comment"` | Name of the folder of a comment page. |
-| `comment_page.template` | string | `"comment"` | Name of the template of a comment page. |
+| `comments-page.title` | string | `"Comments"` | Title of a comments page. |
+| `comments-page.dirname` | string | `"comments"` | Name of the folder of a comments page. |
+| `comments-page.templat` | string | `"comments"` | Name of the template of a comments page. |
+| `comment-page.dirname` | string | `"comment"` | Name of the folder of a comment page. |
+| `comment-page.template` | string | `"comment"` | Name of the template of a comment page. |
 | `form.submit` | string | `"submit"` | POST name of the submit button. |
 | `form.preview` | string | `"preview"` | POST name of the preview button. |
 | `form.name` | string | `"name"` | POST name of the name field. |
@@ -48,7 +48,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `use.honeypot` | bool | `true` | Whether the system should use a honeypot. |
 | `use.email` | bool | `false` | Whether the system should send email notifications. |
 | `allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | All HTML tags that are allowed in a comment’s message. |
-| `max_character_count` | integer | `1000` | Maximum number of characters in the message. |
+| `max-character-count` | integer | `1000` | Maximum number of characters in the message. |
 | `human-honeypot-value` | string | `""` | Value of an empty honeypot field. |
 | `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. |
 | `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of a email notification. |
