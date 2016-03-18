@@ -12,7 +12,6 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your config.php.
 
 ```php
-// Examples
 c::set('comments.use.email', true);
 c::set('comments.email.to', array('my-email@address.com'));
 ```
