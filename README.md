@@ -1,5 +1,7 @@
 # Kirby Comments
 
+File based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell.
+
 ## Options
 
 Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your config.php.
