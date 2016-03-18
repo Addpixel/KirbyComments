@@ -49,6 +49,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `use.email` | bool | `false` | Whether the system should send email notifications. |
 | `allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | All HTML tags that are allowed in a comment’s message. |
 | `max-character-count` | integer | `1000` | Maximum number of characters in the message. |
+| `max-field-length` | integer | `64` | Maximum number of characters in the name/email/website field. |
 | `human-honeypot-value` | string | `""` | Value of an empty honeypot field. |
 | `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. |
 | `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of a email notification. |

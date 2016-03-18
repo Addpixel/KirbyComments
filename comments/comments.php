@@ -34,6 +34,7 @@ class Comments implements Iterator
     'use.email'              => false,
     'allowed_tags'           => '<p><br><a><em><strong><code><pre>',
     'max-character-count'    => 1000,
+    'max-field-length'       => 64,
     'human-honeypot-value'   => '',
     'email.to'               => array(),
     'email.subject'          => 'New Comment on {{ page.title }}',
@@ -272,6 +273,11 @@ class Comments implements Iterator
   public function messageMaxlength()
   {
     return Comments::option('max-character-count');
+  }
+  
+  public function fieldMaxlength()
+  {
+    return Comments::option('max-field-length');
   }
   
   public function sessionIdName()
