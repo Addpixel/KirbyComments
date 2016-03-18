@@ -41,13 +41,13 @@
   
   <form action="#comment-<?php echo $comments->nextCommentId() ?>" method="post" accept-charset="utf-8">
     <label for="name">Name<abbr title="required">*</abbr></label>
-    <input type="text" name="name" value="<?php echo $comments->value('name') ?>" id="name" required>
+    <input type="text" name="name" value="<?php echo $comments->value('name') ?>" id="name" maxlength="<?php echo $comments->fieldMaxlength() ?>" required>
     
     <label for="email">Email Address<?php if ($comments->requiresEmailAddress()): ?><abbr title="required">*</abbr><?php endif ?></label>
-    <input type="email" name="email" value="<?php echo $comments->value('email') ?>" id="email" <?php e($comments->requiresEmailAddress(), 'required') ?>>
+    <input type="email" name="email" value="<?php echo $comments->value('email') ?>" id="email" maxlength="<?php echo $comments->fieldMaxlength() ?>" <?php e($comments->requiresEmailAddress(), 'required') ?>>
     
     <label for="website">Website</label>
-    <input type="url" name="website" value="<?php echo $comments->value('website') ?>" id="website">
+    <input type="url" name="website" value="<?php echo $comments->value('website') ?>" id="website" maxlength="<?php echo $comments->fieldMaxlength() ?>">
     
     <?php if ($comments->isUsingHoneypot()): ?>
       <div style="display: none" hidden>
