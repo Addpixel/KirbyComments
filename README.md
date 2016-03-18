@@ -7,6 +7,16 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 1. Move the folder “comments” to site/plugins.
 2. Move all files inside of “snippets” to site/snippets.
 
+## Usage
+
+To use the comments snippet, include it on the page where the comments and the comments form should appear on.
+
+```php
+<div class="comments">
+  <?php snippet('comments') ?>
+</div>
+```
+
 ## Options
 
 Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your config.php.
