@@ -93,8 +93,8 @@ class Comment
     $this->datetime     = $datetime;
     $this->is_preview   = $is_preview === true;
     
-    if ($this->email   == '') { $this->email   = null; }
-    if ($this->website == '') { $this->website = null; }
+    if (trim($this->email)   == '') { $this->email   = null; }
+    if (trim($this->website) == '') { $this->website = null; }
   }
   
   public static function from_post($content_page, $id, $datetime)
