@@ -40,10 +40,10 @@
   <?php endif ?>
   
   <form action="#comment-<?php echo $comments->nextCommentId() ?>" method="post" accept-charset="utf-8">
-    <label for="name">Name</label>
+    <label for="name">Name<abbr title="required">*</abbr></label>
     <input type="text" name="name" value="<?php echo $comments->value('name') ?>" id="name" required>
     
-    <label for="email">E-Mail</label>
+    <label for="email">Email Address<?php if ($comments->requiresEmailAddress()): ?><abbr title="required">*</abbr><?php endif ?></label>
     <input type="email" name="email" value="<?php echo $comments->value('email') ?>" id="email" <?php e($comments->requiresEmailAddress(), 'required') ?>>
     
     <label for="website">Website</label>
@@ -55,7 +55,7 @@
       </div>
     <?php endif ?>
     
-    <label for="message">Message</label>
+    <label for="message">Message<abbr title="required">*</abbr></label>
     <textarea name="message" id="message" maxlength="<?php echo $comments->messageMaxlength() ?>" required><?php echo $comments->value('message') ?></textarea>
     
     <input type="hidden" name="<?php echo $comments->sessionIdName() ?>" value="<?php echo $comments->sessionId() ?>">
