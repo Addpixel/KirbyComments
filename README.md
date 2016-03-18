@@ -45,7 +45,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 
 ## Email Placeholders
 
-The email body (email.template.txt) and subject (option: `email.subject`) can contain placeholders, which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
+The email body (email.template.txt) and subject (option: `email.subject`) can contain placeholders which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
 
 ```
 You’ve received a new comment on “{{ page.title }}” by {{ comment.user.name }}.
