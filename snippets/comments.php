@@ -5,7 +5,7 @@
   <h2>Comments</h2>
   
   <?php foreach ($comments as $comment): ?>
-    <article id="comment-<?php echo $comment->id() ?>" <?php e($comment->isPreview(), ' class="preview"') ?>>
+    <article id="comment-<?php echo $comment->id() ?>" class="comment<?php e($comment->isPreview(), ' preview"') ?>">
       <h3>
         <?php e($comment->isLinkable(), "<a href='{$comment->website()}'>") ?>
         <?php echo $comment->name() ?>
