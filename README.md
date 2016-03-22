@@ -4,6 +4,14 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 
 <img src="screenshots/form.png" srcset="screenshots/form.png 1x, screenshots/form@2x.png 2x">
 
+## Features
+
+- file-based
+- email-notifications for new comments
+- preview comments before submitting them
+- use honeypot to prevent spam
+- tons of options
+
 ## Installation
 
 1. Move the folder “comments” to site/plugins.
@@ -11,7 +19,7 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 
 ## Usage
 
-To use the comments snippet, include it on the page where the comments and the comments form should appear on.
+To use the `comments` snippet, include it on the page where the comments and the comments form should appear on.
 
 ```php
 <div class="comments">
@@ -35,7 +43,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `comments-page.templat` | string | `"comments"` | Name of the template of a comments page. |
 | `comment-page.dirname` | string | `"comment"` | Name of the folder of a comment page. |
 | `comment-page.template` | string | `"comment"` | Name of the template of a comment page. |
-| `form.submit` | string | `"submit"` | POST name of the submit button. |
+| `form.submit` | string | `"submit"` | POST name of the submit-button. |
 | `form.preview` | string | `"preview"` | POST name of the preview button. |
 | `form.name` | string | `"name"` | POST name of the name field. |
 | `form.email` | string | `"email"` | POST name of the email address field. |
@@ -43,7 +51,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `form.message` | string | `"message"` | POST name of the message field. |
 | `form.honeypot` | string | `"subject",` | POST name of the honeypot field. |
 | `form.session_id` | string | `"session_id"` | POST name of the session id field. |
-| `session.key` | string | `"comments"` | Name of a comments session. |
+| `session.key` | string | `"comments"` | Name of a comments-session. |
 | `require.email` | bool | `false` | Whether the email field is required. |
 | `use.honeypot` | bool | `true` | Whether the system should use a honeypot. |
 | `use.email` | bool | `false` | Whether the system should send email notifications. |
@@ -52,7 +60,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `max-field-length` | integer | `64` | Maximum number of characters in the name/email/website field. |
 | `human-honeypot-value` | string | `""` | Value of an empty honeypot field. |
 | `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. |
-| `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of a email notification. |
+| `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of an email notification. |
 | `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for a email notification is undefined. |
 | `setup.page.title_key` | string | `"title"` | The key/name of the title of a page. This is used to access the title of a page for email notifications. |
 
@@ -88,8 +96,8 @@ You’ve received a new comment on “{{ page.title }}” by {{ comment.user.nam
 | User | 300 | Session is invalid. |
 | User | 301 | Name field must not be empty. |
 | User | 302 | Name is too long. |
-| User | 303 | Email field must not be empty. (Only when requiring email-address.) |
-| User | 304 | Email-address must be valid. (Only when requiring email-address.) |
+| User | 303 | Email field must not be empty. (Only when requiring email address.) |
+| User | 304 | Email address must be valid. (Only when requiring email address.) |
 | User | 305 | Email address is too long. |
 | User | 306 | Website field must not contain JavaScript code. |
 | User | 307 | Website address is too long. |

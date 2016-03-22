@@ -94,7 +94,12 @@ class Comment
     $this->is_preview   = $is_preview === true;
     
     if (trim($this->email)   == '') { $this->email   = null; }
-    if (trim($this->website) == '') { $this->website = null; }
+    
+    if (trim($this->website) == '') {
+      $this->website = null;
+    } else if (!preg_match('/^https?:/', $this->website)) {
+      $this->website = 'http://'.$this->website;
+    }
   }
   
   public static function from_post($content_page, $id, $datetime)
