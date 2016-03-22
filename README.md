@@ -1,8 +1,6 @@
 # Kirby Comments
 
-File based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell.
-
-<img src="screenshots/form.png" srcset="screenshots/form.png 1x, screenshots/form@2x.png 2x">
+File based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell. [Live-Demo](http://kirby-comments.addpixel.net/projects/comments-demo).
 
 ## Features
 
