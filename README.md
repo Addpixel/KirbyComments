@@ -4,6 +4,14 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 
 <img src="screenshots/form.png" srcset="screenshots/form.png 1x, screenshots/form@2x.png 2x">
 
+## Features
+
+- file-based
+- email-notifications for new comments
+- preview comments before submitting them
+- use honeypot to prevent spam
+- tons of options
+
 ## Installation
 
 1. Move the folder “comments” to site/plugins.
