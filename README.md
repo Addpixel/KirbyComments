@@ -10,6 +10,10 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 - use honeypot to prevent spam
 - tons of options
 
+## Download
+
+Download the [latest release](https://github.com/Addpixel/KirbyCommentsPlugin/releases) on GitHub.
+
 ## Installation
 
 1. Move the folder “comments” to site/plugins.
