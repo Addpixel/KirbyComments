@@ -15,7 +15,7 @@ fields:
       max: 64
   date:
     label: Date
-    type: date
+    type: datetime
     width: 1/2
     validate:
       date
