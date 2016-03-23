@@ -47,7 +47,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `form.email` | string | `"email"` | POST name of the email address field. |
 | `form.website` | string | `"website"` | POST name of the website address field. |
 | `form.message` | string | `"message"` | POST name of the message field. |
-| `form.honeypot` | string | `"subject",` | POST name of the honeypot field. |
+| `form.honeypot` | string | `"subject"` | POST name of the honeypot field. |
 | `form.session_id` | string | `"session_id"` | POST name of the session id field. |
 | `session.key` | string | `"comments"` | Name of a comments-session. |
 | `require.email` | bool | `false` | Whether the email field is required. |
@@ -59,7 +59,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `human-honeypot-value` | string | `""` | Value of an empty honeypot field. |
 | `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. |
 | `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of an email notification. |
-| `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for a email notification is undefined. |
+| `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for an email notification is undefined. |
 | `setup.page.title_key` | string | `"title"` | The key/name of the title of a page. This is used to access the title of a page for email notifications. |
 
 ## Email Placeholders
