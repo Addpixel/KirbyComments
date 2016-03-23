@@ -9,6 +9,7 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 - preview comments before submitting them
 - use honeypot to prevent spam
 - tons of options
+- blueprints
 
 ## Download
 
