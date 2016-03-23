@@ -13,7 +13,7 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 
 ## Download
 
-Download the [latest release](https://github.com/Addpixel/KirbyCommentsPlugin/releases) on GitHub.
+Download the [latest release](https://github.com/Addpixel/KirbyCommentsPlugin/releases) on GitHub. ([*Semantic Versioning*](http://semver.org/spec/v2.0.0.html) compatible.)
 
 ## Installation
 
