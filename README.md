@@ -1,8 +1,8 @@
 # Kirby Comments
 
-File based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell. [Live-Demo](http://kirby-comments.addpixel.net/projects/comments-demo).
+File based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell. [Live-Demo](https://kirby-comments.addpixel.net/demos/comments-demo).
 
-<a href="http://kirby-comments.addpixel.net/projects/comments-demo"><img src="https://kirby-comments.addpixel.net/kirbycomments.svg" alt></a>
+<a href="https://kirby-comments.addpixel.net/demos/comments-demo"><img src="https://kirby-comments.addpixel.net/kirbycomments.svg" alt></a>
 
 ## Features
 
