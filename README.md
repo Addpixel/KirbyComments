@@ -45,7 +45,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 |---|---|---|---|
 | `comments-page.title` | string | `"Comments"` | Title of a comments page. |
 | `comments-page.dirname` | string | `"comments"` | Name of the folder of a comments page. |
-| `comments-page.templat` | string | `"comments"` | Name of the template of a comments page. |
+| `comments-page.template` | string | `"comments"` | Name of the template of a comments page. |
 | `comment-page.dirname` | string | `"comment"` | Name of the folder of a comment page. |
 | `comment-page.template` | string | `"comment"` | Name of the template of a comment page. |
 | `form.submit` | string | `"submit"` | POST name of the submit-button. |
