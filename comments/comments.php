@@ -92,7 +92,7 @@ class Comments implements Iterator
                    strval($comment_page->email()),
                    strval($comment_page->website()),
                    strval($comment_page->text()),
-             new DateTime($comment_page->date('Y-m-d H:i:s'))
+            new DateTime(date('c', $comment_page->date()))
           );
         } catch (Exception $e) {
           $this->status = new CommentsStatus(102, $e);
