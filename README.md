@@ -31,13 +31,17 @@ $ kirby plugin:install Addpixel/KirbyComments
 
 ## Usage
 
-To use the `comments` snippet, include it on the page where the comments and the comments form should appear on.
+The *Kirby Comments* plugin comes with an example snippet (`comments`) which lists all comments of a page and provided a form for submitting new ones.
+
+To use the `comments` snippet, include it on the page where the comments and the comments form should appear.
 
 ```php
 <div class="comments">
   <?php snippet('comments') ?>
 </div>
 ```
+
+You are not limited to using the `comments` snipped shipped with this plugin. Feel free to learn from [the source code](https://github.com/Addpixel/KirbyComments/blob/master/snippets/comments.php) and write your own comments-form if the `comments` snippet doesn’t suit your needs.
 
 ## Options
 
