@@ -1,8 +1,8 @@
 <?php
 
-include_once('comment.php');
-include_once('comments-email.php');
-include_once('comments-status.php');
+include_once('plugin/comment.php');
+include_once('plugin/comments-email.php');
+include_once('plugin/comments-status.php');
 
 /**
  * Comments
