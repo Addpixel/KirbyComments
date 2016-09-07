@@ -6,31 +6,42 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 
 ## Features
 
-- file-based
-- email-notifications for new comments
-- preview comments before submitting them
-- use honeypot to prevent spam
-- tons of options
-- blueprints
-
-## Download
-
-Download the [latest release](https://github.com/Addpixel/KirbyCommentsPlugin/releases) on GitHub. ([*Semantic Versioning*](http://semver.org/spec/v2.0.0.html) compatible.)
+- [X] file-based
+- [X] Kirby CLI installation & update support
+- [X] email-notifications for new comments
+- [X] preview comments before submitting them
+- [X] use honeypot to prevent spam
+- [X] tons of options
+- [X] blueprints
 
 ## Installation
 
-1. Move the folder “comments” to site/plugins.
-2. Move all files inside of “snippets” to site/snippets.
+The recommended installation process is using the [Kirby CLI](https://github.com/getkirby/cli).
+
+```sh
+$ kirby plugin:install Addpixel/KirbyComments
+```
+
+### Manuel Installation
+
+1. Download [the latest release](https://github.com/Addpixel/KirbyCommentsPlugin/releases) as a zip-file.
+2. Decompress the zip-file and rename the folder to “comments”.
+3. Move the folder “comments” into site/plugins.
+4. Move all files inside of “comments/snippets” to site/snippets.
 
 ## Usage
 
-To use the `comments` snippet, include it on the page where the comments and the comments form should appear on.
+The *Kirby Comments* plugin comes with an example snippet (`comments`) which lists all comments of a page and provided a form for submitting new ones.
+
+To use the `comments` snippet, include it on the page where the comments and the comments form should appear.
 
 ```php
 <div class="comments">
   <?php snippet('comments') ?>
 </div>
 ```
+
+You are not limited to using the `comments` snipped shipped with this plugin. Feel free to learn from [the source code](https://github.com/Addpixel/KirbyComments/blob/master/snippets/comments.php) and write your own comments-form if the `comments` snippet doesn’t suit your needs.
 
 ## Options
 
