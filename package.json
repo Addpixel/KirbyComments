@@ -1,5 +1,5 @@
 {
-  "name": "Kirby Comments",
+  "name": "comments",
   "description": "File based comments stored as subpages for the Kirby CMS.",
   "author": "Florian Pircher <public@leuchtschirm.com>",
   "license": "MIT",
