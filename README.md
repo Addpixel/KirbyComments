@@ -14,14 +14,20 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 - [X] tons of options
 - [X] blueprints
 
-## Download
-
-Download the [latest release](https://github.com/Addpixel/KirbyCommentsPlugin/releases) on GitHub. ([*Semantic Versioning*](http://semver.org/spec/v2.0.0.html) compatible.)
-
 ## Installation
 
-1. Move the folder “comments” to site/plugins.
-2. Move all files inside of “snippets” to site/snippets.
+The recommended installation process is using the [Kirby CLI](https://github.com/getkirby/cli).
+
+```sh
+$ kirby plugin:install Addpixel/KirbyComments
+```
+
+### Manuel Installation
+
+1. Download [the latest release](https://github.com/Addpixel/KirbyCommentsPlugin/releases) as a zip-file.
+2. Decompress the zip-file and rename the folder to “comments”.
+3. Move the folder “comments” into site/plugins.
+4. Move all files inside of “comments/snippets” to site/snippets.
 
 ## Usage
 
