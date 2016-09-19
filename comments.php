@@ -81,7 +81,7 @@ class Comments implements Iterator
     $this->comments = array();
     $this->valid_preview = false;
     
-    $comments_page = $this->page->find('comments');
+    $comments_page = $this->page->find(Comments::option('comments-page.dirname'));
     
     if ($comments_page != null) {
       foreach ($comments_page->children() as $comment_page) {
@@ -145,7 +145,7 @@ class Comments implements Iterator
     
     if (!$is_send) { return $this->status; }
     
-    $comments_page = $this->page->find('comments');
+    $comments_page = $this->page->find(Comments::option('comments-page.dirname'));
     $now = new DateTime();
     $new_comment_id = count($this->comments) + 1;
     $new_comment = null;
