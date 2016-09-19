@@ -20,7 +20,7 @@ class Comments implements Iterator
     'comments-page.template' => 'comments',
     'comment-page.dirname'   => 'comment',
     'comment-page.template'  => 'comment',
-    'comments.snippet'       => 'comments',
+    'comments-snippet'       => 'comments',
     'form.submit'            => 'submit',
     'form.preview'           => 'preview',
     'form.name'              => 'name',
@@ -341,4 +341,4 @@ class Comments implements Iterator
  */
 $kirby->set('blueprint', Comments::option('comment-page.template'),  __DIR__ . '/blueprints/comment.php');
 $kirby->set('blueprint', Comments::option('comments-page.template'), __DIR__ . '/blueprints/comments.php');
-$kirby->set('snippet',   Comments::option('comments.snippet'), __DIR__ . '/snippets/comments.php');
+$kirby->set('snippet',   Comments::option('comments-snippet'), __DIR__ . '/snippets/comments.php');
