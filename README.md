@@ -59,6 +59,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `comments-page.template` | string | `"comments"` | Name of the template of a comments page. | |
 | `comment-page.dirname` | string | `"comment"` | Name of the folder of a comment page. | |
 | `comment-page.template` | string | `"comment"` | Name of the template of a comment page. | |
+| `comments.snippet` | string | `"comments"` | Name of the default comments snippet. | ✓ |
 | `form.submit` | string | `"submit"` | POST name of the submit-button. | ✓ |
 | `form.preview` | string | `"preview"` | POST name of the preview button. | ✓ |
 | `form.name` | string | `"name"` | POST name of the name field. | ✓ |
