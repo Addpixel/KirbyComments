@@ -5,13 +5,6 @@ include_once('plugin/comments-email.php');
 include_once('plugin/comments-status.php');
 
 /**
- * The Kirby extension registry
- */
-$kirby->set('blueprint', 'comment',  __DIR__ . '/blueprints/comment.php');
-$kirby->set('blueprint', 'comments', __DIR__ . '/blueprints/comments.php');
-$kirby->set('snippet',   'comments', __DIR__ . '/snippets/comments.php');
-
-/**
  * Comments
  */
 class Comments implements Iterator
@@ -27,6 +20,7 @@ class Comments implements Iterator
     'comments-page.template' => 'comments',
     'comment-page.dirname'   => 'comment',
     'comment-page.template'  => 'comment',
+    'comments-snippet'       => 'comments',
     'form.submit'            => 'submit',
     'form.preview'           => 'preview',
     'form.name'              => 'name',
@@ -87,7 +81,7 @@ class Comments implements Iterator
     $this->comments = array();
     $this->valid_preview = false;
     
-    $comments_page = $this->page->find('comments');
+    $comments_page = $this->page->find(Comments::option('comments-page.dirname'));
     
     if ($comments_page != null) {
       foreach ($comments_page->children() as $comment_page) {
@@ -151,7 +145,7 @@ class Comments implements Iterator
     
     if (!$is_send) { return $this->status; }
     
-    $comments_page = $this->page->find('comments');
+    $comments_page = $this->page->find(Comments::option('comments-page.dirname'));
     $now = new DateTime();
     $new_comment_id = count($this->comments) + 1;
     $new_comment = null;
@@ -341,3 +335,10 @@ class Comments implements Iterator
     return isset($this->comments[$this->iterator_index]);
   }
 }
+
+/**
+ * The Kirby extension registry
+ */
+$kirby->set('blueprint', Comments::option('comment-page.template'),  __DIR__ . '/blueprints/comment.php');
+$kirby->set('blueprint', Comments::option('comments-page.template'), __DIR__ . '/blueprints/comments.php');
+$kirby->set('snippet',   Comments::option('comments-snippet'), __DIR__ . '/snippets/comments.php');
