@@ -71,11 +71,11 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `session.key` | string | `"comments"` | Name of a comments-session. | ✓ |
 | `require.email` | bool | `false` | Whether the email field is required. | ✓ |
 | `use.honeypot` | bool | `true` | Whether the system should use a honeypot. | ✓ |
-| `use.email` | bool | `false` | Whether the system should send email notifications. | ✓ |
 | `allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | All HTML tags that are allowed in a comment’s message. | ✓ |
 | `max-character-count` | integer | `1000` | Maximum number of characters in the message. | ✓ |
 | `max-field-length` | integer | `64` | Maximum number of characters in the name/email/website field. | ✓ |
 | `human-honeypot-value` | string | `""` | Value of an empty honeypot field. | ✓ |
+| `use.email` | bool | `false` | Whether the system should send email notifications. | ✓ |
 | `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. | ✓ |
 | `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of an email notification. | ✓ |
 | `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for an email notification is undefined. | ✓ |
