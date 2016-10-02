@@ -56,7 +56,7 @@ class CommentsEmail
       'page.url' => $this->comment->content_page->url()
     );
     
-    return preg_replace_callback('/\{\{\s*(\S+)\s*\}\}/', function ($matches) use ($placeholders)
+    return preg_replace_callback('/\{\{\s*(\S+?)\s*\}\}/', function ($matches) use ($placeholders)
     {
       $identifer = $matches[1];
       
