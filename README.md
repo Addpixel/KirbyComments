@@ -83,7 +83,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 
 \* These options may be modified while comments are stored on the site. Options, which do no have a check-mark in this column, may only be modified whenever no comments are stored on the site (before receiving any comments or after having deleted all comments and comments pages).
 
-## Email Placeholders
+## Email Notifications
 
 The email body (email.template.txt) and subject (option: `email.subject`) can contain placeholders which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
 
