@@ -56,7 +56,7 @@ class CommentsEmail
       'page.url' => $this->comment->content_page->url()
     );
     
-    return preg_replace_callback('/\{\{\s*(\S+)\s*\}\}/', function ($matches) use ($placeholders)
+    return preg_replace_callback('/\{\{\s*(\S+?)\s*\}\}/', function ($matches) use ($placeholders)
     {
       $identifer = $matches[1];
       
@@ -70,7 +70,17 @@ class CommentsEmail
   
   public function send()
   {
-    $template = file_get_contents(__DIR__.'/email.template.txt');
+    $template_file = 'email.template.txt';
+    $plugin_template_file = __DIR__."/../assets/$template_file";
+    $custom_template_file = __DIR__."/../../../../assets/plugins/comments/$template_file";
+    
+    $template = "";
+    
+    if (file_exists($custom_template_file)) {
+      $template = file_get_contents($custom_template_file);
+    } else {
+      $template = file_get_contents($plugin_template_file);
+    }
     
     if ($template === false) {
       return new CommentsStatus(202);
