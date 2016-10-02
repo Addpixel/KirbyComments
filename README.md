@@ -27,7 +27,6 @@ $ kirby plugin:install Addpixel/KirbyComments
 1. Download [the latest release](https://github.com/Addpixel/KirbyCommentsPlugin/releases) as a zip-file.
 2. Decompress the zip-file and rename the folder to “comments”.
 3. Move the folder “comments” into site/plugins.
-4. Move all files inside of “comments/snippets” to site/snippets.
 
 ## Usage
 
