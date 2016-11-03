@@ -103,6 +103,8 @@ If you want to customise the contents of the email body, create a new file asset
 
 ## Status Codes
 
+The comments object (`$comments` in snippets/comments.php) reports its status when processing the current POST-data (`$status = $comments->process()`). This status contains a unique code and a simple message. The status code can be accessed with `$status->getCode()`. The following table lists all possible status codes.
+
 | Domain | Code | Description |
 |---|---|---|
 | – | 0 | Success. |
@@ -124,3 +126,8 @@ If you want to customise the contents of the email body, create a new file asset
 | User | 308 | Message field must not be empty. |
 | User | 309 | Message is too long. |
 | User | 310 | Commentator must be human. |
+
+You can either show the user the default message (`$status->getMessage()`) or provide your own status descriptions by checking its code in a `switch` statement. In case of failure, you can look at the original PHP exception by calling `$status->getException()`. Note that `getException()` does return `null`, if the status is not linked to any exception. In addition, the status object does provide two convenience methods:
+
+- `$status->isError()` is `true` iff `$status->getCode()` is >= 100.
+- `$status->isUserError()` is `true` iff `$status->getCode()` is >= 300 and < 400.
