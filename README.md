@@ -31,7 +31,7 @@ $ kirby plugin:install Addpixel/KirbyComments
 
 ## Usage
 
-The *Kirby Comments* plugin comes with an example snippet (`comments`) which lists all comments of a page and provided a form for submitting new ones.
+The Kirby Comments plugin comes with an example snippet (`comments`) which lists all comments of a page and provided a form for submitting new ones.
 
 To use the `comments` snippet, include it on the page where the comments and the comments form should appear.
 
