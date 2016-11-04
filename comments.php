@@ -132,7 +132,8 @@ class Comments implements Iterator
       $post_session_id = $_POST[Comments::option('form.session_id')];
     
       if ($session_id !== $post_session_id) {
-        return new CommentsStatus(300);
+        $this->status = new CommentsStatus(300);
+        return $this->status;
       }
     }
     
@@ -153,7 +154,8 @@ class Comments implements Iterator
     try {
       $new_comment = Comment::from_post($this->page, $new_comment_id, $now);
     } catch (Exception $e) {
-      return new CommentsStatus($e->getCode(), $e);
+      $this->status = new CommentsStatus($e->getCode(), $e);
+      return $this->status;
     }
     
     if ($comments_page == null) {
@@ -168,7 +170,8 @@ class Comments implements Iterator
           )
         );
       } catch (Exception $e) {
-        return new CommentsStatus(200, $e);
+        $this->status = new CommentsStatus(200, $e);
+        return $this->status;
       }
     }
     
@@ -189,7 +192,8 @@ class Comments implements Iterator
           )
         );
       } catch (Exception $e) {
-        return new CommentsStatus(201, $e);
+        $this->status =  new CommentsStatus(201, $e);
+        return $this->status;
       }
       
       if (Comments::option('use.email')) {
@@ -244,7 +248,7 @@ class Comments implements Iterator
   
   public function userHasSubmitted()
   {
-    return isset($_POST[Comments::option('form.submit')]);
+    return !$this->status->isError() && isset($_POST[Comments::option('form.submit')]);
   }
   
   public function value($name)
@@ -256,9 +260,44 @@ class Comments implements Iterator
     }
   }
   
+  public function submitName()
+  {
+    return Comments::option('form.submit');
+  }
+  
+  public function previewName()
+  {
+    return Comments::option('form.preview');
+  }
+  
+  public function nameName()
+  {
+    return Comments::option('form.name');
+  }
+  
+  public function emailName()
+  {
+    return Comments::option('form.email');
+  }
+  
+  public function websiteName()
+  {
+    return Comments::option('form.website');
+  }
+  
+  public function messageName()
+  {
+    return Comments::option('form.message');
+  }
+  
   public function honeypotName()
   {
     return Comments::option('form.honeypot');
+  }
+  
+  public function sessionIdName()
+  {
+    return Comments::option('form.session_id');
   }
   
   public function isUsingHoneypot()
@@ -281,29 +320,14 @@ class Comments implements Iterator
     return Comments::option('max-field-length');
   }
   
-  public function sessionIdName()
-  {
-    return Comments::option('form.session_id');
-  }
-  
   public function sessionId()
   {
     return $_SESSION[Comments::option('session.key')];
-  }
-  
-  public function previewName()
-  {
-    return Comments::option('form.preview');
   }
    
   public function validPreview()
   {
     return $this->valid_preview;
-  }
-  
-  public function submitName()
-  {
-    return Comments::option('form.submit');
   }
   
   // ============
