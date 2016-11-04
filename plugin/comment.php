@@ -6,9 +6,9 @@
 class Comment
 {
   /**
-   * The per-page unique identifier of the comment. Ids start at 1 and not a 0.
+   * The per-page unique identifier of the comment. Ids start at 1, not a 0.
    *
-   * @var int
+   * @var integer
    */
   private $id;
   /**
@@ -18,7 +18,7 @@ class Comment
    */
   private $name;
   /**
-   * The e-mail address of the author of the comment. `null` if no e-mail
+   * The email address of the author of the comment. `null` if no email
    * address was provided.
    *
    * @var string
