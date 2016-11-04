@@ -260,9 +260,44 @@ class Comments implements Iterator
     }
   }
   
+  public function submitName()
+  {
+    return Comments::option('form.submit');
+  }
+  
+  public function previewName()
+  {
+    return Comments::option('form.preview');
+  }
+  
+  public function nameName()
+  {
+    return Comments::option('form.name');
+  }
+  
+  public function emailName()
+  {
+    return Comments::option('form.email');
+  }
+  
+  public function websiteName()
+  {
+    return Comments::option('form.website');
+  }
+  
+  public function messageName()
+  {
+    return Comments::option('form.message');
+  }
+  
   public function honeypotName()
   {
     return Comments::option('form.honeypot');
+  }
+  
+  public function sessionIdName()
+  {
+    return Comments::option('form.session_id');
   }
   
   public function isUsingHoneypot()
@@ -285,29 +320,14 @@ class Comments implements Iterator
     return Comments::option('max-field-length');
   }
   
-  public function sessionIdName()
-  {
-    return Comments::option('form.session_id');
-  }
-  
   public function sessionId()
   {
     return $_SESSION[Comments::option('session.key')];
-  }
-  
-  public function previewName()
-  {
-    return Comments::option('form.preview');
   }
    
   public function validPreview()
   {
     return $this->valid_preview;
-  }
-  
-  public function submitName()
-  {
-    return Comments::option('form.submit');
   }
   
   // ============
