@@ -85,6 +85,8 @@ c::set('comments.email.to', array('my-email@address.com'));
 
 ## Email Notifications
 
+To use email notifications enable the `use.email` option and specify at least one recipient using the `email.to` option.
+
 The email body (email.template.txt) and subject (option: `email.subject`) can contain placeholders which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
 
 ```
