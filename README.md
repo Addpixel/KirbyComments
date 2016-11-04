@@ -91,7 +91,7 @@ The email body (email.template.txt) and subject (option: `email.subject`) can co
 You’ve received a new comment on “{{ page.title }}” by {{ comment.user.name }}.
 ```
 
-If you want to customise the contents of the email body, create a new file assets/plugins/comments/email.template.txt (create folders as needed). This location is based on [the recommended plugin assets location](https://getkirby.com/docs/developer-guide/plugins/assets#customizing-plugin-assets).
+If you want to customize the contents of the email body, create a new file assets/plugins/comments/email.template.txt (create folders as needed). This location is based on [the recommended plugin assets location](https://getkirby.com/docs/developer-guide/plugins/assets#customizing-plugin-assets).
 
 | Name | Description |
 |---|---|
