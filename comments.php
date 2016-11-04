@@ -248,7 +248,7 @@ class Comments implements Iterator
   
   public function userHasSubmitted()
   {
-    return isset($_POST[Comments::option('form.submit')]);
+    return !$this->status->isError() && isset($_POST[Comments::option('form.submit')]);
   }
   
   public function value($name)
