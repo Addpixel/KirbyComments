@@ -11,6 +11,7 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 - [X] email-notifications for new comments
 - [X] preview comments before submitting them
 - [X] use honeypot to prevent spam
+- [X] block cross-site request forgery
 - [X] tons of options
 - [X] blueprints
 
