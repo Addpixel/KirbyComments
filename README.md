@@ -170,13 +170,13 @@ Before implementing your own form, have a look the default `comments` snippet in
 
 ## API Documentation
 
-### `$comments`
+### `$comments : Comments`
 
 ```php
 $comments = new Comments($page);
 ```
 
-#### `$comments->process()`
+#### `$comments->process() : CommentsStatus`
 
 Processes the HTTP-POST data and creates new comments or generates preview comments. These comments are added to the list of comments contained by `$comments`.
 
@@ -256,7 +256,7 @@ The current session id.
 
 Whether the current preview is valid. `false`, if no preview is performed.
 
-### `$comment`
+### `$comment : Comment`
 
 ```php
 <?php foreach ($comments as $comment): ?>
@@ -266,7 +266,7 @@ Whether the current preview is valid. `false`, if no preview is performed.
 
 #### `$comment->id() : integer`
 
-The per-page unique identifier of the comment. Ids start at 1, not a 0.
+The per-page unique identifier of the comment. Ids start at 1, not at 0.
 
 #### `$comment->name() : string`
 
@@ -288,7 +288,7 @@ The message of the comment. May contain HTML code, which is limited to the HTML-
 
 The message of the comment. May contain markdown-like formatting instructions.
 
-#### `$comment->date($format='Y-m-d') : DateTime`
+#### `$comment->date($format='Y-m-d') : string`
 
 The point in time of when the comment was posted.
 
@@ -300,7 +300,7 @@ Whether the comment is a preview. Iff `false`, the comment was loaded from the f
 
 Whether `$comment->website()` is `null`.
 
-### `$status`
+### `$status : CommentsStatus`
 
 ```php
 $status = $comments->process();
