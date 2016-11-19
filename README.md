@@ -162,7 +162,7 @@ In order to submit comments which are processable by the plugin, please respect 
 
 1. Submit via POST (`<form ... method="post">`)
 2. Submit as UTF-8 (`<form ... accept-charset="utf-8">`)
-3. Do no chose the `name` in the markup, but in the plugins options. This means that code such as `<input type="submit" name="my-preview-button">` should be replaced by `<input type="submit" name="<?= $comments->previewName() ?>">`. This way, the plugin knows what names to look for. If you want to customize the name, register the new name in your config.php, like `c::set('comments.form.preview', 'my-preview-button');`. All available options are listed in the Options table above.
+3. Do no chose the `name` in the markup, but in the plugin’s options. This means that code such as `<input type="submit" name="my-preview-button">` should be replaced by `<input type="submit" name="<?= $comments->previewName() ?>">`. This way, the plugin knows what names to look for. If you want to customize the name, register the new name in your config.php, like `c::set('comments.form.preview', 'my-preview-button');`. All available options are listed in the Options table above.
 4. Hide the submit (not preview) button until the preview is valid. (`<?php if ($comments->validPreview()): ?><input type="submit" ...><?php endif ?>`)
 5. Do not show any form when a user has successfully submitted a comment. You can check for that state by looking at `$comments->userHasSubmitted()`.
 
