@@ -31,7 +31,7 @@ $ kirby plugin:install Addpixel/KirbyComments
 
 ## Usage
 
-The Kirby Comments plugin comes with an example snippet (`comments`) which lists all comments of a page and provided a form for submitting new ones.
+The Kirby Comments plugin comes with an example snippet, `comments`, which lists all comments of a page and provides a form for submitting new ones.
 
 To use the `comments` snippet, include it on the page where the comments and the comments form should appear.
 
@@ -41,7 +41,7 @@ To use the `comments` snippet, include it on the page where the comments and the
 </div>
 ```
 
-You are not limited to using the `comments` snipped shipped with this plugin. Feel free to learn from [the source code](https://github.com/Addpixel/KirbyComments/blob/master/snippets/comments.php) and write your own comments-form if the `comments` snippet doesn’t suit your needs.
+You are not limited to using the `comments` snipped shipped with this plugin. Feel free to learn from [the source code](https://github.com/Addpixel/KirbyComments/blob/master/snippets/comments.php) and write your own comments-form if the `comments` snippet doesn’t suit your needs. Learn more about [writing custom comments markup](#custom-markup) and read the [API Documentation](#api-documentation).
 
 ## Options
 
@@ -81,13 +81,13 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for an email notification is undefined. | ✓ |
 | `setup.page.title_key` | string | `"title"` | The key/name of the title of a page. This is used to access the title of a page for email notifications. | ✓ |
 
-\* These options may be modified while comments are stored on the site. Options, which do no have a check-mark in this column, may only be modified whenever no comments are stored on the site (before receiving any comments or after having deleted all comments and comments pages).
+\* These options may be modified while comments are stored on the site. Options, which do no have a check-mark in this column, **may only be modified whenever no comments are stored on the site** (before receiving any comments or after having deleted all comments and comments pages).
 
 ## Email Notifications
 
-To use email notifications enable the `use.email` option and specify at least one recipient using the `email.to` option.
+To use email notifications enable the `use.email` option and specify **at least one recipient** using the `email.to` option.
 
-The email body (email.template.txt) and subject (option: `email.subject`) can contain placeholders which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
+The email body (email.template.txt) and subject (option: `email.subject`) **can contain placeholders** which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
 
 ```
 You’ve received a new comment on “{{ page.title }}” by {{ comment.user.name }}.
@@ -110,7 +110,7 @@ The Kirby Comments plugin ships with a simple `comments` snippet. It is designed
 
 ### Basics
 
-All comments are handled by the comments object. Kirby offers variables like `$site` and `$page` as an interface to its functionality. In the same way, the Kirby Comments plugin allows you to access all of its functionality by creating the `$comments` object based on a Kirby page.
+All comments are handled by the comments object. Kirby offers variables like `$site` and `$page` as an interface to its functionality. In the same way, the Kirby Comments plugin allows you to **access all of its functionality** by creating the `$comments` object based on a Kirby page.
 
 ```php
 <?php $comments = new Comments($page) ?>
@@ -137,18 +137,18 @@ content/
 
 As you can see, the comment are simply stored as subpages, grouped in a hidden comments directory. The naming scheme of the comment directories was chosen to provide the following functionalities:
 
-- `#-` makes the comments visible and orders it.
-- `comment-#` gives the comment a unique address, at which it can be located. This means, that every comment has a public URL like: www.example.org/blog/hello-world/comments/comment-1. If you would like, you can create `comments` and `comment` templates to style them. By default, both the comments list (some-page/comments) and the comments individual pages (some-page/comments/comment-1) are not referenced by any link, so no users will reach those pages.
+- `#-` makes the comments **visible** and **orders it**.
+- `comment-#` gives the comment a **unique address**, at which it can be located. This means, that every comment has a public URL like: www.example.org/blog/hello-world/comments/comment-1. If you would like, you can create `comments` and `comment` templates to style them. By default, both the comments list (some-page/comments) and the comments individual pages (some-page/comments/comment-1) are not referenced by any link, so **no users will reach those pages**.
 
 ### Handling New Comments
 
-OK, so you have created a `$comments` object. The first thing you should do is to handle new comment requests. This is done by calling the `process` method.
+OK, so you have created a `$comments` object. The first thing you should do is to **handle new comment requests**. This is done by calling the `process` method.
 
 ```php
 <?php $status = $comments->process() ?>
 ```
 
-This will do a lot for you. It checks, whether any new comment was submit to the page or if the user has requested a preview. For security reasons the Kirby Comments plugin will check for a valid session key. Every time the comments form is rendered by PHP, the comments plugin creates generates a new session id and stores it in a hidden input field.
+This will do a lot for you. It checks, whether a new comment was submit to the page or if the user has requested a preview. For security reasons, the Kirby Comments plugin will check for a valid session key. Every time the comments form is rendered by PHP, the comments plugin generates a new session-id and stores it in a hidden input field.
 
 ```php
 <input type="hidden"
@@ -156,7 +156,7 @@ This will do a lot for you. It checks, whether any new comment was submit to the
        value="<?= $comments->sessionId() ?>">
 ```
 
-You have to include this hidden field in you form. For every page refresh (including form submission) a new id will be generated. This ensures that no duplicated comment is submitted to the page by refreshing the page after having submitted a comment.
+You have to include this hidden field in you form. For every page refresh (including form submissions), a new session-id will be generated. This **ensures that no duplicated comment is submitted** to the page by refreshing the page after having submitted a comment and **prevents cross-site request forgery**.
 
 In order to submit comments which are processable by the plugin, please respect the following guidelines.
 
@@ -348,4 +348,4 @@ Whether the status was defined by illegal behaviour by the user. The status code
 
 #### `$status->isError() : bool`
 
-Whether the status represents an error. The status code is >= 100.
+Whether the status represents an error. The status code is `>= 100`.
