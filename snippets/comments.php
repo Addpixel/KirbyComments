@@ -7,7 +7,7 @@
   <?php foreach ($comments as $comment): ?>
     <article id="comment-<?= $comment->id() ?>" class="comment<?php e($comment->isPreview(), ' preview"') ?>">
       <h3>
-        <?php e($comment->isLinkable(), "<a href='{$comment->website()}'>") ?>
+        <?php e($comment->isLinkable(), "<a rel='nofollow noopener' href='{$comment->website()}'>") ?>
         <?= $comment->name() ?>
         <?php e($comment->isLinkable(), "</a>") ?>
       </h3>
