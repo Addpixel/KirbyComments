@@ -135,7 +135,7 @@ content/
             └─ comment.txt
 ``` 
 
-As you can see, the comment are simply stored as subpages, grouped in a hidden comments directory. The naming scheme of the comment directories was chosen to provide the following functionalities:
+As you can see, the comments are simply stored as subpages, grouped in a hidden comments directory. The naming scheme of the comment directories was chosen to provide the following functionalities:
 
 - `#-` makes the comments **visible** and **orders it**.
 - `comment-#` gives the comment a **unique address**, at which it can be located. This means, that every comment has a public URL like: www.example.org/blog/hello-world/comments/comment-1. If you would like, you can create `comments` and `comment` templates to style them. By default, both the comments list (some-page/comments) and the comments individual pages (some-page/comments/comment-1) are not referenced by any link, so **no users will reach those pages**.
