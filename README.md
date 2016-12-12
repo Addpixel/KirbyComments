@@ -149,7 +149,7 @@ OK, so you have created a `$comments` object. The first thing you should do is t
 <?php $status = $comments->process() ?>
 ```
 
-This will do a lot for you. It checks, whether a new comment was submit to the page or if the user has requested a preview. For security reasons, the Kirby Comments plugin will check for a valid session key. Every time the comments form is rendered by PHP, the comments plugin generates a new session-id and stores it in a hidden input field.
+This will do a lot for you. It checks, whether a new comment was submitted to the page or if the user has requested a preview. For security reasons, the Kirby Comments plugin will check for a valid session key. Every time the comments form is rendered by PHP, the comments plugin generates a new session-id and stores it in a hidden input field.
 
 ```php
 <input type="hidden"
