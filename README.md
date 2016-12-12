@@ -72,6 +72,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `require.email` | bool | `false` | Whether the email field is required. | ✓ |
 | `use.honeypot` | bool | `true` | Whether the system should use a honeypot. | ✓ |
 | `allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | All HTML tags that are allowed in a comment’s message. | ✓ |
+| `smartypants` | bool | `true` | Whether to apply [SmartyPants](https://daringfireball.net/projects/smartypants/) to comment messages. Requires [global smartypants option](https://getkirby.com/docs/cheatsheet/options/smartypants) to be `true`. | ✓ |
 | `max-character-count` | integer | `1000` | Maximum number of characters in the message. | ✓ |
 | `max-field-length` | integer | `64` | Maximum number of characters in the name/email/website field. | ✓ |
 | `human-honeypot-value` | string | `""` | Value of an empty honeypot field. | ✓ |

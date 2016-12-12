@@ -145,7 +145,13 @@ class Comment
   
   public function message()
   {
-    return strip_tags(markdown($this->message), Comments::option('allowed_tags'));
+    $message = markdown($this->message);
+    
+    if (Comments::option('smartypants')) {
+      $message = smartypants($message);
+    }
+    
+    return strip_tags($message, Comments::option('allowed_tags'));
   }
   
   public function rawMessage()
