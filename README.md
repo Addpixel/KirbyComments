@@ -2,7 +2,7 @@
 
 File based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell. [Live-Demo](https://kirby-comments.addpixel.net/demos/comments).
 
-<a href="https://kirby-comments.addpixel.net/demos/comments"><img src="https://kirby-comments.addpixel.net/kirbycomments.svg" alt></a>
+[![](https://kirby-comments.addpixel.net/kirbycomments.svg)](https://kirby-comments.addpixel.net/demos/comments)
 
 ## Features
 
@@ -31,7 +31,7 @@ $ kirby plugin:install Addpixel/KirbyComments
 
 ## Usage
 
-The Kirby Comments plugin comes with an example snippet (`comments`) which lists all comments of a page and provided a form for submitting new ones.
+The Kirby Comments plugin comes with an example snippet, `comments`, which lists all comments of a page and provides a form for submitting new ones.
 
 To use the `comments` snippet, include it on the page where the comments and the comments form should appear.
 
@@ -41,7 +41,7 @@ To use the `comments` snippet, include it on the page where the comments and the
 </div>
 ```
 
-You are not limited to using the `comments` snipped shipped with this plugin. Feel free to learn from [the source code](https://github.com/Addpixel/KirbyComments/blob/master/snippets/comments.php) and write your own comments-form if the `comments` snippet doesn’t suit your needs.
+You are not limited to using the `comments` snipped shipped with this plugin. Feel free to learn from [the source code](https://github.com/Addpixel/KirbyComments/blob/master/snippets/comments.php) and write your own comments-form if the `comments` snippet doesn’t suit your needs. Learn more about [writing custom comments markup](#custom-markup) and read the [API Documentation](#api-documentation).
 
 ## Options
 
@@ -72,6 +72,7 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `require.email` | bool | `false` | Whether the email field is required. | ✓ |
 | `use.honeypot` | bool | `true` | Whether the system should use a honeypot. | ✓ |
 | `allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | All HTML tags that are allowed in a comment’s message. | ✓ |
+| `smartypants` | bool | `true` | Whether to apply [SmartyPants](https://daringfireball.net/projects/smartypants/) to comment messages. Requires [global smartypants option](https://getkirby.com/docs/cheatsheet/options/smartypants) to be `true`. | ✓ |
 | `max-character-count` | integer | `1000` | Maximum number of characters in the message. | ✓ |
 | `max-field-length` | integer | `64` | Maximum number of characters in the name/email/website field. | ✓ |
 | `human-honeypot-value` | string | `""` | Value of an empty honeypot field. | ✓ |
@@ -81,13 +82,13 @@ c::set('comments.email.to', array('my-email@address.com'));
 | `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for an email notification is undefined. | ✓ |
 | `setup.page.title_key` | string | `"title"` | The key/name of the title of a page. This is used to access the title of a page for email notifications. | ✓ |
 
-\* These options may be modified while comments are stored on the site. Options, which do no have a check-mark in this column, may only be modified whenever no comments are stored on the site (before receiving any comments or after having deleted all comments and comments pages).
+\* These options may be modified while comments are stored on the site. Options, which do no have a check-mark in this column, **may only be modified whenever no comments are stored on the site** (before receiving any comments or after having deleted all comments and comments pages).
 
 ## Email Notifications
 
-To use email notifications enable the `use.email` option and specify at least one recipient using the `email.to` option.
+To use email notifications enable the `use.email` option and specify **at least one recipient** using the `email.to` option.
 
-The email body (email.template.txt) and subject (option: `email.subject`) can contain placeholders which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
+The email body (email.template.txt) and subject (option: `email.subject`) **can contain placeholders** which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
 
 ```
 You’ve received a new comment on “{{ page.title }}” by {{ comment.user.name }}.
@@ -110,7 +111,7 @@ The Kirby Comments plugin ships with a simple `comments` snippet. It is designed
 
 ### Basics
 
-All comments are handled by the comments object. Kirby offers variables like `$site` and `$page` as an interface to its functionality. In the same way, the Kirby Comments plugin allows you to access all of its functionality by creating the `$comments` object based on a Kirby page.
+All comments are handled by the comments object. Kirby offers variables like `$site` and `$page` as an interface to its functionality. In the same way, the Kirby Comments plugin allows you to **access all of its functionality** by creating the `$comments` object based on a Kirby page.
 
 ```php
 <?php $comments = new Comments($page) ?>
@@ -135,20 +136,20 @@ content/
             └─ comment.txt
 ``` 
 
-As you can see, the comment are simply stored as subpages, grouped in a hidden comments directory. The naming scheme of the comment directories was chosen to provide the following functionalities:
+As you can see, the comments are simply stored as subpages, grouped in a hidden comments directory. The naming scheme of the comment directories was chosen to provide the following functionalities:
 
-- `#-` makes the comments visible and orders it.
-- `comment-#` gives the comment a unique address, at which it can be located. This means, that every comment has a public URL like: www.example.org/blog/hello-world/comments/comment-1. If you would like, you can create `comments` and `comment` templates to style them. By default, both the comments list (some-page/comments) and the comments individual pages (some-page/comments/comment-1) are not referenced by any link, so no users will reach those pages.
+- `#-` makes the comments **visible** and **orders it**.
+- `comment-#` gives the comment a **unique address**, at which it can be located. This means, that every comment has a public URL like: www.example.org/blog/hello-world/comments/comment-1. If you would like, you can create `comments` and `comment` templates to style them. By default, both the comments list (some-page/comments) and the comments individual pages (some-page/comments/comment-1) are not referenced by any link, so **no users will reach those pages**.
 
 ### Handling New Comments
 
-OK, so you have created a `$comments` object. The first thing you should do is to handle new comment requests. This is done by calling the `process` method.
+OK, so you have created a `$comments` object. The first thing you should do is to **handle new comment requests**. This is done by calling the `process` method.
 
 ```php
 <?php $status = $comments->process() ?>
 ```
 
-This will do a lot for you. It checks, whether any new comment was submit to the page or if the user has requested a preview. For security reasons the Kirby Comments plugin will check for a valid session key. Every time the comments form is rendered by PHP, the comments plugin creates generates a new session id and stores it in a hidden input field.
+This will do a lot for you. It checks, whether a new comment was submitted to the page or if the user has requested a preview. For security reasons, the Kirby Comments plugin will check for a valid session key. Every time the comments form is rendered by PHP, the comments plugin generates a new session-id and stores it in a hidden input field.
 
 ```php
 <input type="hidden"
@@ -156,13 +157,13 @@ This will do a lot for you. It checks, whether any new comment was submit to the
        value="<?= $comments->sessionId() ?>">
 ```
 
-You have to include this hidden field in you form. For every page refresh (including form submission) a new id will be generated. This ensures that no duplicated comment is submitted to the page by refreshing the page after having submitted a comment.
+You have to include this hidden field in you form. For every page refresh (including form submissions), a new session-id will be generated. This **ensures that no duplicated comment is submitted** to the page by refreshing the page after having submitted a comment and **prevents cross-site request forgery**.
 
 In order to submit comments which are processable by the plugin, please respect the following guidelines.
 
 1. Submit via POST (`<form ... method="post">`)
 2. Submit as UTF-8 (`<form ... accept-charset="utf-8">`)
-3. Do no chose the `name` in the markup, but in the plugins options. This means that code such as `<input type="submit" name="my-preview-button">` should be replaced by `<input type="submit" name="<?= $comments->previewName() ?>">`. This way, the plugin knows what names to look for. If you want to customize the name, register the new name in your config.php, like `c::set('comments.form.preview', 'my-preview-button');`. All available options are listed in the Options table above.
+3. Do no chose the `name` in the markup, but in the plugin’s options. This means that code such as `<input type="submit" name="my-preview-button">` should be replaced by `<input type="submit" name="<?= $comments->previewName() ?>">`. This way, the plugin knows what names to look for. If you want to customize the name, register the new name in your config.php, like `c::set('comments.form.preview', 'my-preview-button');`. All available options are listed in the Options table above.
 4. Hide the submit (not preview) button until the preview is valid. (`<?php if ($comments->validPreview()): ?><input type="submit" ...><?php endif ?>`)
 5. Do not show any form when a user has successfully submitted a comment. You can check for that state by looking at `$comments->userHasSubmitted()`.
 
@@ -170,13 +171,13 @@ Before implementing your own form, have a look the default `comments` snippet in
 
 ## API Documentation
 
-### `$comments`
+### `$comments : Comments`
 
 ```php
 $comments = new Comments($page);
 ```
 
-#### `$comments->process()`
+#### `$comments->process() : CommentsStatus`
 
 Processes the HTTP-POST data and creates new comments or generates preview comments. These comments are added to the list of comments contained by `$comments`.
 
@@ -256,7 +257,7 @@ The current session id.
 
 Whether the current preview is valid. `false`, if no preview is performed.
 
-### `$comment`
+### `$comment : Comment`
 
 ```php
 <?php foreach ($comments as $comment): ?>
@@ -266,7 +267,7 @@ Whether the current preview is valid. `false`, if no preview is performed.
 
 #### `$comment->id() : integer`
 
-The per-page unique identifier of the comment. Ids start at 1, not a 0.
+The per-page unique identifier of the comment. Ids start at 1, not at 0.
 
 #### `$comment->name() : string`
 
@@ -288,7 +289,7 @@ The message of the comment. May contain HTML code, which is limited to the HTML-
 
 The message of the comment. May contain markdown-like formatting instructions.
 
-#### `$comment->date($format='Y-m-d') : DateTime`
+#### `$comment->date($format='Y-m-d') : string`
 
 The point in time of when the comment was posted.
 
@@ -300,7 +301,7 @@ Whether the comment is a preview. Iff `false`, the comment was loaded from the f
 
 Whether `$comment->website()` is `null`.
 
-### `$status`
+### `$status : CommentsStatus`
 
 ```php
 $status = $comments->process();
@@ -348,4 +349,4 @@ Whether the status was defined by illegal behaviour by the user. The status code
 
 #### `$status->isError() : bool`
 
-Whether the status represents an error. The status code is >= 100.
+Whether the status represents an error. The status code is `>= 100`.

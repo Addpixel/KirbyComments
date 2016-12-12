@@ -60,30 +60,6 @@ class Comment
   
   function __construct($content_page, $id, $name, $email, $website, $message, $datetime, $is_preview = false)
   {
-    if (gettype($id) !== 'integer') {
-      throw new Exception('The id of a comment must be of the type integer.', 100);
-    } elseif ($id <= 0) {
-      throw new Exception('The id of a comment must be bigger than 0.', 101);
-    } elseif (trim($name) == '') {
-      throw new Exception('The name field is required.', 301);
-    } elseif (strlen($name) > Comments::option('max-field-length')) {
-      throw new Exception('The name is too long.', 302);
-    } elseif (Comments::option('require.email') && preg_match('/^\s*$/', $email)) {
-      throw new Exception('The email address field is required.', 303);
-    } elseif (Comments::option('require.email') && !v::email($email)) {
-      throw new Exception('The email address is not valid.', 304);
-    } elseif (strlen($email) > Comments::option('max-field-length')) {
-      throw new Exception('The email address is too long.', 305);
-    } elseif (preg_match('/^\s*javascript:/i', $website)) {
-      throw new Exception('The website address may not contain JavaScript code.', 306);
-    } elseif (strlen($website) > Comments::option('max-field-length')) {
-      throw new Exception('The website address is too long.', 307);
-    } elseif (trim($message) == '') {
-      throw new Exception('The message must not be empty.', 308);
-    } elseif (strlen($message) > Comments::option('max-character-count')) {
-      throw new Exception('The message is to long. (A maximum of '.Comments::option('max-character-count').' characters is allowed.)', 309);
-    }
-    
     $this->content_page = $content_page;
     $this->id           = $id;
     $this->name         = htmlspecialchars(trim(strip_tags($name)));
@@ -113,16 +89,38 @@ class Comment
       }
     }
     
-    return new Comment(
-      $content_page,
-      $id,
-      $_POST[Comments::option('form.name')],
-      $_POST[Comments::option('form.email')],
-      $_POST[Comments::option('form.website')],
-      $_POST[Comments::option('form.message')],
-      $datetime,
-      isset($_POST[Comments::option('form.preview')])
-    );
+    // Check POST data
+    $name       = $_POST[Comments::option('form.name')];
+    $email      = $_POST[Comments::option('form.email')];
+    $website    = $_POST[Comments::option('form.website')];
+    $message    = $_POST[Comments::option('form.message')];
+    $is_preview = isset($_POST[Comments::option('form.preview')]);
+    
+    if (gettype($id) !== 'integer') {
+      throw new Exception('The id of a comment must be of the type integer.', 100);
+    } elseif ($id <= 0) {
+      throw new Exception('The id of a comment must be bigger than 0.', 101);
+    } elseif (trim($name) == '') {
+      throw new Exception('The name field is required.', 301);
+    } elseif (strlen($name) > Comments::option('max-field-length')) {
+      throw new Exception('The name is too long.', 302);
+    } elseif (Comments::option('require.email') && preg_match('/^\s*$/', $email)) {
+      throw new Exception('The email address field is required.', 303);
+    } elseif (Comments::option('require.email') && !v::email($email)) {
+      throw new Exception('The email address is not valid.', 304);
+    } elseif (strlen($email) > Comments::option('max-field-length')) {
+      throw new Exception('The email address is too long.', 305);
+    } elseif (preg_match('/^\s*javascript:/i', $website)) {
+      throw new Exception('The website address may not contain JavaScript code.', 306);
+    } elseif (strlen($website) > Comments::option('max-field-length')) {
+      throw new Exception('The website address is too long.', 307);
+    } elseif (trim($message) == '') {
+      throw new Exception('The message must not be empty.', 308);
+    } elseif (strlen($message) > Comments::option('max-character-count')) {
+      throw new Exception('The message is to long. (A maximum of '.Comments::option('max-character-count').' characters is allowed.)', 309);
+    }
+    
+    return new Comment($content_page, $id, $name, $email, $website, $message, $datetime, $is_preview);
   }
   
   public function id()
@@ -147,7 +145,13 @@ class Comment
   
   public function message()
   {
-    return strip_tags(markdown($this->message), Comments::option('allowed_tags'));
+    $message = markdown($this->message);
+    
+    if (Comments::option('smartypants')) {
+      $message = smartypants($message);
+    }
+    
+    return strip_tags($message, Comments::option('allowed_tags'));
   }
   
   public function rawMessage()

@@ -34,6 +34,7 @@ class Comments implements Iterator
     'use.honeypot'           => true,
     'use.email'              => false,
     'allowed_tags'           => '<p><br><a><em><strong><code><pre>',
+    'smartypants'            => true,
     'max-character-count'    => 1000,
     'max-field-length'       => 64,
     'human-honeypot-value'   => '',
