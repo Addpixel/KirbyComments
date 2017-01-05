@@ -73,7 +73,7 @@ class Comment
     
     if (trim($this->website) == '') {
       $this->website = null;
-    } else if (!preg_match('/^https?:/', $this->website)) {
+    } elseif (!preg_match('/^https?:/', $this->website)) {
       $this->website = 'http://'.$this->website;
     }
   }
