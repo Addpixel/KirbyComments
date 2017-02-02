@@ -31,7 +31,7 @@
 <?php if ($comments->userHasSubmitted()): ?>
   <p class="thank-you">Thank you for your comment!</p>
 <?php else: ?>
-  <h2>Write your comment</h2>
+  <h2 id="comments-form-headline">Write your comment</h2>
   
   <?php if ($status->isUserError()): ?>
     <p id="comment-<?= $comments->nextCommentId() ?>" class="error">
@@ -39,7 +39,7 @@
     </p>
   <?php endif ?>
   
-  <form action="#comment-<?= $comments->nextCommentId() ?>" method="post" accept-charset="utf-8">
+  <form action="#comment-<?= $comments->nextCommentId() ?>" method="post" accept-charset="utf-8" role="form" aria-labelledby="comments-form-headline">
     <label for="name">Name<abbr title="required">*</abbr></label>
     <input type="text" name="<?= $comments->nameName() ?>" value="<?= $comments->value($comments->nameName()) ?>" id="name" maxlength="<?= $comments->fieldMaxlength() ?>" required>
     
