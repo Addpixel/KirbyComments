@@ -10,34 +10,28 @@ class Comments implements Iterator
    *
    * @var array
    */
-  private static $defaults = array(
-    'comments-page.title'    => 'Comments',
-    'comments-page.dirname'  => 'comments',
-    'comments-page.template' => 'comments',
-    'comment-page.dirname'   => 'comment',
-    'comment-page.template'  => 'comment',
-    'comments-snippet'       => 'comments',
-    'form.submit'            => 'submit',
-    'form.preview'           => 'preview',
-    'form.name'              => 'name',
-    'form.email'             => 'email',
-    'form.website'           => 'website',
-    'form.message'           => 'message',
-    'form.honeypot'          => 'subject', 
-    'form.session_id'        => 'session_id',
-    'session.key'            => 'comments',
-    'require.email'          => false,
-    'use.honeypot'           => true,
-    'use.email'              => false,
-    'allowed_tags'           => '<p><br><a><em><strong><code><pre>',
-    'smartypants'            => true,
-    'max-character-count'    => 1000,
-    'max-field-length'       => 64,
-    'human-honeypot-value'   => '',
-    'email.to'               => array(),
-    'email.subject'          => 'New Comment on {{ page.title }}',
-    'email.undefined-value'  => '(not specified)',
-    'setup.page.title_key'   => 'title'
+  private static $defaults = null;
+  /**
+   * The list of keys that have to be checked for values stored under a
+   * deprecated name. `new_key_name` => `deprecated_key_name`.
+   *
+   * @var array
+   */
+  private static $deprecated_keys = array(
+    'pages.comments.title'      => 'comments-page.title',
+    'pages.comments.dirname'    => 'comments-page.dirname',
+    'pages.comment.dirname'     => 'comment-page.dirname',
+    'form.email.required'       => 'require.email',
+    'honeypot.enabled'          => 'use.honeypot',
+    'email.enabled'             => 'use.email',
+    'form.message.allowed_tags' => 'allowed_tags',
+    'form.message.smartypants'  => 'smartypants',
+    'form.message.max-length'   => 'max-character-count',
+    'form.name.max-length'      => 'max-field-length',
+    'form.email.max-length'     => 'max-field-length',
+    'form.website.max-length'   => 'max-field-length',
+    'honeypot.human-value'      => 'human-honeypot-value',
+    'setup.content-page.title'  => 'setup.page.title_key'
   );
   /**
    * The Kirby page the comments object is about.
@@ -70,6 +64,13 @@ class Comments implements Iterator
    */
   private $valid_preview;
   
+  static public function init($defaults)
+  {
+    if (Comments::$defaults != null) { return; }
+    
+    Comments::$defaults = $defaults;
+  }
+  
   function __construct($page)
   {
     $this->page = $page;
@@ -78,7 +79,8 @@ class Comments implements Iterator
     $this->comments = array();
     $this->valid_preview = false;
     
-    $comments_page = $this->page->find(Comments::option('comments-page.dirname'));
+    $comments_page_dirname = Comments::option('pages.comments.dirname', $page);
+    $comments_page = $this->page->find($comments_page_dirname);
     
     if ($comments_page != null) {
       foreach ($comments_page->children() as $comment_page) {
@@ -105,9 +107,37 @@ class Comments implements Iterator
   // = Options =
   // ===========
   
-  public static function option($name)
+  public static function option($key, $argument = null)
   {
-    return c::get("comments.$name", Comments::$defaults[$name]);
+    $value = null;
+    
+    if (array_key_exists($key, Comments::$defaults)) {
+      $value = Comments::$defaults[$key];
+    }
+    
+    if (array_key_exists($key, Comments::$deprecated_keys)) {
+      // Check, whether a deprecated key was used to set a option. If `$tmp` is
+      // not equal to `$default_value` a value was set for a deprecated key.
+      $deprecated_key = Comments::$deprecated_keys[$key];
+      $default_value = null;
+      $tmp = c::get("comments.$deprecated_key", $default_value);
+      
+      if ($tmp !== $default_value) {
+        if ($deprecated_key === 'setup.page.title_key') {
+          $value = $argument->{$tmp}();
+        } else {
+          $value = $tmp;
+        }
+      }
+    }
+    
+    $value = c::get("comments.$key", $value);
+    
+    if ($value instanceof Closure) {
+      return $value($argument);
+    } else {
+      return $value;
+    }
   }
   
   // ===================
@@ -143,7 +173,9 @@ class Comments implements Iterator
     
     if (!$is_send) { return $this->status; }
     
-    $comments_page = $this->page->find(Comments::option('comments-page.dirname'));
+    $comments_page_dirname = Comments::option('pages.comments.dirname', $this->page);
+    $comments_page = $this->page->find($comments_page_dirname);
+    
     $now = new DateTime();
     $new_comment_id = count($this->comments) + 1;
     $new_comment = null;
@@ -159,10 +191,10 @@ class Comments implements Iterator
       // No comments page has been created yet. Create the comments subpage.
       try {
         $comments_page = $this->page->children()->create(
-          Comments::option('comments-page.dirname'),
-          Comments::option('comments-page.template'),
+          Comments::option('pages.comments.dirname', $this->page),
+          'comments',
           array(
-            'title' => Comments::option('comments-page.title'),
+            'title' => Comments::option('pages.comments.title', $this->page),
             'date'  => $now->format('Y-m-d H:i:s')
           )
         );
@@ -177,8 +209,8 @@ class Comments implements Iterator
       // comment to be published on the website.
       try {
         $new_comment_page = $comments_page->children()->create(
-          "$new_comment_id-".Comments::option('comment-page.dirname')."-$new_comment_id",
-          Comments::option('comment-page.template'),
+          "$new_comment_id-".Comments::option('pages.comment.dirname', $this->page)."-$new_comment_id",
+          Comments::option('pages.comment.dirname', $this->page),
           array(
             'cid'     => $new_comment_id,
             'date'    => $new_comment->date('Y-m-d H:i:s'),
@@ -193,7 +225,7 @@ class Comments implements Iterator
         return $this->status;
       }
       
-      if (Comments::option('use.email')) {
+      if (Comments::option('email.enabled')) {
         // Send Email Notification
         $email = new CommentsEmail(
           Comments::option('email.to'),
@@ -299,22 +331,44 @@ class Comments implements Iterator
   
   public function isUsingHoneypot()
   {
-    return Comments::option('use.honeypot');
+    return Comments::option('honeypot.enabled');
   }
   
-  public function requiresEmailAddress()
+  // [deprecated], use `requireEmailAddress` instead
+  public function requiresEmailAddress() {
+    return $this->requireEmailAddress();
+  }
+  
+  public function requireEmailAddress()
   {
-    return Comments::option('require.email');
+    return Comments::option('form.email.required');
   }
   
-  public function messageMaxlength()
+  public function messageMaxLength()
   {
-    return Comments::option('max-character-count');
+    return Comments::option('form.message.max-length');
   }
   
+  // [deprecated], use `nameMaxLength`, `emailMaxLength`, `websiteMaxLength`
+  // instead
   public function fieldMaxlength()
   {
-    return Comments::option('max-field-length');
+    return $this->nameMaxLength();
+  }
+  
+  public function nameMaxLength()
+  {
+    return Comments::option('form.name.max-length');
+  }
+  
+  public function emailMaxLength()
+  {
+    return Comments::option('form.email.max-length');
+  }
+  
+  public function websiteMaxLength()
+  {
+    return Comments::option('form.website.max-length');
   }
   
   public function sessionId()
@@ -356,3 +410,36 @@ class Comments implements Iterator
     return isset($this->comments[$this->iterator_index]);
   }
 }
+
+Comments::init(array(
+  'pages.comments.title'      => function ($page) {
+    return 'Comments for “' . $page->title() . '”';
+  },
+  'pages.comments.dirname'    => function ($page) { return 'comments'; },
+  'pages.comment.dirname'     => function ($page) { return 'comment'; },
+  'form.submit'               => 'submit',
+  'form.preview'              => 'preview',
+  'form.name'                 => 'name',
+  'form.email'                => 'email',
+  'form.website'              => 'website',
+  'form.message'              => 'message',
+  'form.honeypot'             => 'subject',
+  'form.session_id'           => 'session_id',
+  'form.email.required'       => false,
+  'form.message.allowed_tags' => '<p><br><a><em><strong><code><pre>',
+  'form.message.smartypants'  => true,
+  'form.message.max-length'   => 1024,
+  'form.name.max-length'      => 64,
+  'form.email.max-length'     => 64,
+  'form.website.max-length'   => 64,
+  'honeypot.enabled'          => true,
+  'honeypot.human-value'      => '',
+  'email.enabled'             => false,
+  'email.to'                  => array(),
+  'email.subject'             => 'New Comment on {{ page.title }}',
+  'email.undefined-value'     => '(not specified)',
+  'session.key'               => 'comments',
+  'setup.content-page.title'  => function ($page) {
+    return $page->title();
+  }
+));
