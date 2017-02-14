@@ -49,8 +49,14 @@ You are not limited to using the `comments` snipped shipped with this plugin. Fe
 Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your config.php.
 
 ```php
+// Enable email notifications
 c::set('comments.use.email', true);
 c::set('comments.email.to', array('my-email@address.com'));
+
+// Customise the title of the comments page
+c::set('comments.pages.comments.title', function ($page) {
+  return 'Kommentare zu „' . $page->title() . '“';
+});
 ```
 
 | Name | Type | Default | Description | * |
