@@ -193,6 +193,10 @@ Processes the HTTP-POST data and creates new comments or generates preview comme
 
 Whether `$comments` contains any comments (preview comments included).
 
+#### `$comments->count() : integer`
+
+The number of comments managed by `$comments`. Comments loaded by calling `$comments->process()` (unpublished preview comments) are included.
+
 #### `$comments->nextCommentId() : integer`
 
 All comments have a per-page unique ID. The first comment has an ID of 1, the second an ID of 2, … This method returns the ID of the next comment. The *next* comment is the *next after all stored comments*, so previewing a comment does not change this value as the preview comment is described by the next-comment-id.

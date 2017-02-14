@@ -261,6 +261,11 @@ class Comments implements Iterator
     return count($this->comments) === 0;
   }
   
+  public function count()
+  {
+    return count($this->comments);
+  }
+  
   // ========
   // = Form =
   // ========
