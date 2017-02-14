@@ -6,7 +6,7 @@
 class Comment
 {
   /**
-   * The per-page unique identifier of the comment. Ids start at 1, not a 0.
+   * The per-page unique identifier of the comment. Ids start at 1, not at 0.
    *
    * @var integer
    */
