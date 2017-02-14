@@ -55,35 +55,34 @@ c::set('comments.email.to', array('my-email@address.com'));
 
 | Name | Type | Default | Description | * |
 |---|---|---|---|---|
-| `comments-page.title` | string | `"Comments"` | Title of a comments page. | |
-| `comments-page.dirname` | string | `"comments"` | Name of the folder of a comments page. | |
-| `comments-page.template` | string | `"comments"` | Name of the blueprint/template of a comments page. | |
-| `comment-page.dirname` | string | `"comment"` | Name of the folder of a comment page. | |
-| `comment-page.template` | string | `"comment"` | Name of the blueprint/template of a comment page. | |
-| `comments-snippet` | string | `"comments"` | Name of the default comments snippet. | ✓ |
-| `form.submit` | string | `"submit"` | POST name of the submit-button. | ✓ |
-| `form.preview` | string | `"preview"` | POST name of the preview button. | ✓ |
-| `form.name` | string | `"name"` | POST name of the name field. | ✓ |
-| `form.email` | string | `"email"` | POST name of the email address field. | ✓ |
-| `form.website` | string | `"website"` | POST name of the website address field. | ✓ |
-| `form.message` | string | `"message"` | POST name of the message field. | ✓ |
-| `form.honeypot` | string | `"subject"` | POST name of the honeypot field. | ✓ |
-| `form.session_id` | string | `"session_id"` | POST name of the session id field. | ✓ |
-| `session.key` | string | `"comments"` | Name of a comments-session. | ✓ |
-| `require.email` | bool | `false` | Whether the email field is required. | ✓ |
-| `use.honeypot` | bool | `true` | Whether the system should use a honeypot. | ✓ |
-| `allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | All HTML tags that are allowed in a comment’s message. | ✓ |
-| `smartypants` | bool | `true` | Whether to apply [SmartyPants](https://daringfireball.net/projects/smartypants/) to comment messages. Requires [global smartypants option](https://getkirby.com/docs/cheatsheet/options/smartypants) to be `true`. | ✓ |
-| `max-character-count` | integer | `1000` | Maximum number of characters in the message. | ✓ |
-| `max-field-length` | integer | `64` | Maximum number of characters in the name/email/website field. | ✓ |
-| `human-honeypot-value` | string | `""` | Value of an empty honeypot field. | ✓ |
-| `use.email` | bool | `false` | Whether the system should send email notifications. | ✓ |
-| `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. | ✓ |
-| `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of an email notification. | ✓ |
-| `email.undefined-value` | string | `"(not specified)"` | Text that is inserted whenever a value for an email notification is undefined. | ✓ |
-| `setup.page.title_key` | string | `"title"` | The key/name of the title of a page. This is used to access the title of a page for email notifications. | ✓ |
+| `pages.comments.title` | Closure | `function ($page) { return 'Comments for “' . $page->title() . '”'; }` | Takes a `Page` on which a comment was posted and returns the title for the comments page as `string`. | |
+| `pages.comments.dirname` | string | `"comments"` | Name of the folder of a comments page. | * |
+| `pages.comment.dirname` | string | `"comment"` | Name of the folder of a comment page. | * |
+| `form.submit` | string | `"submit"` | POST name of the submit button. | |
+| `form.preview` | string | `"preview"` | POST name of the preview button. | |
+| `form.name` | string | `"name"` | POST name of the name field. | |
+| `form.name.max-length` | integer | `64` | Maximum length of the value in the name field. | |
+| `form.email` | string | `"email"` | POST name of the email address field. | |
+| `form.email.required` | type | `false` | Whether the email address field is required. | |
+| `form.email.max-length` | integer | `64` | Maximum length of the value in the email address field. | |
+| `form.website` | string | `"website"` | POST name of the website field. | |
+| `form.website.max-length` | integer | `64` | Maximum length of the value in the website field. | |
+| `form.message` | string | `"message"` | POST name of the message field. | |
+| `form.message.allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | HTML tags that are allowed in a comment’s message. | |
+| `form.message.smartypants` | bool | `true` | Whether to apply [SmartyPants](https://daringfireball.net/projects/smartypants/) to comment messages. Requires the [global smartypants option](https://getkirby.com/docs/cheatsheet/options/smartypants) to be `true`. | |
+| `form.message.max-length` | integer | `1024` | Maximum length of the value in the message field. | |
+| `form.session_id` | string | `"session_id"` | POST name of the session ID field. | |
+| `form.honeypot` | string | `"subject"` | POST name of the honeypot field. | |
+| `honeypot.enabled` | bool | `true` | Whether the plugin should use a honeypot. | |
+| `honeypot.human-value` | string | `""` | Value of an empty honeypot field. | |
+| `email.enabled` | bool | `false` | Whether the plugin should send email notifications. | |
+| `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. | |
+| `email.subject` | string | `New Comment on {{ page.title }}` | Subject of an email notification. | |
+| `email.undefined-value` | string | `"(not specified)"` | Text that is inserted for values that the comment’s author did not specify. | |
+| `session.key` | string | `"comments"` | Key used to store the comments session. | |
+| `setup.content-page.title` | Closure | `function ($page) { return $page->title(); }` | Takes a `Page` and returns its title as `string`. Is used for genereting email notifications. | |
 
-\* These options may be modified while comments are stored on the site. Options, which do no have a check-mark in this column, **may only be modified whenever no comments are stored on the site** (before receiving any comments or after having deleted all comments and comments pages).
+\* Can not be changed after the first comment was published on the site.
 
 ## Email Notifications
 
