@@ -127,7 +127,7 @@ class Comments implements Iterator
     if ($is_send) {
       $session_id = $_SESSION[Comments::option('session.key')];
       $post_session_id = $_POST[Comments::option('form.session_id')];
-    
+      
       if ($session_id !== $post_session_id) {
         $this->status = new CommentsStatus(300);
         return $this->status;
@@ -321,7 +321,7 @@ class Comments implements Iterator
   {
     return $_SESSION[Comments::option('session.key')];
   }
-   
+  
   public function validPreview()
   {
     return $this->valid_preview;
