@@ -37,4 +37,4 @@ fields:
     required: true
     type: textarea
     validate:
-      max: 1000
+      max: 1024
