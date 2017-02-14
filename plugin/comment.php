@@ -97,9 +97,9 @@ class Comment
     $is_preview = isset($_POST[Comments::option('form.preview')]);
     
     if (gettype($id) !== 'integer') {
-      throw new Exception('The id of a comment must be of the type integer.', 100);
+      throw new Exception('The ID of a comment must be of the type integer.', 100);
     } elseif ($id <= 0) {
-      throw new Exception('The id of a comment must be bigger than 0.', 101);
+      throw new Exception('The ID of a comment must be bigger than 0.', 101);
     } elseif (trim($name) == '') {
       throw new Exception('The name field is required.', 301);
     } elseif (strlen($name) > Comments::option('form.name.max-length')) {
