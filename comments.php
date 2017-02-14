@@ -8,6 +8,6 @@ include_once('plugin/comments-status.php');
 /**
  * The Kirby extension registry
  */
-$kirby->set('blueprint', Comments::option('comment-page.template'),  __DIR__ . '/blueprints/comment.php');
-$kirby->set('blueprint', Comments::option('comments-page.template'), __DIR__ . '/blueprints/comments.php');
-$kirby->set('snippet',   Comments::option('comments-snippet'), __DIR__ . '/snippets/comments.php');
+$kirby->set('blueprint', 'comments', __DIR__ . '/blueprints/comments.php');
+$kirby->set('blueprint', 'comment',  __DIR__ . '/blueprints/comment.php');
+$kirby->set('snippet',   'comments', __DIR__ . '/snippets/comments.php');
