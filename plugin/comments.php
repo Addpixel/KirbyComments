@@ -415,8 +415,8 @@ Comments::init(array(
   'pages.comments.title'      => function ($page) {
     return 'Comments for “' . $page->title() . '”';
   },
-  'pages.comments.dirname'    => function ($page) { return 'comments'; },
-  'pages.comment.dirname'     => function ($page) { return 'comment'; },
+  'pages.comments.dirname'    => 'comments',
+  'pages.comment.dirname'     => 'comment',
   'form.submit'               => 'submit',
   'form.preview'              => 'preview',
   'form.name'                 => 'name',
