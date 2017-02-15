@@ -287,7 +287,7 @@ class Comments implements Iterator
   
   public function value($name)
   {
-    if (isset($_POST[Comments::option('form.preview')])) {
+    if (isset($_POST[Comments::option('form.preview')]) || isset($_POST[Comments::option('form.submit')])) {
       return strip_tags(htmlentities(trim($_POST[$name])));
     } else {
       return '';
