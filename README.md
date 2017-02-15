@@ -52,7 +52,7 @@ Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your c
 
 ```php
 // Enable email notifications
-c::set('comments.use.email', true);
+c::set('comments.email.enabled', true);
 c::set('comments.email.to', array('name@example.org'));
 
 // Customise the title of the comments page
