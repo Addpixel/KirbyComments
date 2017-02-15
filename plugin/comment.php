@@ -147,11 +147,11 @@ class Comment
   {
     $message = markdown($this->message);
     
-    if (Comments::option('smartypants')) {
+    if (Comments::option('form.message.smartypants')) {
       $message = smartypants($message);
     }
     
-    return strip_tags($message, Comments::option('allowed_tags'));
+    return strip_tags($message, Comments::option('form.message.allowed_tags'));
   }
   
   public function rawMessage()
