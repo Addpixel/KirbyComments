@@ -1,7 +1,7 @@
 {
   "name": "comments",
   "description": "File based comments stored as subpages for the Kirby CMS.",
-  "author": "Florian Pircher <public@leuchtschirm.com>",
+  "author": "Florian Pircher <florian@addpixel.net>",
   "license": "MIT",
   "version": "1.1.7",
   "type": "kirby-plugin",
