@@ -41,13 +41,13 @@
   
   <form action="#comment-<?= $comments->nextCommentId() ?>" method="post" accept-charset="utf-8" role="form" aria-labelledby="comments-form-headline">
     <label for="name">Name<abbr title="required">*</abbr></label>
-    <input type="text" name="<?= $comments->nameName() ?>" value="<?= $comments->value($comments->nameName()) ?>" id="name" maxlength="<?= $comments->fieldMaxlength() ?>" required>
+    <input type="text" name="<?= $comments->nameName() ?>" value="<?= $comments->value($comments->nameName()) ?>" id="name" maxlength="<?= $comments->nameMaxLength() ?>" required>
     
     <label for="email">Email Address<?php if ($comments->requiresEmailAddress()): ?><abbr title="required">*</abbr><?php endif ?></label>
-    <input type="email" name="<?= $comments->emailName() ?>" value="<?= $comments->value($comments->emailName()) ?>" id="email" maxlength="<?= $comments->fieldMaxlength() ?>"<?php e($comments->requiresEmailAddress(), ' required') ?>>
+    <input type="email" name="<?= $comments->emailName() ?>" value="<?= $comments->value($comments->emailName()) ?>" id="email" maxlength="<?= $comments->emailMaxLength() ?>"<?php e($comments->requiresEmailAddress(), ' required') ?>>
     
     <label for="website">Website</label>
-    <input type="url" name="<?= $comments->websiteName() ?>" value="<?= $comments->value($comments->websiteName()) ?>" id="website" maxlength="<?= $comments->fieldMaxlength() ?>">
+    <input type="url" name="<?= $comments->websiteName() ?>" value="<?= $comments->value($comments->websiteName()) ?>" id="website" maxlength="<?= $comments->websiteMaxLength() ?>">
     
     <?php if ($comments->isUsingHoneypot()): ?>
       <div style="display: none" hidden>
@@ -56,7 +56,7 @@
     <?php endif ?>
     
     <label for="message">Message<abbr title="required">*</abbr></label>
-    <textarea name="<?= $comments->messageName() ?>" id="message" maxlength="<?= $comments->messageMaxlength() ?>" required><?= $comments->value($comments->messageName()) ?></textarea>
+    <textarea name="<?= $comments->messageName() ?>" id="message" maxlength="<?= $comments->messageMaxLength() ?>" required><?= $comments->value($comments->messageName()) ?></textarea>
     
     <input type="hidden" name="<?= $comments->sessionIdName() ?>" value="<?= $comments->sessionId() ?>">
     
