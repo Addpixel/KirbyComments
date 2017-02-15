@@ -81,10 +81,10 @@ class Comment
   public static function from_post($content_page, $id, $datetime)
   {
     if (Comments::option('honeypot.enabled')) {
-      $post_value = Comments::option('form.honeypot');
+      $post_value = $_POST[Comments::option('form.honeypot')];
       $human_value = Comments::option('honeypot.human-value');
       
-      if ($_POST[$post_value] != $human_value) {
+      if ($post_value != $human_value) {
         throw new Exception('Comment must be written by a human being.', 310);
       }
     }
