@@ -26,7 +26,7 @@ $ kirby plugin:install Addpixel/KirbyComments
 
 ### Manual Installation
 
-1. Download [the latest release](https://github.com/Addpixel/KirbyCommentsPlugin/releases) as a zip-file.
+1. Download [the latest release](https://github.com/Addpixel/KirbyComments/releases) as a zip-file.
 2. Decompress the zip-file and rename the folder to *comments*.
 3. Move the folder *comments* into site/plugins.
 
@@ -55,7 +55,7 @@ Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your c
 c::set('comments.email.enabled', true);
 c::set('comments.email.to', array('name@example.org'));
 
-// Customise the title of the comments page
+// Customize the title of the comments page
 c::set('comments.pages.comments.title', function ($page) {
   return 'Kommentare zu „' . $page->title() . '“';
 });
@@ -88,7 +88,7 @@ c::set('comments.pages.comments.title', function ($page) {
 | `email.subject` | string | `New Comment on {{ page.title }}` | Subject of an email notification. | |
 | `email.undefined-value` | string | `"(not specified)"` | Text that is inserted for values that the comment’s author did not specify. | |
 | `session.key` | string | `"comments"` | Key used to store the comments session. | |
-| `setup.content-page.title` | Closure | `function ($page) { return $page->title(); }` | Takes a `Page` and returns its title as `string`. Is used for genereting email notifications. | |
+| `setup.content-page.title` | Closure | `function ($page) { return $page->title(); }` | Takes a `Page` and returns its title as `string`. Is used for generating email notifications. | |
 
 \* Can not be changed after the first comment was published on the site.
 
@@ -361,7 +361,7 @@ You can either show the user the default message (`$status->getMessage()`) or pr
 
 #### `$status->getMessage() : string`
 
-A short, english description of the status. May not be user-friendly.
+A short, English description of the status. May not be user-friendly.
 
 #### `$status->getException() : Exception`
 
