@@ -52,7 +52,7 @@ class CommentsEmail
       'comment.user.email' => $this->comment->email(),
       'comment.user.website' => $this->comment->website(),
       'comment.message' => $this->comment->rawMessage(),
-      'page.title' => $this->comment->content_page->{Comments::option('setup.page.title_key')}(),
+      'page.title' => Comments::option('setup.content-page.title', $this->comment->content_page),
       'page.url' => $this->comment->content_page->url()
     );
     
