@@ -311,7 +311,11 @@ The message of the comment. May contain Markdown instructions and/or HTML code.
 
 #### `$comment->date($format='Y-m-d') : string`
 
-The point in time of when the comment was posted.
+The point in time when the comment was posted formatted as string.
+
+#### `$comment->datetime() : DateTime`
+
+The point in time when the comment was posted.
 
 #### `$comment->isPreview() : bool`
 

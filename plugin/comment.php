@@ -164,6 +164,11 @@ class Comment
     return $this->datetime->format($format);
   }
   
+  public function datetime()
+  {
+    return $this->datetime;
+  }
+  
   public function isPreview()
   {
     return $this->is_preview === true;
