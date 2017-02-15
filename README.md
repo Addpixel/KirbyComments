@@ -349,7 +349,7 @@ The status code which describes the state of the `$comments` object.
 | User | 301 | Name field must not be empty. |
 | User | 302 | Name is too long. |
 | User | 303 | Email field must not be empty. (Only when requiring email address.) |
-| User | 304 | Email address must be valid. (Only when requiring email address.) |
+| User | 304 | Email address must be valid. (Only when requiring email address or not empty.) |
 | User | 305 | Email address is too long. |
 | User | 306 | Website field must not contain JavaScript code. |
 | User | 307 | Website address is too long. |

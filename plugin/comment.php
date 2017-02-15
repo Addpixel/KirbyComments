@@ -90,23 +90,23 @@ class Comment
     }
     
     // Check POST data
-    $name       = $_POST[Comments::option('form.name')];
-    $email      = $_POST[Comments::option('form.email')];
-    $website    = $_POST[Comments::option('form.website')];
-    $message    = $_POST[Comments::option('form.message')];
+    $name       = trim($_POST[Comments::option('form.name')]);
+    $email      = trim($_POST[Comments::option('form.email')]);
+    $website    = trim($_POST[Comments::option('form.website')]);
+    $message    = trim($_POST[Comments::option('form.message')]);
     $is_preview = isset($_POST[Comments::option('form.preview')]);
     
     if (gettype($id) !== 'integer') {
       throw new Exception('The ID of a comment must be of the type integer.', 100);
     } elseif ($id <= 0) {
       throw new Exception('The ID of a comment must be bigger than 0.', 101);
-    } elseif (trim($name) == '') {
+    } elseif ($name == '') {
       throw new Exception('The name field is required.', 301);
     } elseif (strlen($name) > Comments::option('form.name.max-length')) {
       throw new Exception('The name is too long.', 302);
-    } elseif (Comments::option('form.email.required') && preg_match('/^\s*$/', $email)) {
+    } elseif (Comments::option('form.email.required') && $email == '') {
       throw new Exception('The email address field is required.', 303);
-    } elseif (Comments::option('form.email.required') && !v::email($email)) {
+    } elseif ($email != '' && !v::email($email)) {
       throw new Exception('The email address is not valid.', 304);
     } elseif (strlen($email) > Comments::option('form.email.max-length')) {
       throw new Exception('The email address is too long.', 305);
@@ -114,7 +114,7 @@ class Comment
       throw new Exception('The website address may not contain JavaScript code.', 306);
     } elseif (strlen($website) > Comments::option('form.website.max-length')) {
       throw new Exception('The website address is too long.', 307);
-    } elseif (trim($message) == '') {
+    } elseif ($message == '') {
       throw new Exception('The message must not be empty.', 308);
     } elseif (strlen($message) > Comments::option('form.message.max-length')) {
       throw new Exception('The message is to long. (A maximum of '.Comments::option('form.message.max-length').' characters is allowed.)', 309);
