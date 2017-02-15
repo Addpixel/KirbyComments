@@ -90,10 +90,10 @@ class Comment
     }
     
     // Check POST data
-    $name       = htmlentities(trim($_POST[Comments::option('form.name')]));
-    $email      = htmlentities(trim($_POST[Comments::option('form.email')]));
-    $website    = htmlentities(trim($_POST[Comments::option('form.website')]));
-    $message    = htmlentities(trim($_POST[Comments::option('form.message')]));
+    $name       = trim($_POST[Comments::option('form.name')]);
+    $email      = trim($_POST[Comments::option('form.email')]);
+    $website    = trim($_POST[Comments::option('form.website')]);
+    $message    = trim($_POST[Comments::option('form.message')]);
     $is_preview = isset($_POST[Comments::option('form.preview')]);
     
     if (gettype($id) !== 'integer') {
@@ -130,22 +130,22 @@ class Comment
   
   public function name()
   {
-    return $this->name;
+    return htmlentities($this->name);
   }
   
   public function email()
   {
-    return $this->email;
+    return htmlentities($this->email);
   }
   
   public function website()
   {
-    return $this->website;
+    return htmlentities($this->website);
   }
   
   public function message()
   {
-    $message = markdown($this->message);
+    $message = markdown(htmlentities($this->message));
     
     if (Comments::option('form.message.smartypants')) {
       $message = smartypants($message);
