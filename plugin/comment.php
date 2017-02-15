@@ -62,9 +62,9 @@ class Comment
   {
     $this->content_page = $content_page;
     $this->id           = $id;
-    $this->name         = htmlspecialchars(trim(strip_tags($name)));
-    $this->email        = htmlspecialchars(trim(strip_tags($email)));
-    $this->website      = htmlspecialchars(trim(strip_tags($website)));
+    $this->name         = trim(strip_tags($name));
+    $this->email        = trim(strip_tags($email));
+    $this->website      = trim(strip_tags($website));
     $this->message      = trim($message);
     $this->datetime     = $datetime;
     $this->is_preview   = $is_preview === true;
@@ -90,10 +90,10 @@ class Comment
     }
     
     // Check POST data
-    $name       = trim($_POST[Comments::option('form.name')]);
-    $email      = trim($_POST[Comments::option('form.email')]);
-    $website    = trim($_POST[Comments::option('form.website')]);
-    $message    = trim($_POST[Comments::option('form.message')]);
+    $name       = htmlentities(trim($_POST[Comments::option('form.name')]));
+    $email      = htmlentities(trim($_POST[Comments::option('form.email')]));
+    $website    = htmlentities(trim($_POST[Comments::option('form.website')]));
+    $message    = htmlentities(trim($_POST[Comments::option('form.message')]));
     $is_preview = isset($_POST[Comments::option('form.preview')]);
     
     if (gettype($id) !== 'integer') {
