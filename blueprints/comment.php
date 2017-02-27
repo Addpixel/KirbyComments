@@ -11,8 +11,6 @@ fields:
     required: true
     width: 1/2
     icon: user
-    validate:
-      max: 64
   date:
     label: Date
     type: datetime
@@ -24,17 +22,12 @@ fields:
     type: email
     width: 1/2
     validate:
-      max: 64
       email
   url:
     label: Website Address
     type: url
     width: 1/2
-    validate:
-      max: 64
   text:
     label: Text
     required: true
     type: textarea
-    validate:
-      max: 1024
