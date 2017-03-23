@@ -4,7 +4,7 @@
  * This is the example comments snippet. Feel free to use this code as a
  * reference for creating your own, custom comments snippet.
  * 
- * Custom snipper markup guide:
+ * Custom snippet markup guide:
  * <https://github.com/Addpixel/KirbyComments#custom-markup>
  * 
  * API documentation:

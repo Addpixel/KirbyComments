@@ -282,7 +282,7 @@ Whether the current preview is valid. `false`, if no preview is performed.
 ```php
 <?php foreach ($comments as $comment): ?>
   ...
-<?php endforeach ?>>
+<?php endforeach ?>
 ```
 
 #### `$comment->id() : integer`
