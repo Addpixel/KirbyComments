@@ -60,7 +60,7 @@ class CommentsEmail
     {
       $identifer = $matches[1];
       
-      if (isset($placeholders[$identifer])) {
+      if ($placeholders[$identifer]) {
         return $placeholders[$identifer];
       } else {
         return Comments::option('email.undefined-value');
