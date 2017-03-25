@@ -34,9 +34,9 @@ When updating, simply delete the old *comments* folder and replace it with the n
 
 ## Usage
 
-The Kirby Comments plugin comes with an example snippet, `comments`, which lists all comments of a page and provides a form for submitting new ones.
+Kirby Comments includes three snippets: `comments-form`, `comments-list` and `comments`. `comments-form` renders an HTML form for writing comments, `comments-list` lists all comments and `comments` is a convenience snippet for rendering the list and the form.
 
-To use the `comments` snippet, include it on the page where the comments and the comments form should appear.
+A quick and easy installation could use the following code:
 
 ```php
 <div class="comments">
@@ -44,7 +44,19 @@ To use the `comments` snippet, include it on the page where the comments and the
 </div>
 ```
 
-You are not limited to using the `comments` snipped shipped with this plugin. Feel free to learn from [the source code](https://github.com/Addpixel/KirbyComments/blob/master/snippets/comments.php) and write your own comments form if the `comments` snippet doesn’t suit your needs.
+You can also place the form and list separately:
+
+```php
+<div class="comments-list">
+  <?php snippet('comments-list') ?>
+</div>
+...
+<div class="comments-form">
+  <?php snippet('comments-form') ?>
+</div>
+```
+
+You are by no means limited to the snippets shipped with Kirby Comments. If you want to create your own form or comments list, I recommend having a look at [the source code of the example snippets](https://github.com/Addpixel/KirbyComments/tree/master/snippets) and reading about [custom markup](#custom-markup) the [Kirby Comments API](#api-documentation). Custom behaviour should be configured using [Kirby Comments options](#options).
 
 ## Options
 
@@ -282,7 +294,7 @@ Whether the current preview is valid. `false`, if no preview is performed.
 ```php
 <?php foreach ($comments as $comment): ?>
   ...
-<?php endforeach ?>>
+<?php endforeach ?>
 ```
 
 #### `$comment->id() : integer`
