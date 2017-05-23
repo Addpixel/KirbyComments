@@ -77,7 +77,10 @@ c::set('comments.pages.comments.title', function ($page) {
 |---|---|---|---|---|
 | `pages.comments.title` | Closure | `function ($page) { return 'Comments for “' . $page->title() . '”'; }` | Takes a `Page` on which a comment was posted and returns the title for the comments page as `string`. | |
 | `pages.comments.dirname` | string | `"comments"` | Name of the folder of a comments page. | * |
+| `pages.comments.template` | string | `"comments"` | Name of the template/blueprint of a comments page. | * |
 | `pages.comment.dirname` | string | `"comment"` | Name of the folder of a comment page. | * |
+| `pages.comment.template` | string | `"comment"` | Name of the template/blueprint of a comment page. | * |
+| `pages.comment.visible` | bool | `true` | Whether comment pages are visible (have an index-prefix) .| * |
 | `form.submit` | string | `"submit"` | POST name of the submit button. | |
 | `form.preview` | string | `"preview"` | POST name of the preview button. | |
 | `form.name` | string | `"name"` | POST name of the name field. | |
@@ -158,7 +161,7 @@ content/
 
 As you can see, the comments are simply stored as subpages, grouped in a hidden comments directory. The naming scheme of the comment directories (1-comment-1, 2-comment-2, …) was chosen to provide the following functionalities:
 
-- `#-` makes the comments **visible** and **orders it**.
+- `#-` makes the comments **visible** and **orders it**. This can be disabled by setting the option `pages.comment.visible` to `false`.
 - `comment-#` gives the comment a **unique address**, at which it can be located. This means, that every comment has a public URL like: www.example.org/blog/hello-world/comments/comment-1. If you would like, you can create `comments` and `comment` templates to style them. By default, both the comments list (some-page/comments) and the comment pages (some-page/comments/comment-1) are not referenced by any link, so no users will be linked to those pages.
 
 ### Handling New Comments
