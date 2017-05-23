@@ -20,7 +20,9 @@ class Comments implements Iterator
   private static $deprecated_keys = array(
     'pages.comments.title'      => 'comments-page.title',
     'pages.comments.dirname'    => 'comments-page.dirname',
+    'pages.comments.template'   => 'comments-page.template',
     'pages.comment.dirname'     => 'comment-page.dirname',
+    'pages.comment.template'    => 'comment-page.template',
     'form.email.required'       => 'require.email',
     'honeypot.enabled'          => 'use.honeypot',
     'email.enabled'             => 'use.email',
@@ -79,7 +81,7 @@ class Comments implements Iterator
     $this->comments = array();
     $this->valid_preview = false;
     
-    $comments_page_dirname = Comments::option('pages.comments.dirname', $page);
+    $comments_page_dirname = Comments::option('pages.comments.dirname');
     $comments_page = $this->page->find($comments_page_dirname);
     
     if ($comments_page != null) {
@@ -175,7 +177,7 @@ class Comments implements Iterator
     
     if (!$is_send) { return $this->status; }
     
-    $comments_page_dirname = Comments::option('pages.comments.dirname', $this->page);
+    $comments_page_dirname = Comments::option('pages.comments.dirname');
     $comments_page = $this->page->find($comments_page_dirname);
     
     $now = new DateTime();
@@ -192,9 +194,11 @@ class Comments implements Iterator
     if ($comments_page == null) {
       // No comments page has been created yet. Create the comments subpage.
       try {
+        $page_dirname = Comments::option('pages.comments.dirname');
+        $page_template = Comments::option('pages.comments.template');
         $comments_page = $this->page->children()->create(
-          Comments::option('pages.comments.dirname', $this->page),
-          'comments',
+          $page_dirname,
+          $page_template,
           array(
             'title' => Comments::option('pages.comments.title', $this->page),
             'date'  => $now->format('Y-m-d H:i:s')
@@ -210,9 +214,21 @@ class Comments implements Iterator
       // The commentator is happy with the preview and has submitted the
       // comment to be published on the website.
       try {
+        $page_dirname = Comments::option('pages.comment.dirname');
+        $page_uri = $page_dirname.'-'.$new_comment_id;
+        $page_dirname = $page_uri;
+        
+        if (Comments::option('pages.comment.visible')) {
+          // add index-prefix to dirname
+          $page_index = $new_comment_id;
+          $page_dirname = $page_index.'-'.$page_dirname;
+        }
+        
+        $page_template = Comments::option('pages.comment.template');
+        
         $new_comment_page = $comments_page->children()->create(
-          "$new_comment_id-".Comments::option('pages.comment.dirname', $this->page)."-$new_comment_id",
-          Comments::option('pages.comment.dirname', $this->page),
+          $page_dirname,
+          $page_template,
           array(
             'cid'     => $new_comment_id,
             'date'    => $new_comment->date('Y-m-d H:i:s'),
@@ -423,7 +439,10 @@ Comments::init(array(
     return 'Comments for “' . $page->title() . '”';
   },
   'pages.comments.dirname'    => 'comments',
+  'pages.comments.template'   => 'comments',
   'pages.comment.dirname'     => 'comment',
+  'pages.comment.template'    => 'comment',
+  'pages.comment.visible'     => true,
   'form.submit'               => 'submit',
   'form.preview'              => 'preview',
   'form.name'                 => 'name',
