@@ -36,6 +36,14 @@ class Comments implements Iterator
     'setup.content-page.title'  => 'setup.page.title_key'
   );
   /**
+   * Instances created by calling `Comments::for_page`. The key is the URI of
+   * of the page for which the instance was created and the value a `Comments`
+   * instance. (`string => Comments`)
+   *
+   * @var array
+   */
+  private static $instances = array();
+  /**
    * The Kirby page the comments object is about.
    *
    * @var Page
@@ -71,14 +79,6 @@ class Comments implements Iterator
    * @var string
    */
   private $valid_preview;
-  /**
-   * Instances created by calling `Comments::for_page`. The key is the URI of
-   * of the page for which the instance was created and the value a `Comments`
-   * instance. (`string => Comments`)
-   *
-   * @var array
-   */
-  private static $instances = array();
   
   static public function init($defaults)
   {
