@@ -71,11 +71,33 @@ class Comments implements Iterator
    * @var string
    */
   private $valid_preview;
+  /**
+   * Instances created by calling `Comments::for_page`. The key is the URI of
+   * of the page for which the instance was created and the value a `Comments`
+   * instance. (`string => Comments`)
+   *
+   * @var array
+   */
+  private static $instances = array();
   
   static public function init($defaults)
   {
     if (Comments::$defaults != null) { return; }
     Comments::$defaults = $defaults;
+  }
+  
+  static public function for_page($page)
+  {
+    $uri = $page->uri();
+    
+    if (array_key_exists($uri, Comments::$instances)) {
+      return Comments::$instances[$uri];
+    }
+    
+    $new_instance = new Comments($page);
+    Comments::$instances[$uri] = $new_instance;
+    
+    return $new_instance;
   }
   
   function __construct($page)
