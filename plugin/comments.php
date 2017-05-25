@@ -100,6 +100,7 @@ class Comments implements Iterator
     return $new_instance;
   }
   
+  // [deprecated], use `Comments::for_page` instead
   function __construct($page)
   {
     $this->page = $page;
