@@ -1,6 +1,6 @@
 # Kirby Comments
 
-File based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell. [Live-Demo](https://kirby-comments.addpixel.net/demos/comments).
+File-based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell. [Live-Demo](https://kirby-comments.addpixel.net/demos/comments).
 
 [![](https://kirby-comments.addpixel.net/kirbycomments.svg)](https://kirby-comments.addpixel.net/demos/comments)
 
@@ -8,7 +8,7 @@ File based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 
 - [X] file-based
 - [X] Kirby CLI installation & update support
-- [X] email-notifications for new comments
+- [X] email notifications for new comments
 - [X] preview comments before submitting them
 - [X] use a honeypot to prevent spam
 - [X] block cross-site request forgery
@@ -27,18 +27,22 @@ $ kirby plugin:install Addpixel/KirbyComments
 ### Manual Installation
 
 1. Download [the latest release](https://github.com/Addpixel/KirbyComments/releases) as a zip-file.
-2. Decompress the zip-file and rename the folder to *comments*.
+2. Decompress the zip file and rename the folder to *comments*.
 3. Move the folder *comments* into site/plugins.
 
 When updating, simply delete the old *comments* folder and replace it with the new one.
 
 ## Usage
 
-Kirby Comments includes three snippets: `comments-form`, `comments-list` and `comments`. `comments-form` renders an HTML form for writing comments, `comments-list` lists all comments and `comments` is a convenience snippet for rendering the list and the form.
+Kirby Comments includes three snippets: `comments-form`, `comments-list` and `comments`.
+
+- `comments-form` renders an HTML form for writing comments,
+- `comments-list` lists all comments and
+- `comments` is a convenience snippet for rendering both the list and the form.
 
 A quick and easy installation could use the following code:
 
-```php
+```html
 <div class="comments">
   <?php snippet('comments') ?>
 </div>
@@ -46,7 +50,7 @@ A quick and easy installation could use the following code:
 
 You can also place the form and list separately:
 
-```php
+```html
 <div class="comments-list">
   <?php snippet('comments-list') ?>
 </div>
@@ -56,11 +60,16 @@ You can also place the form and list separately:
 </div>
 ```
 
-You are by no means limited to the snippets shipped with Kirby Comments. If you want to create your own form or comments list, I recommend having a look at [the source code of the example snippets](https://github.com/Addpixel/KirbyComments/tree/master/snippets) and reading about [custom markup](#custom-markup) the [Kirby Comments API](#api-documentation). Custom behaviour should be configured using [Kirby Comments options](#options).
+You are by no means limited to the snippets shipped with Kirby Comments. For creating your own form or comments list I recommend having a look at the following sections:
+
+- [Kirby Comments options](#options)
+- [Custom markup](#custom-markup)
+- [Kirby Comments API](#api-documentation)
+- [source code of the snippets included in Kirby Comments](https://github.com/Addpixel/KirbyComments/tree/master/snippets)
 
 ## Options
 
-Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your config.php.
+Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your site/config/config.php.
 
 ```php
 // Enable email notifications
@@ -75,12 +84,12 @@ c::set('comments.pages.comments.title', function ($page) {
 
 | Name | Type | Default | Description | * |
 |---|---|---|---|---|
-| `pages.comments.title` | Closure | `function ($page) { return 'Comments for “' . $page->title() . '”'; }` | Takes a `Page` on which a comment was posted and returns the title for the comments page as `string`. | |
+| `pages.comments.title` | Closure | `function ($page) { return 'Comments for “' . $page->title() . '”'; }` | Takes a `Page` on which a comment was posted and returns the title for the comments page as a `string`. | |
 | `pages.comments.dirname` | string | `"comments"` | Name of the folder of a comments page. | * |
-| `pages.comments.template` | string | `"comments"` | Name of the template/blueprint of a comments page. | * |
+| `pages.comments.template` | string | `"comments"` | Name of the template and blueprint of a comments page. | * |
 | `pages.comment.dirname` | string | `"comment"` | Name of the folder of a comment page. | * |
-| `pages.comment.template` | string | `"comment"` | Name of the template/blueprint of a comment page. | * |
-| `pages.comment.visible` | bool | `true` | Whether comment pages are visible (have an index-prefix) .| * |
+| `pages.comment.template` | string | `"comment"` | Name of the template and blueprint of a comment page. | * |
+| `pages.comment.visible` | bool | `true` | Whether comment pages are visible (have an index-prefix). | * |
 | `form.submit` | string | `"submit"` | POST name of the submit button. | |
 | `form.preview` | string | `"preview"` | POST name of the preview button. | |
 | `form.name` | string | `"name"` | POST name of the name field. | |
@@ -109,49 +118,52 @@ c::set('comments.pages.comments.title', function ($page) {
 
 ## Email Notifications
 
-To use email notifications enable the `email.enabled` option and specify **at least one recipient** using the `email.to` option.
+Kirby Comments can notify you about new comments. Set the `email.enabled` option to `true` and specify at least one recipient using the `email.to` option.
 
-The email body (email.template.txt) and subject (option: `email.subject`) can contain placeholders which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
+- **email subject:** value of the `email.subject` option
+- **email body:** contents of assets/email.template.txt. Do not edit the email.template.txt file in the plugins folder as it will be replaced when updating Kirby Comments. Instead, create a new file at yoursite/assets/plugins/comments/email.template.txt (create folders as needed). This location is based on [the recommended plugin assets location](https://getkirby.com/docs/developer-guide/plugins/assets#customizing-plugin-assets).
+
+The email’s body and subject can contain placeholders which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
 
 ```
 You’ve received a new comment on “{{ page.title }}” by {{ comment.user.name }}.
 ```
-
-If you want to customize the contents of the email body, create a new file at assets/plugins/comments/email.template.txt (create folders as needed). This location is based on [the recommended plugin assets location](https://getkirby.com/docs/developer-guide/plugins/assets#customizing-plugin-assets).
 
 | Name | Description |
 |---|---|
 | `comment.user.name`| Name of the commentator. |
 | `comment.user.email` | Email address of the commentator. |
 | `comment.user.website` | Website of the commentator. |
-| `comment.message` | Message that the commentator has posted. |
+| `comment.message` | Message of the comment. |
 | `page.title` | Title of the page the comment was posted on. |
-| `page.url` | URL of the page on which the comment was posted on. |
+| `page.url` | URL of the page on which the comment was posted. |
 
 ## Custom Markup
 
-The Kirby Comments plugin ships with a simple `comments` snippet. It is designed to handle most use cases and to serve as example implementation. If you find yourself constrained by its markup or functionality, you can create a custom comments snippet.
+As described in [Usage](#usage), Kirby Comments ships with three snippets: `comments-form`, `comments-list` and `comments`. These make it easy to get started, as you don’t have to write your own form or comment list.
 
-### Basics
+However, you are not limited to only using these three snippets. This section describes how you can write your own comments form and list.
 
-All comments are handled by the comments object. Kirby offers variables like `$site` and `$page` as an interface to its functionality. In the same way, the Kirby Comments plugin allows you to access all of its functionality by creating the `$comments` object based on a Kirby page.
+### Accessing the Kirby Comments API
+
+All comments are handled by the `$comments` object. Kirby offers variables like `$site` and `$page` as an interface to its functionality. In the same way, Kirby Comments allows you to access its functionality using the `$comments` variable.
 
 ```php
-<?php $comments = new Comments($page) ?>
+$comments = $page->comments();
 ```
 
 ### File Structure
 
-The `$page` is referring to the page holding the comments. Like this:
+`$page` in the above code example is referring to the page containing the comments page. A typical file structure looks like this:
 
 ```
 content/
 └─ blog/
-   └─ 1-hello-world/ <- $page
+   └─ 1-hello-world/        <- $page
       ├─ post.txt
-      └─ comments/
+      └─ comments/          <- comments page
          ├─ comments.txt
-         ├─ 1-comment-1/
+         ├─ 1-comment-1/    <- comment page
          │  └─ comment.txt
          ├─ 2-comment-2/
          │  └─ comment.txt
@@ -159,50 +171,154 @@ content/
             └─ comment.txt
 ``` 
 
-As you can see, the comments are simply stored as subpages, grouped in a hidden comments directory. The naming scheme of the comment directories (1-comment-1, 2-comment-2, …) was chosen to provide the following functionalities:
+Comments are stored as subpages, grouped in a hidden directory called “comments” (option `pages.comments.dirname`). This page contains the individual comment pages. The name of a comment page can be split into three pieces:
 
-- `#-` makes the comments **visible** and **orders it**. This can be disabled by setting the option `pages.comment.visible` to `false`.
-- `comment-#` gives the comment a **unique address**, at which it can be located. This means, that every comment has a public URL like: www.example.org/blog/hello-world/comments/comment-1. If you would like, you can create `comments` and `comment` templates to style them. By default, both the comments list (some-page/comments) and the comment pages (some-page/comments/comment-1) are not referenced by any link, so no users will be linked to those pages.
+- `#-`: Makes the comment pages visible within the comments page. Can be removed by setting the `pages.comment.visible` option to `false`.
+- `comment`: Name of all comment pages. Can be changed using the `pages.comment.dirname` option.
+- `-#`: Orders comment pages and gives them a unique ID. This way, every comment has its own page located at `www.example.org/blog/hello-world/comments/comment-#`.
 
-### Handling New Comments
+### Custom Markup: Processing Comments
 
-The first thing you should do is **handle new comment requests**. This is done by calling the `process` method.
-
-```php
-<?php $status = $comments->process() ?>
-```
-
-This will do a lot for you. It checks, whether a new comment was submitted to the page or if the user has requested a preview. For security reasons, Kirby Comments will check for a valid session key. Every time the comments form is rendered by PHP, Kirby Comments generates a new session ID and stores it in a hidden input field.
+Before listing comments or rendering a form you should call `$comments->process()`. This will handle new comments submitted using the form and report a success or error status.
 
 ```php
-<input type="hidden"
-       name="<?= $comments->sessionIdName() ?>"
-       value="<?= $comments->sessionId() ?>">
+$status = $comments->process();
 ```
 
-You have to include this hidden field in you form. For every page refresh (including form submissions), a new session ID will be generated. This **ensures that no duplicated comment is submitted** to the page by refreshing the page after having submitted a comment and **prevents cross-site request forgery**.
+You can read more about the comment’s status in the [API documentation](#status--commentsstatus).
 
-In order to submit comments which are processable by the plugin, please respect the following guidelines:
+### Custom Markup: Comments List
 
-1. Submit via POST (`<form ... method="post">`)
-2. Submit as UTF-8 (`<form ... accept-charset="utf-8">`)
-3. Do no chose the `name` in the markup, but in the plugin’s options. This means that code such as `<input type="submit" name="my-submit-button">` should be replaced by `<input type="submit" name="<?= $comments->submitName() ?>">`. This way, the plugin knows what names to look for. If you want to customize the name, register the new name in your config.php, e.g. `c::set('comments.form.submit', 'my-submit-button');`. All available options are listed in the Options table above.
-4. Hide the submit (not preview) button until the preview is valid. (`<?php if ($comments->validPreview()): ?><input type="submit" ...><?php endif ?>`)
-5. Do not show any form when a user has successfully submitted a comment. You can check for that state by looking at `$comments->userHasSubmitted()`.
+`$comments` implements PHP’s `Iterator` interface so that you can loop over every comment using a `foreach` loop.
 
-Before implementing your own form, have a look the default `comments` snippet in snippets/comments.php.
+```html
+<?php foreach ($comments as $comment): ?>
+  <div class="comment">
+    <h3>Comment by <?= $comment->name() ?></h3>
+    <div class="message"><?= $comment->message() ?></div>
+  </div>
+<?php endforeach ?>
+```
+
+If you want to add a heading before the comments, you can also check whether there are any comments.
+
+```html
+<?php if (!$comments->isEmpty()): ?>
+  <h2>Comments</h2>
+  
+  <?php foreach ($comments as $comment): ?>
+    ...
+  <?php endforeach ?>
+<?php endif ?>
+```
+
+For a list of all `$comment` methods have a look at the [API Documentation](#comment--comment).
+
+### Custom Markup: Comments Form
+
+Your form must fulfill the following criteria:
+
+- Submit as UTF-8 via HTTP POST
+- Submit to a page with a comments form (or simply to the same page)
+- Use Kirby Comments “name” and “value” methods for accessing the name and value of fields and buttons.
+- Include a name and message field.
+- Include a hidden field with the session ID as value.
+- Include a preview and submit button, where the submit button is shown for valid previews only.
+
+The following minimal example fulfills all of the above.
+
+```html
+<form method="post" accept-charset="utf-8">
+  <label for="name">Name</label>
+  <input type="text" id="name" name="<?= $comments->nameName() ?>" value="<?= $comments->nameValue() ?>">
+  
+  <label for="message">Message</label>
+  <textarea id="message" name="<?= $comments->messageName() ?>"><?= $comments->messageValue() ?></textarea>
+  
+  <input type="hidden" name="<?= $comments->sessionIdName() ?>" value="<?= $comments->sessionId() ?>">
+  
+  <input type="submit" name="<?= $comments->previewName() ?>" value="Preview">
+  <?php if ($comments->validPreview()): ?>
+    <input type="submit" name="<?= $comments->submitName() ?>" value="Submit">
+  <?php endif ?>
+</form>
+```
+
+Note: The session ID ensures that no duplicated comment is submitted to the page by refreshing the page after having submitted a comment and prevents cross-site request forgery.
+
+For security reasons and to prevent spam, you should not render the form after a comment was submitted. For this, wrap your form in an `if` block checking `$comments->userHasSubmitted()`.
+
+```html
+<?php if ($comments->userHasSubmitted()): ?>
+  <p>Thank you for your comment!</p>
+<?php else: ?>
+  <form ...>
+    ...
+  </form>
+<?php endif ?>
+```
+
+#### Using a Honeypot
+
+By default, Kirby Comments will look for a honeypot value. Generally, a honeypot is a trap that checks for bots trying to submit comments. In the case of Kirby Comments, you include a field and hide it with CSS (most bots don’t load and apply CSS). Humans will not see the field and therefore not fill it out. Bots on the other hand mostly only read the HTML source code and fill out every field the find with whatever data they think fits best.
+
+To use the honeypot, include the following in your form:
+
+```html
+<div class="hide-me">
+  <input type="text" name="<?= $comments->honeypotName() ?>" value="<?= $comments->honeypotValue() ?>">
+</div>
+```
+
+If you do not use a honeypot, disable it in your config.php using `c::set('comments.honeypot.enabled', false);`.
+
+Kirby Comments will block any comment submission with a honeypot value other than an empty string. You can change that by setting the `honeypot.human-value` option to any string you like. You can also change the name of the field using the `form.honeypot` option.
+
+#### Jumping to the Comment
+
+When submitting the form, the page will reload and your scroll position is lost. You can make the browser scroll automatically to the new comment by giving the new comment a unique ID and referencing it in the forms `action` attribute.
+
+```html
+<?php foreach ($comments as $comment): ?>
+  <div id="comment-<?= $comment->id() ?>">
+    ...
+  </div>
+<?php endforeach ?>
+
+<form action="#comment-<?= $comments->nextCommentId() ?>" ...>
+  ...
+</form>
+```
+
+If you don’t want every comment to have an ID you can check for `$comment->isPreview()`.
+
+```html
+<?php foreach ($comments as $comment): ?>
+  <div<? e($comment->isPreview(), ' id="preview-comment"') ?>>
+    ...
+  </div>
+<?php endforeach ?>
+
+<form action="#preview-comment" ...>
+  ...
+</form>
+```
 
 ## API Documentation
 
-### `$comments : Comments`
+### `$comments : Comments implements Iterator`
+
+The main object you will be using when working with Kirby Comments.
 
 ```php
-$comments = new Comments($page);
+$comments = $page->comments();
 ```
 
 #### `$comments->process() : CommentsStatus`
 
 Processes the HTTP-POST data and creates new comments or generates preview comments. These comments are added to the list of comments contained by `$comments`.
+
+This method may be called multiple times, but only executes once. The `CommentsStatus` object is returned on every call.
 
 #### `$comments->isEmpty() : bool`
 
@@ -220,13 +336,35 @@ All comments have a per-page unique ID. The first comment has an ID of 1, the se
 
 Whether the user has successfully submitted a new comment.
 
-#### `$comments->value($name : string) : string`
+#### `$comments->value($name : string, $default="" : string) : string`
 
-This is a convenience method for creating forms. When a user submits a form, the page is reloaded and the form is cleared. In order to prevent this, you have to set the `value` attribute of all input fields to the value which was transmitted by the forms request. This method helps you in doing so, by returning an empty string, if the form was not submitted, or a HTML-escaped version of the value posted by the user.
+When a user submits a form, the page is reloaded and all fields in the form are cleared. In order to keep the text that the user has typed into the fields, you have to set the `value` attribute of all input fields to the value which was transmitted by the forms request.
 
-```php
+This method helps you in doing so, by returning `$default`, if the form was not submitted, or an HTML-escaped version of the value posted by the user.
+
+```html
 <input ... value="<?= $comments->value($comments->websiteName()) ?>">
 ```
+
+#### `$comments->nameValue($default="" : string) : string`
+
+Convenience method for `$comments->value($comments->nameName(), $default)`.
+
+#### `$comments->emailValue($default="" : string) : string`
+
+Convenience method for `$comments->value($comments->emailName(), $default)`.
+
+#### `$comments->websiteValue($default="" : string) : string`
+
+Convenience method for `$comments->value($comments->websiteName(), $default)`.
+
+#### `$comments->messageValue($default="" : string) : string`
+
+Convenience method for `$comments->value($comments->messageName(), $default)`.
+
+#### `$comments->honeypotValue($default="" : string) : string`
+
+Convenience method for `$comments->value($comments->honeypotName(), $default)`.
 
 #### `$comments->submitName() : string`
 
@@ -250,7 +388,7 @@ The HTTP-POST name for the email field. The value is defined by the `form.email`
 
 #### `$comments->requireEmailAddress() : bool`
 
-Whether the plugin requires a (valid) email address. This behaviour can be determined using the `form.email.required` option. The HTTP-POST name of the email field is defined by the `form.email` option.
+Whether the plugin requires a (valid) email address. This behavior can be determined using the `form.email.required` option. The HTTP-POST name of the email field is defined by the `form.email` option.
 
 #### `$comments->emailMaxLength() : integer`
 
@@ -286,15 +424,21 @@ The HTTP-POST name for the honeypot field. The value is defined by the `form.hon
 
 #### `$comments->isUsingHoneypot() : bool`
 
-Whether the plugin should check the value of a honeypot field. This behaviour can be determined using the `honeypot.enabled` option. The HTTP-POST name of the honeypot field is defined by the `form.honeypot` option.
+Whether the plugin should check the value of a honeypot field. This behavior can be determined using the `honeypot.enabled` option. The HTTP-POST name of the honeypot field is defined by the `form.honeypot` option.
 
 #### `$comments->validPreview() : bool`
 
 Whether the current preview is valid. `false`, if no preview is performed.
 
+#### `$comments->toArray() : array`
+
+Returns an array containing all comments managed by `$comments` in chronological order.
+
 ### `$comment : Comment`
 
-```php
+An individual comment.
+
+```html
 <?php foreach ($comments as $comment): ?>
   ...
 <?php endforeach ?>
@@ -326,7 +470,7 @@ The message of the comment. May contain Markdown instructions and/or HTML code.
 
 #### `$comment->date($format='Y-m-d') : string`
 
-The point in time when the comment was posted formatted as string.
+The point in time when the comment was posted formatted as a string.
 
 #### `$comment->datetime() : DateTime`
 
@@ -338,7 +482,7 @@ Whether the comment is a preview. Iff `false`, the comment was loaded from the f
 
 #### `$comment->isLinkable() : bool`
 
-Whether `$comment->website()` is `null`.
+Whether `$comment->website()` is not `null`.
 
 ### `$status : CommentsStatus`
 
@@ -380,11 +524,11 @@ A short, English description of the status. May not be user-friendly.
 
 #### `$status->getException() : Exception`
 
-The exception responsible for the status. May be `null`, if no exception was involved in defining the status.
+The exception responsible for the status. Can be `null`, if no exception was involved in defining the status.
 
 #### `$status->isUserError() : bool`
 
-Whether the status was defined by illegal behaviour by the user. The status code is in the *User* domain.
+Whether the status was defined by illegal behavior by the user. The status code is in the *User* domain.
 
 #### `$status->isError() : bool`
 
