@@ -11,19 +11,8 @@
  * <https://github.com/Addpixel/KirbyComments#api-documentation>
  */
 
-if (kirby()->get('option', 'comments.runtime.comments') == null) {
-  // Create `Comments` object for the current page
-  $comments = new Comments($page);
-  $status = $comments->process();
-  
-  // Store `Comments` object and status for `comments-list` snippet
-  kirby()->set('option', 'comments.runtime.comments', $comments);
-  kirby()->set('option', 'comments.runtime.status',   $status);
-} else {
-  // Load `Comments` object and status from
-  $comments = kirby()->get('option', 'comments.runtime.comments');
-  $status = kirby()->get('option', 'comments.runtime.status');
-}
+$comments = $page->comments();
+$status = $comments->process();
 
 ?>
 <?php if ($comments->userHasSubmitted()): ?>
