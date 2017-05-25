@@ -48,6 +48,12 @@ class Comments implements Iterator
    */
   private $status;
   /**
+   * Whether `$this->process()` has been invoked.
+   *
+   * @var bool
+   */
+  private $has_been_processed;
+  /**
    * The index of the iterator.
    *
    * @var integer
@@ -79,6 +85,7 @@ class Comments implements Iterator
     $this->iterator_index = 0;
     $this->comments = array();
     $this->valid_preview = false;
+    $this->has_been_processed = false;
     
     $comments_page_dirname = Comments::option('pages.comments.dirname');
     $comments_page = $this->page->find($comments_page_dirname);
@@ -149,6 +156,10 @@ class Comments implements Iterator
   
   public function process()
   {
+    if ($this->has_been_processed) { return $this->status; }
+    $this->has_been_processed = true;
+    
+    // Return on Error
     if ($this->status->isError()) { return $this->status; }
     
     $is_preview = isset($_POST[Comments::option('form.preview')]);
