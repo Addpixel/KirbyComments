@@ -334,12 +334,37 @@ class Comments implements Iterator
     return !$this->status->isError() && isset($_POST[Comments::option('form.submit')]);
   }
   
-  public function value($name)
+  public function value($name, $default = '')
   {
     if (isset($_POST[Comments::option('form.preview')]) || isset($_POST[Comments::option('form.submit')])) {
       return strip_tags(htmlentities(trim($_POST[$name])));
     }
-    return '';
+    return $default;
+  }
+  
+  public function nameValue($default = '')
+  {
+    return $this->value($this->nameName(), $default);
+  }
+  
+  public function emailValue($default = '')
+  {
+    return $this->value($this->emailName(), $default);
+  }
+  
+  public function websiteValue($default = '')
+  {
+    return $this->value($this->websiteName(), $default);
+  }
+  
+  public function messageValue($default = '')
+  {
+    return $this->value($this->messageName(), $default);
+  }
+  
+  public function honeypotValue($default = '')
+  {
+    return $this->value($this->honeypotName(), $default);
   }
   
   public function submitName()
