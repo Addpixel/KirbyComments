@@ -460,6 +460,15 @@ class Comments implements Iterator
   }
   
   //
+  // Converter
+  //
+  
+  public function toArray()
+  {
+    return $this->comments;
+  }
+  
+  //
   // Iterator
   //
   
