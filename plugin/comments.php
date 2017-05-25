@@ -69,7 +69,6 @@ class Comments implements Iterator
   static public function init($defaults)
   {
     if (Comments::$defaults != null) { return; }
-    
     Comments::$defaults = $defaults;
   }
   
@@ -290,11 +289,9 @@ class Comments implements Iterator
   
   public function nextCommentId()
   {
-    $stored_comments = array_filter($this->comments, function ($x)
-    {
+    $stored_comments = array_filter($this->comments, function ($x) {
       return $x->isPreview() === false;
     });
-    
     return count($stored_comments) + 1;
   }
   
@@ -307,9 +304,8 @@ class Comments implements Iterator
   {
     if (isset($_POST[Comments::option('form.preview')]) || isset($_POST[Comments::option('form.submit')])) {
       return strip_tags(htmlentities(trim($_POST[$name])));
-    } else {
-      return '';
     }
+    return '';
   }
   
   public function submitName()
