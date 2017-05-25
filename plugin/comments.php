@@ -136,9 +136,9 @@ class Comments implements Iterator
     }
   }
   
-  // ===========
-  // = Options =
-  // ===========
+  //
+  // Options
+  //
   
   public static function option($key, $argument = null)
   {
@@ -173,9 +173,9 @@ class Comments implements Iterator
     }
   }
   
-  // ===================
-  // = Process Comment =
-  // ===================
+  //
+  // Process Comment
+  //
   
   public function process()
   {
@@ -303,9 +303,9 @@ class Comments implements Iterator
     return $this->status;
   }
   
-  // =================
-  // = Comments List =
-  // =================
+  //
+  // Comments List
+  //
   
   public function isEmpty()
   {
@@ -317,9 +317,9 @@ class Comments implements Iterator
     return count($this->comments);
   }
   
-  // ========
-  // = Form =
-  // ========
+  //
+  // Form
+  //
   
   public function nextCommentId()
   {
@@ -434,9 +434,9 @@ class Comments implements Iterator
     return $this->valid_preview;
   }
   
-  // ============
-  // = Iterator =
-  // ============
+  //
+  // Iterator
+  //
   
   function rewind()
   {
