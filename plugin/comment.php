@@ -78,6 +78,14 @@ class Comment
     }
   }
   
+  private static function qq($array, $key, $default)
+  {
+    if (isset($array[$key])) {
+      return $array[$key];
+    }
+    return $default;
+  }
+  
   public static function from_post($content_page, $id, $datetime)
   {
     if (Comments::option('honeypot.enabled')) {
@@ -90,10 +98,10 @@ class Comment
     }
     
     // Check POST data
-    $name       = trim($_POST[Comments::option('form.name')]);
-    $email      = trim($_POST[Comments::option('form.email')]);
-    $website    = trim($_POST[Comments::option('form.website')]);
-    $message    = trim($_POST[Comments::option('form.message')]);
+    $name       = trim(Comment::qq($_POST, Comments::option('form.name'), ''));
+    $email      = trim(Comment::qq($_POST, Comments::option('form.email'), ''));
+    $website    = trim(Comment::qq($_POST, Comments::option('form.website'), ''));
+    $message    = trim(Comment::qq($_POST, Comments::option('form.message'), ''));
     $is_preview = isset($_POST[Comments::option('form.preview')]);
     
     if (gettype($id) !== 'integer') {
