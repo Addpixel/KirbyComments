@@ -28,7 +28,7 @@ $status = $comments->process();
       
       <aside class="comment-info">
         <?php if ($comment->isPreview()): ?>
-          <p>This is a preview of your comment. If you’re happy with it, <a href="#submit" title="Jump to the submit button">submit</a> it to the public.</p>
+          <p>This is a preview of your comment. If you’re happy with it, <a href="#comments-submit" title="Jump to the submit button">submit</a> it to the public.</p>
         <?php else: ?>
           <p>
             Posted on <?= $comment->date('Y-m-d') ?>.
