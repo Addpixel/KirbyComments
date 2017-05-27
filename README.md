@@ -468,7 +468,7 @@ The message of the comment. May contain HTML code, which is limited to the HTML-
 
 The message of the comment. May contain Markdown instructions and/or HTML code.
 
-#### `$comment->date($format='Y-m-d') : string`
+#### `$comment->date($format="Y-m-d") : string`
 
 The point in time when the comment was posted formatted as a string.
 
