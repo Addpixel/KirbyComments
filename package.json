@@ -1,6 +1,6 @@
 {
   "name": "comments",
-  "description": "File based comments stored as subpages for the Kirby CMS.",
+  "description": "File-based comments stored as subpages for the Kirby CMS.",
   "author": "Florian Pircher <florian@addpixel.net>",
   "license": "MIT",
   "version": "1.3.1",
