@@ -36,6 +36,14 @@ class Comments implements Iterator
     'setup.content-page.title'  => 'setup.page.title_key'
   );
   /**
+   * Instances created by calling `Comments::for_page`. The key is the URI of
+   * of the page for which the instance was created and the value a `Comments`
+   * instance. (`string => Comments`)
+   *
+   * @var array
+   */
+  private static $instances = array();
+  /**
    * The Kirby page the comments object is about.
    *
    * @var Page
@@ -47,6 +55,12 @@ class Comments implements Iterator
    * @var CommentsStatus
    */
   private $status;
+  /**
+   * Whether `$this->process()` has been invoked.
+   *
+   * @var bool
+   */
+  private $has_been_processed;
   /**
    * The index of the iterator.
    *
@@ -69,10 +83,24 @@ class Comments implements Iterator
   static public function init($defaults)
   {
     if (Comments::$defaults != null) { return; }
-    
     Comments::$defaults = $defaults;
   }
   
+  static public function for_page($page)
+  {
+    $uri = $page->uri();
+    
+    if (array_key_exists($uri, Comments::$instances)) {
+      return Comments::$instances[$uri];
+    }
+    
+    $new_instance = new Comments($page);
+    Comments::$instances[$uri] = $new_instance;
+    
+    return $new_instance;
+  }
+  
+  // [deprecated], use `Comments::for_page` instead
   function __construct($page)
   {
     $this->page = $page;
@@ -80,6 +108,7 @@ class Comments implements Iterator
     $this->iterator_index = 0;
     $this->comments = array();
     $this->valid_preview = false;
+    $this->has_been_processed = false;
     
     $comments_page_dirname = Comments::option('pages.comments.dirname');
     $comments_page = $this->page->find($comments_page_dirname);
@@ -107,9 +136,9 @@ class Comments implements Iterator
     }
   }
   
-  // ===========
-  // = Options =
-  // ===========
+  //
+  // Options
+  //
   
   public static function option($key, $argument = null)
   {
@@ -144,12 +173,16 @@ class Comments implements Iterator
     }
   }
   
-  // ===================
-  // = Process Comment =
-  // ===================
+  //
+  // Process Comment
+  //
   
   public function process()
   {
+    if ($this->has_been_processed) { return $this->status; }
+    $this->has_been_processed = true;
+    
+    // Return on Error
     if ($this->status->isError()) { return $this->status; }
     
     $is_preview = isset($_POST[Comments::option('form.preview')]);
@@ -270,9 +303,9 @@ class Comments implements Iterator
     return $this->status;
   }
   
-  // =================
-  // = Comments List =
-  // =================
+  //
+  // Comments List
+  //
   
   public function isEmpty()
   {
@@ -284,17 +317,15 @@ class Comments implements Iterator
     return count($this->comments);
   }
   
-  // ========
-  // = Form =
-  // ========
+  //
+  // Form
+  //
   
   public function nextCommentId()
   {
-    $stored_comments = array_filter($this->comments, function ($x)
-    {
+    $stored_comments = array_filter($this->comments, function ($x) {
       return $x->isPreview() === false;
     });
-    
     return count($stored_comments) + 1;
   }
   
@@ -303,13 +334,37 @@ class Comments implements Iterator
     return !$this->status->isError() && isset($_POST[Comments::option('form.submit')]);
   }
   
-  public function value($name)
+  public function value($name, $default = '')
   {
     if (isset($_POST[Comments::option('form.preview')]) || isset($_POST[Comments::option('form.submit')])) {
       return strip_tags(htmlentities(trim($_POST[$name])));
-    } else {
-      return '';
     }
+    return $default;
+  }
+  
+  public function nameValue($default = '')
+  {
+    return $this->value($this->nameName(), $default);
+  }
+  
+  public function emailValue($default = '')
+  {
+    return $this->value($this->emailName(), $default);
+  }
+  
+  public function websiteValue($default = '')
+  {
+    return $this->value($this->websiteName(), $default);
+  }
+  
+  public function messageValue($default = '')
+  {
+    return $this->value($this->messageName(), $default);
+  }
+  
+  public function honeypotValue($default = '')
+  {
+    return $this->value($this->honeypotName(), $default);
   }
   
   public function submitName()
@@ -404,9 +459,18 @@ class Comments implements Iterator
     return $this->valid_preview;
   }
   
-  // ============
-  // = Iterator =
-  // ============
+  //
+  // Converter
+  //
+  
+  public function toArray()
+  {
+    return $this->comments;
+  }
+  
+  //
+  // Iterator
+  //
   
   function rewind()
   {
