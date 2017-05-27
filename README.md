@@ -340,7 +340,7 @@ Whether the user has successfully submitted a new comment.
 
 When a user submits a form, the page is reloaded and all fields in the form are cleared. In order to keep the text that the user has typed into the fields, you have to set the `value` attribute of all input fields to the value which was transmitted by the forms request.
 
-This method helps you in doing so, by returning `$default`, if the form was not submitted, or an HTML-escaped version of the value posted by the user.
+This method helps you in doing so, by returning `$default` if the form was not submitted, or an HTML-escaped version of the value posted by the user.
 
 ```html
 <input ... value="<?= $comments->value($comments->websiteName()) ?>">
