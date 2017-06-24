@@ -306,7 +306,7 @@ If you don’t want every comment to have an ID you can check for `$comment->isP
 
 ## API Documentation
 
-### `$comments : Comments implements Iterator`
+### `$comments : Comments implements Iterator, Countable`
 
 The main object you will be using when working with Kirby Comments.
 
