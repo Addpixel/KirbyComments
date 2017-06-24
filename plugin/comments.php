@@ -3,7 +3,7 @@
 /**
  * Comments
  */
-class Comments implements Iterator
+class Comments implements Iterator, Countable
 {
   /**
    * All default values linked to their options-keys.
