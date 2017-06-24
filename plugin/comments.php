@@ -191,7 +191,7 @@ class Comments implements Iterator
     
     // Check Session.ID == POST.Session.ID
     
-    if ($is_send) {
+    if ($is_submit) {
       $session_id = $_SESSION[Comments::option('session.key')];
       $post_session_id = $_POST[Comments::option('form.session_id')];
       
