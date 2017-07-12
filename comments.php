@@ -1,9 +1,9 @@
 <?php
 
-include_once('plugin/comments.php');
-include_once('plugin/comment.php');
-include_once('plugin/comments-email.php');
-include_once('plugin/comments-status.php');
+include_once('plugin/Comments.php');
+include_once('plugin/Comment.php');
+include_once('plugin/CommentsEmail.php');
+include_once('plugin/CommentsStatus.php');
 
 /*
  * Custom page methods

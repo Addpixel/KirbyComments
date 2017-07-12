@@ -109,7 +109,7 @@ c::set('comments.pages.comments.title', function ($page) {
 | `honeypot.human-value` | string | `""` | Value of an empty honeypot field. | |
 | `email.enabled` | bool | `false` | Whether the plugin should send email notifications. | |
 | `email.to` | array(string) | `array()` | List of email addresses that receive email notifications. | |
-| `email.subject` | string | `New Comment on {{ page.title }}` | Subject of an email notification. | |
+| `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of an email notification. | |
 | `email.undefined-value` | string | `"(not specified)"` | Text that is inserted for values that the comment’s author did not specify. | |
 | `session.key` | string | `"comments"` | Key used to store the comments session. | |
 | `setup.content-page.title` | Closure | `function ($page) { return $page->title(); }` | Takes a `Page` and returns its title as `string`. Is used for generating email notifications. | |
@@ -306,7 +306,7 @@ If you don’t want every comment to have an ID you can check for `$comment->isP
 
 ## API Documentation
 
-### `$comments : Comments implements Iterator`
+### `$comments : Comments implements Iterator, Countable`
 
 The main object you will be using when working with Kirby Comments.
 
