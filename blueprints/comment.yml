@@ -28,7 +28,7 @@ fields:
     validate:
       email
   
-  url:
+  website:
     label: Website Address
     type: url
     width: 1/2
