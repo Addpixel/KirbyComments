@@ -214,7 +214,7 @@ class Comments implements Iterator, Countable
     $comments_page = $this->page->find($comments_page_dirname);
     
     $now = new DateTime();
-    $new_comment_id = count($this->comments) + 1;
+    $new_comment_id = $this->nextCommentId();
     $new_comment = null;
     
     try {
@@ -326,7 +326,9 @@ class Comments implements Iterator, Countable
     $stored_comments = array_filter($this->comments, function ($x) {
       return $x->isPreview() === false;
     });
-    return count($stored_comments) + 1;
+    return count($stored_comments) === 0
+      ? 1
+      : $stored_comments[count($stored_comments) - 1]->id() + 1;
   }
   
   public function userHasSubmitted()
