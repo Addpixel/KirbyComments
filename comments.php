@@ -9,7 +9,7 @@ include_once('plugin/CommentsStatus.php');
  * Custom page methods
  */
 page::$methods['comments'] = function ($page) {
-  return Comments::for_page($page);
+	return Comments::for_page($page);
 };
 
 /*
