@@ -93,6 +93,7 @@ c::set('comments.pages.comments.title', function ($page) {
 | `form.submit` | string | `"submit"` | POST name of the submit button. | |
 | `form.preview` | string | `"preview"` | POST name of the preview button. | |
 | `form.name` | string | `"name"` | POST name of the name field. | |
+| `form.name.required` | bool | `true` | Whether the name field is required. | |
 | `form.name.max-length` | integer | `64` | Maximum length of the value in the name field. | |
 | `form.email` | string | `"email"` | POST name of the email address field. | |
 | `form.email.required` | type | `false` | Whether the email address field is required. | |

@@ -108,7 +108,7 @@ class Comment
       throw new Exception('The ID of a comment must be of the type integer.', 100);
     } elseif ($id <= 0) {
       throw new Exception('The ID of a comment must be bigger than 0.', 101);
-    } elseif ($name == '') {
+    } elseif (Comments::option('form.name.required') && $name == '') {
       throw new Exception('The name field is required.', 301);
     } elseif (strlen($name) > Comments::option('form.name.max-length')) {
       throw new Exception('The name is too long.', 302);

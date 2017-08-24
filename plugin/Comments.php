@@ -512,6 +512,7 @@ Comments::init(array(
   'form.submit'               => 'submit',
   'form.preview'              => 'preview',
   'form.name'                 => 'name',
+  'form.name.required'        => true,
   'form.name.max-length'      => 64,
   'form.email'                => 'email',
   'form.email.required'       => false,
