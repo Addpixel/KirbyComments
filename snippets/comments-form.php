@@ -48,7 +48,7 @@ $status = $comments->process();
 		<input type="hidden" name="<?= $comments->sessionIdName() ?>" value="<?= $comments->sessionId() ?>">
 		
 		<input type="submit" name="<?= $comments->previewName() ?>" value="Preview">
-		<?php if ($comments->validPreview()): ?>
+		<?php if ($comments->isValidPreview()): ?>
 			<input id="comments-submit" type="submit" name="<?= $comments->submitName() ?>" value="Submit">
 		<?php endif ?>
 	</form>

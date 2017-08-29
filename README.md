@@ -241,7 +241,7 @@ The following minimal example fulfills all of the above.
   <input type="hidden" name="<?= $comments->sessionIdName() ?>" value="<?= $comments->sessionId() ?>">
   
   <input type="submit" name="<?= $comments->previewName() ?>" value="Preview">
-  <?php if ($comments->validPreview()): ?>
+  <?php if ($comments->isValidPreview()): ?>
     <input type="submit" name="<?= $comments->submitName() ?>" value="Submit">
   <?php endif ?>
 </form>
@@ -429,7 +429,7 @@ The HTTP-POST name for the honeypot field. The value is defined by the `form.hon
 
 Whether the plugin should check the value of a honeypot field. This behavior can be determined using the `honeypot.enabled` option. The HTTP-POST name of the honeypot field is defined by the `form.honeypot` option.
 
-#### `$comments->validPreview() : bool`
+#### `$comments->isValidPreview() : bool`
 
 Whether the current preview is valid. `false`, if no preview is performed.
 

@@ -456,7 +456,13 @@ class Comments implements Iterator, Countable
 		return $_SESSION[Comments::option('session.key')];
 	}
 	
+	// [deprecated], use `isValidPreview` instead
 	public function validPreview()
+	{
+		return $this->isValidPreview();
+	}
+	
+	public function isValidPreview()
 	{
 		return $this->valid_preview;
 	}
