@@ -508,7 +508,7 @@ The status code which describes the state of the `$comments` object.
 | Developer | 202 | Could not read email template file. |
 | Developer | 203 | Could not send email. |
 | User | 300 | Session is invalid. |
-| User | 301 | Name field must not be empty. |
+| User | 301 | Name field must not be empty. (Only when requiring name.) |
 | User | 302 | Name is too long. |
 | User | 303 | Email field must not be empty. (Only when requiring email address.) |
 | User | 304 | Email address must be valid. (Only when requiring email address or not empty.) |
