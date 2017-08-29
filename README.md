@@ -170,7 +170,7 @@ content/
          │  └─ comment.txt
          └─ 3-comment-3/
             └─ comment.txt
-``` 
+```
 
 Comments are stored as subpages, grouped in a hidden directory called “comments” (option `pages.comments.dirname`). This page contains the individual comment pages. The name of a comment page can be split into three pieces:
 
