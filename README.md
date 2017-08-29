@@ -222,9 +222,11 @@ Your form must fulfill the following criteria:
 - Submit as UTF-8 via HTTP POST
 - Submit to a page with a comments form (or simply to the same page)
 - Use Kirby Comments “name” and “value” methods for accessing the name and value of fields and buttons.
-- Include a name and message field.
+- Include a message field.
 - Include a hidden field with the session ID as value.
 - Include a preview and submit button, where the submit button is shown for valid previews only.
+
+A name field is required by default, but you can remove this constraint by adding `c::set('comments.form.name.required', false);` to your config.php.
 
 The following minimal example fulfills all of the above.
 
