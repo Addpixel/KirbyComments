@@ -518,6 +518,7 @@ The status code which describes the state of the `$comments` object.
 | User | 308 | Message field must not be empty. |
 | User | 309 | Message is too long. |
 | User | 310 | Commentator must be human. |
+| Custom Field | 4xx | Custom exceptions. |
 
 You can either show the user the default message (`$status->getMessage()`) or provide your own status descriptions by checking its code in a `switch` statement.
 
