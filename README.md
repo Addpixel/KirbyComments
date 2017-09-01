@@ -452,13 +452,25 @@ The per-page unique identifier of the comment. IDs start at 1, not at 0.
 
 The name of the author of the comment.
 
+#### `$comment->rawName() : string`
+
+The name of the author of the comment. **May contain unescaped HTML code; use with caution!**
+
 #### `$comment->email() : string`
 
 The email address of the author of the comment. `null` if no email address was specified.
 
+#### `$comment->rawEmail() : string`
+
+The email address of the author of the comment. `null` if no email address was specified. **May contain unescaped HTML code; use with caution!**
+
 #### `$comment->website() : string`
 
 The address of the website of the author of the comment. `null` if no website was specified.
+
+#### `$comment->rawWebsite() : string`
+
+The address of the website of the author of the comment. `null` if no website was specified. **May contain unescaped HTML code; use with caution!**
 
 #### `$comment->message() : string`
 
@@ -466,7 +478,7 @@ The message of the comment. May contain HTML code, which is limited to the HTML-
 
 #### `$comment->rawMessage() : string`
 
-The message of the comment. May contain Markdown instructions and/or HTML code.
+The message of the comment. **May contain unescaped HTML/Markdown code; use with caution!**
 
 #### `$comment->date($format="Y-m-d") : string`
 
