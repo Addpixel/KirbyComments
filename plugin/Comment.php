@@ -136,14 +136,29 @@ class Comment
     return $this->id;
   }
   
+  public function rawName()
+  {
+    return $this->name;
+  }
+  
   public function name()
   {
     return htmlentities($this->name);
   }
   
+  public function rawEmail()
+  {
+    return $this->email;
+  }
+  
   public function email()
   {
     return htmlentities($this->email);
+  }
+  
+  public function rawWebsite()
+  {
+    return $this->website;
   }
   
   public function website()
