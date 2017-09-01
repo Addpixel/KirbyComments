@@ -265,9 +265,9 @@ class Comments implements Iterator, Countable
 					array(
 						'cid'     => $new_comment_id,
 						'date'    => $new_comment->date('Y-m-d H:i:s'),
-						'name'    => $new_comment->name(),
-						'email'   => $new_comment->email(),
-						'website' => $new_comment->website(),
+						'name'    => $new_comment->rawName(),
+						'email'   => $new_comment->rawEmail(),
+						'website' => $new_comment->rawWebsite(),
 						'text'    => $new_comment->rawMessage()
 					)
 				);

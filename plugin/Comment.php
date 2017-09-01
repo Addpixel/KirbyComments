@@ -61,13 +61,13 @@ class Comment
 	function __construct($content_page, $id, $name, $email, $website, $message, $datetime, $is_preview = false)
 	{
 		$this->content_page = $content_page;
-		$this->id           = $id;
-		$this->name         = trim(strip_tags($name));
-		$this->email        = trim(strip_tags($email));
-		$this->website      = trim(strip_tags($website));
-		$this->message      = trim($message);
-		$this->datetime     = $datetime;
-		$this->is_preview   = $is_preview === true;
+		$this->id						= $id;
+		$this->name					= trim(strip_tags($name));
+		$this->email				= trim(strip_tags($email));
+		$this->website			= trim(strip_tags($website));
+		$this->message			= trim($message);
+		$this->datetime			= $datetime;
+		$this->is_preview		= $is_preview === true;
 		
 		if (trim($this->email) == '') { $this->email = null; }
 		
@@ -98,10 +98,10 @@ class Comment
 		}
 		
 		// Check POST data
-		$name       = trim(Comment::qq($_POST, Comments::option('form.name'), ''));
-		$email      = trim(Comment::qq($_POST, Comments::option('form.email'), ''));
-		$website    = trim(Comment::qq($_POST, Comments::option('form.website'), ''));
-		$message    = trim(Comment::qq($_POST, Comments::option('form.message'), ''));
+		$name				= trim(Comment::qq($_POST, Comments::option('form.name'), ''));
+		$email			= trim(Comment::qq($_POST, Comments::option('form.email'), ''));
+		$website		= trim(Comment::qq($_POST, Comments::option('form.website'), ''));
+		$message		= trim(Comment::qq($_POST, Comments::option('form.message'), ''));
 		$is_preview = isset($_POST[Comments::option('form.preview')]);
 		
 		if (gettype($id) !== 'integer') {
@@ -136,14 +136,29 @@ class Comment
 		return $this->id;
 	}
 	
+	public function rawName()
+	{
+		return $this->name;
+	}
+	
 	public function name()
 	{
 		return htmlentities($this->name);
 	}
 	
+	public function rawEmail()
+	{
+		return $this->email;
+	}
+	
 	public function email()
 	{
 		return htmlentities($this->email);
+	}
+	
+	public function rawWebsite()
+	{
+		return $this->website;
 	}
 	
 	public function website()
