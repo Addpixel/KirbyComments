@@ -22,7 +22,7 @@ $status = $comments->process();
     <article id="comment-<?= $comment->id() ?>" class="comment<?php e($comment->isPreview(), ' preview"') ?>">
       <h3>
         <?php e($comment->isLinkable(), "<a rel='nofollow noopener' href='{$comment->website()}'>") ?>
-        <?= $comment->name() ?>
+        <?= html_entity_decode($comment->name()) ?>
         <?php e($comment->isLinkable(), "</a>") ?>
       </h3>
       
