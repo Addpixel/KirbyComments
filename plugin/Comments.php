@@ -8,14 +8,14 @@ class Comments implements Iterator, Countable
 	/**
 	 * All default values linked to their options-keys.
 	 *
-	 * @var array
+	 * @var mixed[string]
 	 */
 	private static $defaults = null;
 	/**
 	 * The list of keys that have to be checked for values stored under a
 	 * deprecated name. `new_key_name` => `deprecated_key_name`.
 	 *
-	 * @var array
+	 * @var string[string]
 	 */
 	private static $deprecated_keys = array(
 		'pages.comments.title'      => 'comments-page.title',
@@ -38,9 +38,9 @@ class Comments implements Iterator, Countable
 	/**
 	 * Instances created by calling `Comments::for_page`. The key is the URI of
 	 * of the page for which the instance was created and the value a `Comments`
-	 * instance. (`string => Comments`)
+	 * instance.
 	 *
-	 * @var array
+	 * @var Comments[string]
 	 */
 	private static $instances = array();
 	/**
@@ -70,19 +70,22 @@ class Comments implements Iterator, Countable
 	/**
 	 * An array of comments on $this->page (published and unpublished).
 	 *
-	 * @var array
+	 * @var Comment[int]
 	 */
 	private $comments;
 	/**
 	 * Whether the current comment preview is valid.
 	 *
-	 * @var string
+	 * @var bool
 	 */
 	private $valid_preview;
 	
 	static public function init($defaults)
 	{
+		// early exit if init has already been called
 		if (Comments::$defaults != null) { return; }
+		
+		// store defaut options
 		Comments::$defaults = $defaults;
 	}
 	
@@ -296,7 +299,7 @@ class Comments implements Iterator, Countable
 		
 		if ($is_preview) {
 			// This is a valid preview, because any illegal data would have obliged
-			// this function to retun a `CommentsStatus` instance.
+			// this function to return a `CommentsStatus` instance.
 			$this->valid_preview = true;
 		}
 		
