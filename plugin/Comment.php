@@ -98,10 +98,10 @@ class Comment
 		}
 		
 		// Check POST data
-		$name				= trim(Comment::qq($_POST, Comments::option('form.name'), ''));
-		$email			= trim(Comment::qq($_POST, Comments::option('form.email'), ''));
-		$website		= trim(Comment::qq($_POST, Comments::option('form.website'), ''));
-		$message		= trim(Comment::qq($_POST, Comments::option('form.message'), ''));
+		$name       = trim(Comment::qq($_POST, Comments::option('form.name'), ''));
+		$email      = trim(Comment::qq($_POST, Comments::option('form.email'), ''));
+		$website    = trim(Comment::qq($_POST, Comments::option('form.website'), ''));
+		$message    = trim(Comment::qq($_POST, Comments::option('form.message'), ''));
 		$is_preview = isset($_POST[Comments::option('form.preview')]);
 		
 		if (gettype($id) !== 'integer') {
