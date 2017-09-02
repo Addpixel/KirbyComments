@@ -69,9 +69,9 @@ class Comment
 		$this->datetime      = $datetime;
 		$this->is_preview    = $is_preview === true;
 		
-		if (trim($this->email) == '') { $this->email = null; }
+		if (trim($this->email) === '') { $this->email = null; }
 		
-		if (trim($this->website) == '') {
+		if (trim($this->website) === '') {
 			$this->website = null;
 		} elseif (!preg_match('/^https?:/', $this->website)) {
 			$this->website = 'http://'.$this->website;
