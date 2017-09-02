@@ -60,14 +60,14 @@ class Comment
 	
 	function __construct($content_page, $id, $name, $email, $website, $message, $datetime, $is_preview = false)
 	{
-		$this->content_page = $content_page;
-		$this->id						= $id;
-		$this->name					= trim(strip_tags($name));
-		$this->email				= trim(strip_tags($email));
-		$this->website			= trim(strip_tags($website));
-		$this->message			= trim($message);
-		$this->datetime			= $datetime;
-		$this->is_preview		= $is_preview === true;
+		$this->content_page  = $content_page;
+		$this->id            = $id;
+		$this->name          = trim(strip_tags($name));
+		$this->email         = trim(strip_tags($email));
+		$this->website       = trim(strip_tags($website));
+		$this->message       = trim($message);
+		$this->datetime      = $datetime;
+		$this->is_preview    = $is_preview === true;
 		
 		if (trim($this->email) == '') { $this->email = null; }
 		
