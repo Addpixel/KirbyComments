@@ -4,6 +4,8 @@ include_once('plugin/Comments.php');
 include_once('plugin/Comment.php');
 include_once('plugin/CommentsEmail.php');
 include_once('plugin/CommentsStatus.php');
+include_once('plugin/CommentsField.php');
+include_once('plugin/CommentsFieldType.php');
 
 /*
  * Initialize Comments with default option values

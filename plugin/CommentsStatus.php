@@ -26,7 +26,8 @@ class CommentsStatus
 		'no_error'     => 0,
 		'system_error' => 100,
 		'dev_error'    => 200,
-		'user_error'   => 300
+		'user_error'   => 300,
+		'custom_error' => 400
 	);
 	/**
 	 * The exception the status is based on.
@@ -39,6 +40,14 @@ class CommentsStatus
 	{
 		$this->code = $code;
 		$this->exception = $exception;
+	}
+	
+	private function is_in_domain($domain_name) {
+		$code = $this->code;
+		$domain = CommentsStatus::$domains[$domain_name];
+		$size = CommentsStatus::$domain_size;
+		
+		return ($code >= $domain) && ($code < $domain + $size);
 	}
 	
 	public function getCode()
@@ -62,15 +71,11 @@ class CommentsStatus
 	
 	public function isUserError()
 	{
-		$code = $this->code;
-		$user_domain = CommentsStatus::$domains['user_error'];
-		$size = CommentsStatus::$domain_size;
-		
-		return ($code >= $user_domain) && ($code < ($user_domain + $size));
+		return $this->is_in_domain('user_error') || $this->is_in_domain('custom_error');
 	}
 	
 	public function isError()
 	{
-		return $this->code >= CommentsStatus::$domain_size;
+		return !$this->is_in_domain('no_error');
 	}
 }

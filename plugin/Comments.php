@@ -87,6 +87,11 @@ class Comments implements Iterator, Countable
 		
 		// store defaut options
 		Comments::$defaults = $defaults;
+		
+		// register custom fields
+		CommentsFieldType::$instances = array_map(function ($instruction) {
+			return CommentsFieldType::from_array($instruction);
+		}, Comments::option('custom-fields'));
 	}
 	
 	static public function for_page($page)
@@ -119,6 +124,21 @@ class Comments implements Iterator, Countable
 		if ($comments_page != null) {
 			foreach ($comments_page->children() as $comment_page) {
 				try {
+					// Read Custom Fields
+					$custom_fields = array();
+					
+					if ($comment_page->customfields()->exists()) {
+						$custom_fields_data = $comment_page->customfields()->yaml();
+						
+						foreach ($custom_fields_data as $field_name => $value) {
+							$type = CommentsFieldType::named($field_name);
+							$field = new CommentsField($type, $value, $this->page, false);
+							
+							$custom_fields[] = $field;
+						}
+					}
+					
+					// Read Main Fields
 					$this->comments[] = new Comment(
 						              $this->page,
 						intval(strval($comment_page->cid())),
@@ -126,10 +146,11 @@ class Comments implements Iterator, Countable
 						       strval($comment_page->email()),
 						       strval($comment_page->website()),
 						       strval($comment_page->text()),
+						              $custom_fields,
 						new DateTime(date('c', $comment_page->date()))
 					);
 				} catch (Exception $e) {
-					$this->status = new CommentsStatus(102, $e);
+					throw new Exception('Could not create comment from page.', 102, $e);
 				}
 			}
 		}
@@ -262,17 +283,34 @@ class Comments implements Iterator, Countable
 				
 				$page_template = Comments::option('pages.comment.template');
 				
+				// Save Main Fields
+				$contents = array(
+					'cid'     => $new_comment_id,
+					'date'    => $new_comment->date('Y-m-d H:i:s'),
+					'name'    => $new_comment->rawName(),
+					'email'   => $new_comment->rawEmail(),
+					'website' => $new_comment->rawWebsite(),
+					'text'    => $new_comment->rawMessage(),
+				);
+				
+				// Save Custom Fields
+				$custom_fields = $new_comment->customFields();
+				
+				if (count($custom_fields) > 0) {
+					$custom_fields_data = array();
+					
+					foreach ($new_comment->customFields() as $field) {
+						$custom_fields_data[$field->name()] = $field->value();
+					}
+					
+					$contents['customfields'] = yaml::encode($custom_fields_data);
+				}
+				
+				// Save Comment as Page
 				$new_comment_page = $comments_page->children()->create(
 					$page_dirname,
 					$page_template,
-					array(
-						'cid'     => $new_comment_id,
-						'date'    => $new_comment->date('Y-m-d H:i:s'),
-						'name'    => $new_comment->rawName(),
-						'email'   => $new_comment->rawEmail(),
-						'website' => $new_comment->rawWebsite(),
-						'text'    => $new_comment->rawMessage()
-					)
+					$contents
 				);
 			} catch (Exception $e) {
 				$this->status =  new CommentsStatus(201, $e);
@@ -367,6 +405,11 @@ class Comments implements Iterator, Countable
 		return $this->value($this->messageName(), $default);
 	}
 	
+	public function customFieldValue($field_name, $default = '')
+	{
+		return $this->value($this->customFieldName($field_name), $default);
+	}
+	
 	public function honeypotValue($default = '')
 	{
 		return $this->value($this->honeypotName(), $default);
@@ -410,6 +453,16 @@ class Comments implements Iterator, Countable
 	public function sessionIdName()
 	{
 		return Comments::option('form.session_id');
+	}
+	
+	public function customFieldName($field_name)
+	{
+		$type = CommentsFieldType::named($field_name);
+		
+		if ($type !== null) {
+			return $type->httpPostName();
+		}
+		return null;
 	}
 	
 	public function isUsingHoneypot()

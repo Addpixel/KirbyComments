@@ -39,6 +39,12 @@ class Comment
 	 */
 	private $message;
 	/**
+	 * List of custom fields.
+	 *
+	 * @var CommentsField[string]
+	 */
+	private $custom_fields;
+	/**
 	 * The point in time of when the comment was posted.
 	 *
 	 * @var \DateTime
@@ -58,7 +64,7 @@ class Comment
 	 */
 	public $content_page;
 	
-	function __construct($content_page, $id, $name, $email, $website, $message, $datetime, $is_preview = false)
+	function __construct($content_page, $id, $name, $email, $website, $message, $custom_fields, $datetime, $is_preview = false)
 	{
 		$this->content_page  = $content_page;
 		$this->id            = $id;
@@ -66,6 +72,7 @@ class Comment
 		$this->email         = trim(strip_tags($email));
 		$this->website       = trim(strip_tags($website));
 		$this->message       = trim($message);
+		$this->custom_fields = $custom_fields;
 		$this->datetime      = $datetime;
 		$this->is_preview    = $is_preview === true;
 		
@@ -104,6 +111,18 @@ class Comment
 		$message    = trim(Comment::qq($_POST, Comments::option('form.message'), ''));
 		$is_preview = isset($_POST[Comments::option('form.preview')]);
 		
+		$custom_fields = array_map(function ($type) use ($content_page) {
+			$key = $type->httpPostName();
+			
+			if ($type->isRequired() && (!isset($_POST[$key]) || $_POST[$key] === '')) {
+				throw new Exception('The '.$type->title().' field is required.', 312);
+			}
+			
+			$value = isset($_POST[$key]) ? $_POST[$key] : '';
+			
+			return new CommentsField($type, $value, $content_page, true);
+		}, CommentsFieldType::$instances);
+		
 		if (gettype($id) !== 'integer') {
 			throw new Exception('The ID of a comment must be of the type integer.', 100);
 		} elseif ($id <= 0) {
@@ -128,7 +147,7 @@ class Comment
 			throw new Exception('The message is to long. (A maximum of '.Comments::option('form.message.max-length').' characters is allowed.)', 309);
 		}
 		
-		return new Comment($content_page, $id, $name, $email, $website, $message, $datetime, $is_preview);
+		return new Comment($content_page, $id, $name, $email, $website, $message, $custom_fields, $datetime, $is_preview);
 	}
 	
 	public function id()
@@ -180,6 +199,27 @@ class Comment
 	public function rawMessage()
 	{
 		return $this->message;
+	}
+	
+	/**
+	 * @return CommentsField[]
+	 */
+	public function customFields()
+	{
+		return $this->custom_fields;
+	}
+	
+	/**
+	 * @param string $field_name Name of the custom field.
+	 * @return mixed
+	 */
+	public function customField($field_name) {
+		foreach ($this->custom_fields as $field) {
+			if ($field->name() === $field_name) {
+				return $field->value();
+			}
+		}
+		return null;
 	}
 	
 	public function date($format='Y-m-d')

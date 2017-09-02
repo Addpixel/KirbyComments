@@ -113,6 +113,7 @@ c::set('comments.pages.comments.title', function ($page) {
 | `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of an email notification. | |
 | `email.undefined-value` | string | `"(not specified)"` | Text that is inserted for values that the comment’s author did not specify. | |
 | `session.key` | string | `"comments"` | Key used to store the comments session. | |
+| `custom-field` | array(array(string => string \| bool \| Closure)) | `array()` | Custom field definitions. | |
 | `setup.content-page.title` | Closure | `function ($page) { return $page->title(); }` | Takes a `Page` and returns its title as `string`. Is used for generating email notifications. | |
 
 \* Can not be changed after the first comment was published on the site.
@@ -519,6 +520,7 @@ The status code which describes the state of the `$comments` object.
 | Developer | 201 | Could not create comment page. |
 | Developer | 202 | Could not read email template file. |
 | Developer | 203 | Could not send email. |
+| Developer | 204 | Custom fields require a name. |
 | User | 300 | Session is invalid. |
 | User | 301 | Name field must not be empty. (Only when requiring name.) |
 | User | 302 | Name is too long. |
@@ -530,6 +532,8 @@ The status code which describes the state of the `$comments` object.
 | User | 308 | Message field must not be empty. |
 | User | 309 | Message is too long. |
 | User | 310 | Commentator must be human. |
+| User | 311 | Invalid custom field. |
+| User | 312 | Custom field is required. |
 | Custom Field | 4xx | Custom exceptions. |
 
 You can either show the user the default message (`$status->getMessage()`) or provide your own status descriptions by checking its code in a `switch` statement.
