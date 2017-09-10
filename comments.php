@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Kirby Comments
+ * 
+ * File-based comments stored as subpages.
+ * Easy to setup. Easy to use. Flexible as hell.
+ *
+ * @package   Kirby Comments
+ * @author    Florian Pircher <florian@addpixel.net>
+ * @link      https://addpixel.net/kirby-comments/
+ * @copyright Florian Pircher
+ * @license   https://addpixel.net/kirby-comments/LICENSE
+ */
+
 include_once('plugin/Comments.php');
 include_once('plugin/Comment.php');
 include_once('plugin/CommentsEmail.php');
