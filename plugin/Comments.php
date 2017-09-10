@@ -477,7 +477,7 @@ class Comments implements Iterator, Countable
 	 * of yet unwritten, comment otherwise. IDs start at 1 and increment on a per-
 	 * page basis by 1.
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	public function nextCommentId()
 	{
