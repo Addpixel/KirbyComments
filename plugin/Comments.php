@@ -2,18 +2,36 @@
 
 /**
  * Comments
+ * 
+ * The `Comments` class provides static methods to be accessed by its own
+ * instances and other parts of the plugin. `Comments` instances manage the
+ * comments of a specific Kirby page. This involves processing HTTP POST data
+ * for creating comment previews, submitting comments, storing comments as
+ * Kirby pages, reading those pages and reporting status.
+ * 
+ * `Comments` instances provide additional convenience methods for creating
+ * comments forms.
+ * 
+ * The preferred way of creating and accessing `Comments` instances is by
+ * calling `$page->comments()` where `$page` is a Kirby `Page` object.
+ *
+ * @package   Kirby Comments
+ * @author    Florian Pircher <florian@addpixel.net>
+ * @link      https://addpixel.net/kirby-comments/
+ * @copyright Florian Pircher
+ * @license   https://addpixel.net/kirby-comments/LICENSE
  */
 class Comments implements Iterator, Countable
 {
 	/**
-	 * All default values linked to their options-keys.
+	 * The default option values referenced by their name.
 	 *
 	 * @var mixed[string]
 	 */
 	private static $defaults = null;
+	
 	/**
-	 * The list of keys that have to be checked for values stored under a
-	 * deprecated name. `new_key_name` => `deprecated_key_name`.
+	 * Deprecated option names referenced by their new counterparts.
 	 *
 	 * @var string[string]
 	 */
@@ -35,102 +53,144 @@ class Comments implements Iterator, Countable
 		'honeypot.human-value'      => 'human-honeypot-value',
 		'setup.content-page.title'  => 'setup.page.title_key'
 	);
+	
 	/**
-	 * Instances created by calling `Comments::for_page`. The key is the URI of
-	 * of the page for which the instance was created and the value a `Comments`
-	 * instance.
+	 * All instances created using `Comments::for_page($page)` (which is also used
+	 * by `$page->comments()`) referenced by the URI of the page.
 	 *
 	 * @var Comments[string]
 	 */
 	private static $instances = array();
+	
 	/**
-	 * The Kirby page the comments object is about.
+	 * Kirby page on which the comments are posted.
 	 *
 	 * @var Page
 	 */
 	private $page;
+	
 	/**
-	 * The status of the comments.
+	 * Status of the comments. Is modified during construction of a `Comments`
+	 * instance and which processing the comments using `$this->process()`.
 	 *
 	 * @var CommentsStatus
 	 */
 	private $status;
+	
 	/**
 	 * Whether `$this->process()` has been invoked.
 	 *
 	 * @var bool
 	 */
 	private $has_been_processed;
+	
 	/**
-	 * The index of the iterator.
+	 * The index of the iterator. Used for the implementation of the `Iterator`
+	 * interface.
 	 *
 	 * @var integer
 	 */
 	private $iterator_index;
+	
 	/**
 	 * An array of comments on $this->page (published and unpublished).
+	 * All comments managed by a `Comments` instance. Is modified during
+	 * construction of a `Comments` instance and which processing the comments
+	 * using `$this->process()`.
 	 *
-	 * @var Comment[int]
+	 * @var Comment[]
 	 */
 	private $comments;
+	
 	/**
-	 * Whether the current comment preview is valid.
+	 * Whether the current comment preview is valid. `false` iff no preview is
+	 * requested.
 	 *
 	 * @var bool
 	 */
-	private $valid_preview;
+	private $is_valid_preview;
 	
+	/**
+	 * Configures the plugin by setting default values and reading custom field
+	 * types from Kirby’s configuration. This static method will early exit if
+	 * called multiple times during a single HTTP request.
+	 * 
+	 * @param mixed[string] $defaults
+	 */
 	static public function init($defaults)
 	{
-		// early exit if init has already been called
-		if (Comments::$defaults != null) { return; }
+		// Early exit if this method has already been called during this request
+		if (Comments::$defaults !== null) { return; }
 		
-		// store defaut options
+		// Store default options
 		Comments::$defaults = $defaults;
 		
-		// register custom fields
+		// Register custom fields
 		CommentsFieldType::$instances = array_map(function ($instruction) {
 			return CommentsFieldType::from_array($instruction);
 		}, Comments::option('custom-fields'));
 	}
 	
+	/**
+	 * Returns a `Comments` instance for `$page`. Constructs a new instance
+	 * if no instance exists for the given page, returns a reference to an
+	 * existing instance otherwise. Page equality is determined based on their
+	 * URI.
+	 * 
+	 * @param Page $page
+	 * @return Comments
+	 */
 	static public function for_page($page)
 	{
 		$uri = $page->uri();
 		
+		// Check for existing instance
 		if (array_key_exists($uri, Comments::$instances)) {
+			// Return existing instance
 			return Comments::$instances[$uri];
 		}
 		
+		// Construct new instance
 		$new_instance = new Comments($page);
 		Comments::$instances[$uri] = $new_instance;
 		
+		// Return new instance
 		return $new_instance;
 	}
 	
-	// [deprecated], use `Comments::for_page` instead
+	/**
+	 * Comments constructor. ATTENTION: the use of this constructor is DEPRECATED;
+	 * use `Comments::for_page($page)` or `$page->comments()` instead.
+	 *
+	 * @param Page $page
+	 * @throws Exception Throws if a comment could not be constructed based on a
+	 * existing comment page.
+	 */
 	function __construct($page)
 	{
 		$this->page = $page;
 		$this->status = new CommentsStatus(0);
 		$this->iterator_index = 0;
 		$this->comments = array();
-		$this->valid_preview = false;
+		$this->is_valid_preview = false;
 		$this->has_been_processed = false;
 		
+		// Scan for existing comments
 		$comments_page_dirname = Comments::option('pages.comments.dirname');
 		$comments_page = $this->page->find($comments_page_dirname);
 		
-		if ($comments_page != null) {
+		// Check for existence of stored comments
+		if ($comments_page !== null) {
 			foreach ($comments_page->children() as $comment_page) {
 				try {
-					// Read Custom Fields
+					// Read custom fields
 					$custom_fields = array();
 					
 					if ($comment_page->customfields()->exists()) {
 						$custom_fields_data = $comment_page->customfields()->yaml();
 						
 						foreach ($custom_fields_data as $field_name => $value) {
+							// Construct and add custom field
 							$type = CommentsFieldType::named($field_name);
 							$field = new CommentsField($type, $value, $this->page, false);
 							
@@ -155,7 +215,8 @@ class Comments implements Iterator, Countable
 			}
 		}
 		
-		if (session_status() == PHP_SESSION_NONE) {
+		// A session is needed for form validation and CSRF protection
+		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
 	}
@@ -164,7 +225,24 @@ class Comments implements Iterator, Countable
 	// Options
 	//
 	
-	public static function option($key, $argument = null)
+	/**
+	 * This method provides convenient access to Kirby Comments’s options. Options
+	 * may be configured in Kirby’s configuration file. The default values for
+	 * all options are set in `Comments::init($defaults)`. All Kirby Comments
+	 * options are prefixed with `comments.`; the `$key` argument must not include
+	 * this prefix.
+	 * 
+	 * Returns the value of the option, unless the value is an instance of
+	 * `Closure`, in which case the return value of the closure given `$argument`
+	 * is returned.
+	 * 
+	 * Note that this method is used throughout the whole plugin.
+	 *
+	 * @param string $key
+	 * @param mixed|null $argument
+	 * @return mixed|null
+	 */
+	public static function option($key, $argument=null)
 	{
 		$value = null;
 		
@@ -177,7 +255,7 @@ class Comments implements Iterator, Countable
 			// not equal to `$default_value` a value was set for a deprecated key.
 			$deprecated_key = Comments::$deprecated_keys[$key];
 			$default_value = null;
-			$tmp = c::get("comments.$deprecated_key", $default_value);
+			$tmp = c::get('comments.'.$deprecated_key, $default_value);
 			
 			if ($tmp !== $default_value) {
 				if ($deprecated_key === 'setup.page.title_key') {
@@ -188,7 +266,7 @@ class Comments implements Iterator, Countable
 			}
 		}
 		
-		$value = c::get("comments.$key", $value);
+		$value = c::get('comments.'.$key, $value);
 		
 		if ($value instanceof Closure) {
 			return $value($argument);
@@ -201,20 +279,32 @@ class Comments implements Iterator, Countable
 	// Process Comment
 	//
 	
+	/**
+	 * Processes comments based on the HTTP POST data of the HTTP request. This
+	 * involves generating preview comments, storing published comments as
+	 * Kirby pages, creating comments pages, validating user data and sending
+	 * email notifications.
+	 * 
+	 * This method may be called multiple times during a single HTTP request but
+	 * execute only once. On repeated calls, the current status object is
+	 * returned.
+	 *
+	 * @return CommentsStatus
+	 */
 	public function process()
 	{
+		// Early exit of repeated calls
 		if ($this->has_been_processed) { return $this->status; }
 		$this->has_been_processed = true;
 		
-		// Return on Error
+		// Return on error
 		if ($this->status->isError()) { return $this->status; }
 		
 		$is_preview = isset($_POST[Comments::option('form.preview')]);
 		$is_submit  = isset($_POST[Comments::option('form.submit')]);
 		$is_send    = $is_preview || $is_submit;
 		
-		// Check Session.ID == POST.Session.ID
-		
+		// Check whether the session ID equals the posted session ID
 		if ($is_submit) {
 			$session_id = $_SESSION[Comments::option('session.key')];
 			$post_session_id = $_POST[Comments::option('form.session_id')];
@@ -225,37 +315,49 @@ class Comments implements Iterator, Countable
 			}
 		}
 		
-		// Generate new Session ID
+		//
+		// Session is valid
+		//
 		
-		$new_session_id = md5(uniqid('comments_session_id').c::get('license'));
+		// Generate new session ID
+		$license_substring = substr(c::get('license'), 0, 6);
+		$new_session_id = md5(uniqid('comments_session_id').$license_substring);
 		$_SESSION[Comments::option('session.key')] = $new_session_id;
 		
-		// Session is Valid
+		if (!$is_send) {
+			// No preview request, no submission request:
+			return $this->status;
+		}
 		
-		if (!$is_send) { return $this->status; }
-		
+		// Find comments page
 		$comments_page_dirname = Comments::option('pages.comments.dirname');
 		$comments_page = $this->page->find($comments_page_dirname);
 		
+		// Store current time in a variable so that it is guaranteed to be the
+		// exact same point in time throughout the execution of this method.
 		$now = new DateTime();
-		$new_comment_id = $this->nextCommentId();
+		
+		// Prepare new comment
 		$new_comment = null;
+		$new_comment_id = $this->nextCommentId();
 		
 		try {
+			// Try constructing a `Comment` from the current POST data
 			$new_comment = Comment::from_post($this->page, $new_comment_id, $now);
 		} catch (Exception $e) {
+			// Construction failed (most probably due to invalid user input)
 			$this->status = new CommentsStatus($e->getCode(), $e);
 			return $this->status;
 		}
 		
-		if ($comments_page == null) {
-			// No comments page has been created yet. Create the comments subpage.
+		if ($comments_page === null) {
+			// No comment was posted on `$this->page` yet; create comments page
 			try {
-				$page_dirname = Comments::option('pages.comments.dirname');
-				$page_template = Comments::option('pages.comments.template');
+				$dirname = Comments::option('pages.comments.dirname');
+				$template = Comments::option('pages.comments.template');
 				$comments_page = $this->page->children()->create(
-					$page_dirname,
-					$page_template,
+					$dirname,
+					$template,
 					array(
 						'title' => Comments::option('pages.comments.title', $this->page),
 						'date'  => $now->format('Y-m-d H:i:s')
@@ -268,22 +370,18 @@ class Comments implements Iterator, Countable
 		}
 		
 		if ($is_submit) {
-			// The commentator is happy with the preview and has submitted the
-			// comment to be published on the website.
+			// The comment author has submitted the comment; store it as page
 			try {
-				$page_dirname = Comments::option('pages.comment.dirname');
-				$page_uri = $page_dirname.'-'.$new_comment_id;
-				$page_dirname = $page_uri;
+				$dirname = Comments::option('pages.comment.dirname').'-'.$new_comment_id;
 				
 				if (Comments::option('pages.comment.visible')) {
-					// add index-prefix to dirname
-					$page_index = $new_comment_id;
-					$page_dirname = $page_index.'-'.$page_dirname;
+					// Add index to dirname to make the comment visible
+					$dirname =  $new_comment_id.'-'.$dirname;
 				}
 				
-				$page_template = Comments::option('pages.comment.template');
+				$template = Comments::option('pages.comment.template');
 				
-				// Save Main Fields
+				// Save main fields
 				$contents = array(
 					'cid'     => $new_comment_id,
 					'date'    => $new_comment->date('Y-m-d H:i:s'),
@@ -293,7 +391,7 @@ class Comments implements Iterator, Countable
 					'text'    => $new_comment->rawMessage(),
 				);
 				
-				// Save Custom Fields
+				// Save custom fields
 				$custom_fields = $new_comment->customFields();
 				
 				if (count($custom_fields) > 0) {
@@ -306,10 +404,10 @@ class Comments implements Iterator, Countable
 					$contents['customfields'] = yaml::encode($custom_fields_data);
 				}
 				
-				// Save Comment as Page
-				$new_comment_page = $comments_page->children()->create(
-					$page_dirname,
-					$page_template,
+				// Save comment as page
+				$comments_page->children()->create(
+					$dirname,
+					$template,
 					$contents
 				);
 			} catch (Exception $e) {
@@ -317,8 +415,12 @@ class Comments implements Iterator, Countable
 				return $this->status;
 			}
 			
+			//
+			// Comment has been saved
+			//
+			
 			if (Comments::option('email.enabled')) {
-				// Send Email Notification
+				// Send email notifications
 				$email = new CommentsEmail(
 					Comments::option('email.to'),
 					Comments::option('email.subject'),
@@ -326,19 +428,17 @@ class Comments implements Iterator, Countable
 				);
 				$email_status = $email->send();
 				
-				if ($email_status->getCode() != 0) {
+				if ($email_status->isError()) {
 					$this->status = $email_status;
 				}
 			}
 		}
 		
-		// Add the new comment to the current list of comments.
+		// Add the new comment to the list
 		$this->comments[] = $new_comment;
 		
 		if ($is_preview) {
-			// This is a valid preview, because any illegal data would have obliged
-			// this function to return a `CommentsStatus` instance.
-			$this->valid_preview = true;
+			$this->is_valid_preview = true;
 		}
 		
 		return $this->status;
@@ -348,11 +448,21 @@ class Comments implements Iterator, Countable
 	// Comments List
 	//
 	
+	/**
+	 * `true` iff no comment is managed by this `Comments` instance.
+	 *
+	 * @return bool
+	 */
 	public function isEmpty()
 	{
 		return count($this->comments) === 0;
 	}
 	
+	/**
+	 * Number of comments managed `true` by this `Comments` instance.
+	 *
+	 * @return int
+	 */
 	public function count()
 	{
 		return count($this->comments);
@@ -362,99 +472,233 @@ class Comments implements Iterator, Countable
 	// Form
 	//
 	
+	/**
+	 * The ID of the preview comment in case of a preview; the ID of the next, as
+	 * of yet unwritten, comment otherwise. IDs start at 1 and increment on a per-
+	 * page basis by 1.
+	 *
+	 * @return int
+	 */
 	public function nextCommentId()
 	{
-		$stored_comments = array_filter($this->comments, function ($x) {
-			return $x->isPreview() === false;
+		$stored_comments = array_filter($this->comments, function ($comment) {
+			return $comment->isPreview() === false;
 		});
-		return count($stored_comments) === 0
-			? 1
-			: $stored_comments[count($stored_comments) - 1]->id() + 1;
+		
+		if (count($stored_comments) > 0) {
+			return $stored_comments[count($stored_comments) - 1]->id() + 1;
+		}
+		return 1;
 	}
 	
+	/**
+	 * `true` iff the user has submitted a comment and no errors occurred.
+	 *
+	 * @return bool
+	 */
+	public function isSuccessfulSubmission()
+	{
+		$is_error = !$this->status->isError();
+		$is_submit = isset($_POST[Comments::option('form.submit')]);
+		
+		return !$is_error && $is_submit;
+	}
+	
+	/**
+	 * `true` iff the user has submitted a comment and no errors occurred.
+	 * ATTENTION: this method is DEPRECATED; use `$this->isSuccessfulSubmission()`
+	 * instead.
+	 *
+	 * @deprecated
+	 * @return bool
+	 */
 	public function userHasSubmitted()
 	{
-		return !$this->status->isError() && isset($_POST[Comments::option('form.submit')]);
+		return $this->isSuccessfulSubmission();
 	}
 	
-	public function value($name, $default = '')
+	/**
+	 * Returns the HTML-escaped value of the HTTP POST data with the name
+	 * `$name`.
+	 *
+	 * @param string $name HTTP POST name of the field.
+	 * @param string $default Default value to be used if unset.
+	 * @return string
+	 */
+	public function value($name, $default='')
 	{
-		if (isset($_POST[Comments::option('form.preview')]) || isset($_POST[Comments::option('form.submit')])) {
-			return strip_tags(htmlentities(trim($_POST[$name])));
+		$is_preview = isset($_POST[Comments::option('form.preview')]);
+		$is_submit = isset($_POST[Comments::option('form.submit')]);
+		
+		if (($is_preview || $is_submit) && isset($_POST[$name])) {
+			return htmlentities(trim($_POST[$name]));
 		}
 		return $default;
 	}
 	
-	public function nameValue($default = '')
+	/**
+	 * Convenience method for accessing `$this->value()` for the name field.
+	 *
+	 * @param string $default Default value to be used if unset.
+	 * @return string
+	 */
+	public function nameValue($default='')
 	{
 		return $this->value($this->nameName(), $default);
 	}
 	
-	public function emailValue($default = '')
+	/**
+	 * Convenience method for accessing `$this->value()` for the email field.
+	 *
+	 * @param string $default Default value to be used if unset.
+	 * @return string
+	 */
+	public function emailValue($default='')
 	{
 		return $this->value($this->emailName(), $default);
 	}
 	
-	public function websiteValue($default = '')
+	/**
+	 * Convenience method for accessing `$this->value()` for the website field.
+	 *
+	 * @param string $default Default value to be used if unset.
+	 * @return string
+	 */
+	public function websiteValue($default='')
 	{
 		return $this->value($this->websiteName(), $default);
 	}
 	
-	public function messageValue($default = '')
+	/**
+	 * Convenience method for accessing `$this->value()` for the message field.
+	 *
+	 * @param string $default Default value to be used if unset.
+	 * @return string
+	 */
+	public function messageValue($default='')
 	{
 		return $this->value($this->messageName(), $default);
 	}
 	
-	public function customFieldValue($field_name, $default = '')
+	/**
+	 * Convenience method for accessing `$this->value()` for custom fields.
+	 *
+	 * @param string $field_name Name of the custom field.
+	 * @param string $default Default value to be used if unset.
+	 * @return string
+	 */
+	public function customFieldValue($field_name, $default='')
 	{
 		return $this->value($this->customFieldName($field_name), $default);
 	}
 	
-	public function honeypotValue($default = '')
+	/**
+	 * Convenience method for accessing `$this->value()` for the honeypot field.
+	 *
+	 * @param string $default Default value to be used if unset.
+	 * @return string
+	 */
+	public function honeypotValue($default)
 	{
 		return $this->value($this->honeypotName(), $default);
 	}
 	
+	/**
+	 * HTTP POST name of the submit button. Used as the key for the HTTP POST
+	 * data and as the value of the HTML input `name` attribute.
+	 *
+	 * @return string
+	 */
 	public function submitName()
 	{
 		return Comments::option('form.submit');
 	}
 	
+	/**
+	 * HTTP POST name of the preview button. Used as the key for the HTTP POST
+	 * data and as the value of the HTML input `name` attribute.
+	 *
+	 * @return string
+	 */
 	public function previewName()
 	{
 		return Comments::option('form.preview');
 	}
 	
+	/**
+	 * HTTP POST name of the name field. Used as the key for the HTTP POST data
+	 * and as the value of the HTML input `name` attribute.
+	 *
+	 * @return string
+	 */
 	public function nameName()
 	{
 		return Comments::option('form.name');
 	}
 	
+	/**
+	 * HTTP POST name of the email field. Used as the key for the HTTP POST data
+	 * and as the value of the HTML input `name` attribute.
+	 *
+	 * @return string
+	 */
 	public function emailName()
 	{
 		return Comments::option('form.email');
 	}
 	
+	/**
+	 * HTTP POST name of the website field. Used as the key for the HTTP POST
+	 * data and as the value of the HTML input `name` attribute.
+	 *
+	 * @return string
+	 */
 	public function websiteName()
 	{
 		return Comments::option('form.website');
 	}
 	
+	/**
+	 * HTTP POST name of the message field. Used as the key for the HTTP POST
+	 * data and as the value of the HTML input `name` attribute.
+	 *
+	 * @return string
+	 */
 	public function messageName()
 	{
 		return Comments::option('form.message');
 	}
 	
+	/**
+	 * HTTP POST name of the honeypot field. Used as the key for the HTTP POST
+	 * data and as the value of the HTML input `name` attribute.
+	 *
+	 * @return string
+	 */
 	public function honeypotName()
 	{
 		return Comments::option('form.honeypot');
 	}
 	
+	/**
+	 * HTTP POST name of the session ID field. Used as the key for the HTTP POST
+	 * data and as the value of the HTML input `name` attribute.
+	 *
+	 * @return string
+	 */
 	public function sessionIdName()
 	{
 		return Comments::option('form.session_id');
 	}
 	
+	/**
+	 * HTTP POST name of a custom field. Used as the key for the HTTP POST data
+	 * and as the value of the HTML input `name` attribute. `null` iff no custom
+	 * field with the name `$field_name` exists.
+	 *
+	 * @param string $field_name Name of the custom field.
+	 * @return null|string
+	 */
 	public function customFieldName($field_name)
 	{
 		$type = CommentsFieldType::named($field_name);
@@ -465,68 +709,159 @@ class Comments implements Iterator, Countable
 		return null;
 	}
 	
+	/**
+	 * `true` iff the honeypot mechanism is enabled.
+	 *
+	 * @return bool
+	 */
 	public function isUsingHoneypot()
 	{
 		return Comments::option('honeypot.enabled');
 	}
 	
-	// [deprecated], use `requireEmailAddress` instead
-	public function requiresEmailAddress() {
-		return $this->requireEmailAddress();
+	/**
+	 * `true` iff a comment author has to provide an email address.
+	 *
+	 * @return bool
+	 */
+	public function requiresName()
+	{
+		return Comments::option('form.name.required');
 	}
 	
-	public function requireEmailAddress()
+	/**
+	 * `true` iff a comment author has to provide an email address.
+	 *
+	 * @return bool
+	 */
+	public function requiresEmailAddress()
 	{
 		return Comments::option('form.email.required');
 	}
 	
-	public function messageMaxLength()
+	/**
+	 * `true` iff a comment author has to provide a value for the custom field.
+	 *
+	 * @param string $field_name Name of the custom field.
+	 * @return bool
+	 */
+	public function requiresCustomField($field_name)
 	{
-		return Comments::option('form.message.max-length');
+		$type = CommentsFieldType::named($field_name);
+		
+		if ($type !== null) {
+			return $type->isRequired();
+		}
+		return false;
 	}
 	
-	// [deprecated], use `nameMaxLength`, `emailMaxLength`, `websiteMaxLength`
-	// instead
-	public function fieldMaxlength()
-	{
-		return $this->nameMaxLength();
+	/**
+	 * `true` iff a comment author must provide an email address. ATTENTION: this
+	 * method is DEPRECATED, use `$this->requiresEmailAddress()` instead.
+	 *
+	 * @deprecated
+	 * @return bool
+	 */
+	public function requireEmailAddress() {
+		return $this->requiresEmailAddress();
 	}
 	
+	/**
+	 * Maximum allowed number of characters in the comment’s name field.
+	 *
+	 * @return integer
+	 */
 	public function nameMaxLength()
 	{
 		return Comments::option('form.name.max-length');
 	}
 	
+	/**
+	 * Maximum allowed number of characters in the comment’s email field.
+	 *
+	 * @return integer
+	 */
 	public function emailMaxLength()
 	{
 		return Comments::option('form.email.max-length');
 	}
 	
+	/**
+	 * Maximum allowed number of characters in the comment’s website field.
+	 *
+	 * @return integer
+	 */
 	public function websiteMaxLength()
 	{
 		return Comments::option('form.website.max-length');
 	}
 	
+	/**
+	 * Maximum allowed number of characters in the comment’s message field.
+	 *
+	 * @return integer
+	 */
+	public function messageMaxLength()
+	{
+		return Comments::option('form.message.max-length');
+	}
+	
+	/**
+	 * Maximum allowed number of characters in the comment’s name field.
+	 * ATTENTION: this method is DEPRECATED, use `$this->nameMaxLength()`,
+	 * `$this->emailMaxLength()`, `$this->websiteMaxLength()` or
+	 * `$this->messageMaxLength()` instead.
+	 *
+	 * @deprecated
+	 * @return integer
+	 */
+	public function fieldMaxlength()
+	{
+		return $this->nameMaxLength();
+	}
+	
+	/**
+	 * ID of the current comments session.
+	 *
+	 * @return string
+	 */
 	public function sessionId()
 	{
 		return $_SESSION[Comments::option('session.key')];
 	}
 	
-	// [deprecated], use `isValidPreview` instead
+	/**
+	 * `true` iff the current request is a preview and the preview is valid.
+	 *
+	 * @return bool
+	 */
+	public function isValidPreview()
+	{
+		return $this->is_valid_preview;
+	}
+	
+	/**
+	 * `true` iff the current request is a preview and the preview is valid.
+	 * ATTENTION: this method is DEPRECATED, use `$this->isValidPreview()`
+	 * instead.
+	 *
+	 * @deprecated
+	 * @return bool
+	 */
 	public function validPreview()
 	{
 		return $this->isValidPreview();
-	}
-	
-	public function isValidPreview()
-	{
-		return $this->valid_preview;
 	}
 	
 	//
 	// Converter
 	//
 	
+	/**
+	 * Returns the comments managed by this `Comments` instance.
+	 *
+	 * @return Comment[]
+	 */
 	public function toArray()
 	{
 		return $this->comments;
