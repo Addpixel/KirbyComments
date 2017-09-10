@@ -23,7 +23,7 @@ class Comment
 	 *
 	 * @var integer
 	 */
-	private $id;
+	protected $id;
 	
 	/**
 	 * Name of the comment author. `null` iff no email address was provided by
@@ -32,7 +32,7 @@ class Comment
 	 *
 	 * @var string|null
 	 */
-	private $name;
+	protected $name;
 	
 	/**
 	 * Email address of the comment author. `null` iff no email address was
@@ -41,7 +41,7 @@ class Comment
 	 *
 	 * @var string|null
 	 */
-	private $email_address;
+	protected $email_address;
 	
 	/**
 	 * Absolute website address (including scheme) of the comment author. `null`,
@@ -50,7 +50,7 @@ class Comment
 	 *
 	 * @var string|null
 	 */
-	private $website;
+	protected $website;
 	
 	/**
 	 * Message of the comment. This value is unescaped and may therefore contain
@@ -58,28 +58,28 @@ class Comment
 	 *
 	 * @var string
 	 */
-	private $message;
+	protected $message;
 	
 	/**
 	 * List of `CommentsField` objects used as custom fields.
 	 *
 	 * @var CommentsField[]
 	 */
-	private $custom_fields;
+	protected $custom_fields;
 	
 	/**
 	 * Date and time of the publication of the comment.
 	 *
 	 * @var \DateTime
 	 */
-	private $datetime;
+	protected $datetime;
 	
 	/**
 	 * `true` iff the comment is in preview mode and not stored as Kirby page.
 	 *
 	 * @var bool
 	 */
-	private $is_preview;
+	protected $is_preview;
 	
 	/**
 	 * Page on which the comment was posted or iff the comment is in preview mode,
@@ -87,7 +87,7 @@ class Comment
 	 *
 	 * @var Page
 	 */
-	private $content_page;
+	protected $content_page;
 	
 	/**
 	 * Implementation of the null coalescing operator; searching an array for an

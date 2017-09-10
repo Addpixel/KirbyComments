@@ -15,6 +15,7 @@
 
 include_once('plugin/Comments.php');
 include_once('plugin/Comment.php');
+include_once('plugin/NestedComment.php');
 include_once('plugin/CommentsEmail.php');
 include_once('plugin/CommentsStatus.php');
 include_once('plugin/CommentsField.php');
