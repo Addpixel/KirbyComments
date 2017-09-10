@@ -62,7 +62,7 @@ class CommentsEmail
 		$this->to = $to;
 		$this->message = strip_tags($comment->message());
 		$this->status = new CommentsStatus(0);
-		$this->subject = self::format($this, $subject);
+		$this->subject = CommentsEmail::format($comment, $subject);
 	}
 	
 	/**
@@ -117,7 +117,7 @@ class CommentsEmail
 			return new CommentsStatus(202);
 		}
 		
-		$body = self::format($this, $template);
+		$body = CommentsEmail::format($this->comment, $template);
 		$headers = 'Content-type: text/plain; charset=utf-8';
 		
 		foreach ($this->to as $to) {
