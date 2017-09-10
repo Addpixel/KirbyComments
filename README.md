@@ -542,6 +542,16 @@ ID of the current comments session.
 
 Returns the comments managed by this `Comments` instance sorted in chronological order.
 
+#### `$comments->nestByField($reference_field : string|null, $anchor_field=null : string|null, $compare_stringvalue=true : bool) : NestedComment[]`
+
+Nests comments based on a reference-to-anchor relationship.
+
+The anchor must be unique for every comment while zero or more references may point to the same anchor. A comment is added as a child iff its reference matches the anchor of another comment. A comment may not reference its own anchor. If the reference of a comment does not match any anchor it is placed at the top level.
+
+If `$reference_field` or `$anchor_field` are `null`, the comment’s ID is used instead.
+
+By default, the string value of the reference and the anchor are compared. Set `$compare_stringvalue` to `false` to compare the original values.
+
 ### `$comment : Comment`
 
 A `Comment` object stores information about the comment author, the comment’s message, and metadata like the publication date and the comment ID.
@@ -617,6 +627,28 @@ Page on which the comment was posted or if the comment is in preview mode, the p
 #### `$comment->isLinkable() : bool`
 
 `true` iff the website address of the comment author is not `null`.
+
+### `$nested : NestedComment extends Comment`
+
+An augmentation of the standard `Comment` class which support nesting. Nested comments are constructed from a standard comment and are assigned to a parent comment by calling `$parent->addChild($child)`.
+
+Nest comments using [`$comments->nestByField()`](#comments-nestbyfieldreference_field--stringnull-anchor_fieldnull--stringnull-compare_stringvaluetrue--bool--nestedcomment). You can also design your own nesting algorithm using this class to store children and parent information.
+
+#### `$nested->parent() : NestedComment`
+
+Parent comment in the nested structure. `null` iff the comment is nested on the top level.
+
+#### `$nested->children() : NestedComment[]`
+
+List of comments nested directly underneath this comment.
+
+#### `$nested->hasChildren() : bool`
+
+`true` iff the comment has nested children.
+
+#### `$nested->addChild($child : NestedComment)`
+
+Adds a comment to the children list and sets this comment as its parent.
 
 ### `$status : CommentsStatus`
 

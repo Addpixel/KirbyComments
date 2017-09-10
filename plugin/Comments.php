@@ -876,6 +876,56 @@ class Comments implements Iterator, Countable
 		return $this->comments;
 	}
 	
+	/**
+	 * Nests comments based on a reference-to-anchor relationship.
+	 * 
+	 * The anchor must be unique for every comment while zero or more references
+	 * may point to the same anchor. A comment is added as a child iff its
+	 * reference matches the anchor of another comment. A comment may not
+	 * reference its own anchor. If the reference of a comment does not match any
+	 * anchor it is placed at the top level.
+	 * 
+	 * If `$reference_field` or `$anchor_field` are `null`, the comment’s ID is
+	 * used instead.
+	 * 
+	 * By default, the string value of the reference and the anchor are compared.
+	 * Set `$compare_stringvalue` to `false` to compare the original values.
+	 *
+	 * @param string|null $reference_field
+	 * @param string|null $anchor_field
+	 * @param bool $compare_stringvalue
+	 * @return NestedComment[]
+	 */
+	public function nestByField($reference_field, $anchor_field=null, $compare_stringvalue=true)
+	{
+		/** @var NestedComment[] */
+		$nested_comments = array();
+		/** @var NestedComment[mixed] */
+		$labeled_comments = array();
+		
+		foreach ($this->comments as $comment) {
+			$anchor = $anchor_field === null ? $comment->id() : $comment->customField($anchor_field);
+			if ($compare_stringvalue) { $anchor = strval($anchor); }
+			
+			$labeled_comments[$anchor] = new NestedComment($comment);
+		}
+		
+		foreach ($this->comments as $comment) {
+			$anchor = $anchor_field === null ? $comment->id() : $comment->customField($anchor_field);
+			$reference = $reference_field === null ? $comment->id() : $comment->customField($reference_field);
+			if ($compare_stringvalue) { $reference = strval($reference); }
+			
+			if (isset($labeled_comments[$reference])) {
+				$labeled_comments[$reference]->addChild($labeled_comments[$anchor]);
+			}
+			else {
+				$nested_comments[] = $labeled_comments[$anchor];
+			}
+		}
+		
+		return $nested_comments;
+	}
+	
 	//
 	// Iterator
 	//
