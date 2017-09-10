@@ -608,7 +608,7 @@ class Comments implements Iterator, Countable
 	 * @param string $default Default value to be used if unset.
 	 * @return string
 	 */
-	public function honeypotValue($default)
+	public function honeypotValue($default='')
 	{
 		return $this->value($this->honeypotName(), $default);
 	}
