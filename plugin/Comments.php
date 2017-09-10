@@ -192,8 +192,10 @@ class Comments implements Iterator, Countable
 						foreach ($custom_fields_data as $field_name => $value) {
 							// Construct and add custom field
 							$type = CommentsFieldType::named($field_name);
-							$field = new CommentsField($type, $value, $this->page, false);
+							// Ignore undefined custom fields
+							if ($type === null) { continue; }
 							
+							$field = new CommentsField($type, $value, $this->page, false);
 							$custom_fields[] = $field;
 						}
 					}
