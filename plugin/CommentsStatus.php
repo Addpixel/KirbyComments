@@ -129,6 +129,16 @@ class CommentsStatus
 	}
 	
 	/**
+	 * `true` iff the status is in the Success domain.
+	 *
+	 * @return bool
+	 */
+	public function isSuccess()
+	{
+		return $this->is_in_domain('success');
+	}
+	
+	/**
 	 * `true` iff the status is not in the Success domain.
 	 *
 	 * @return bool

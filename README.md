@@ -704,6 +704,10 @@ Exception that has caused the status. `null` iff the status is not based upon an
 
 `true` iff the status is in the User or Custom domain.
 
+#### `$status->isSuccess() : bool`
+
+`true` iff the status is in the Success domain.
+
 #### `$status->isError() : bool`
 
 `true` iff the status is not in the Success domain.
