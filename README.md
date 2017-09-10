@@ -774,3 +774,41 @@ If `null`, a return value of `true` is assumed.
 Sanitizes the value of a field of this type. This closure receives the field’s value as its first argument and must return a value. Note that this closure is called after Kirby Comments’s validation and after `validate`.
 
 If `null`, a return value of `$value` is assumed.
+
+### Hooks
+
+Hooks allow to alter the behavior of Kirby Comments by running custom code at specific events. Hooks are defined in Kirby’s config.php and use the `comments.hooks.` prefix.
+
+#### `block-comment($comments : Comments, $comment : Comment) : bool`
+
+Blocks the creation of a comment for a return value of `true`. Blocking a comment causes:
+
+- The comment is not added to the comments list.
+- If in submission mode, the comment is not saved.
+- If in preview mode, the comment preview is stopped.
+- If the hook does not throw, the current status is returned from `$comments->process()`.
+- If the hook does throw, a status based on the thrown exception is returned from `$comments->process()`.
+
+This hook is invoked after a comment is created from the HTTP POST data. This happens during preview mode and when submitting a comment.
+
+##### Example: Blocking URLs
+
+```php
+c::set('comments.hooks.block-comment', function ($comments, $comment) {
+  if (strpos($comment->rawWebsite(), 'http://www.5z8.info') !== false) {
+    return true;
+  }
+  return false;
+});
+```
+
+##### Example: Blocking URLs With Custom Error Message
+
+```php
+c::set('comments.hooks.block-comment', function ($comments, $comment) {
+  if (strpos($comment->rawWebsite(), 'http://www.5z8.info') !== false) {
+    throw new Exception('5z8.info links are not allowed.', 400);
+  }
+  return false;
+});
+```
