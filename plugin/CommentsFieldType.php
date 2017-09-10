@@ -133,7 +133,7 @@ class CommentsFieldType
 		$validate = isset($array['validate']) ? $array['validate'] : null;
 		$sanitize = isset($array['sanitize']) ? $array['sanitize'] : null;
 		
-		return new CommentsFieldType($name, $title, $http_post_name, $is_required, $validate, $sanitize);
+		return new CommentsFieldType($name, $title, $http_post_name, $is_required, $max_length, $validate, $sanitize);
 	}
 	
 	/**
