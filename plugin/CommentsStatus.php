@@ -108,7 +108,7 @@ class CommentsStatus
 	}
 	
 	/**
-	 * Exception that has caused this status. `null` iff the status is not based
+	 * Exception that has caused the status. `null` iff the status is not based
 	 * upon an exception.
 	 *
 	 * @return Exception|null

@@ -51,12 +51,21 @@ class CommentsFieldType
 	private $is_required;
 	
 	/**
+	 * Maximum allowed number of characters in the field.
+	 *
+	 * @var integer
+	 */
+	private $max_length;
+	
+	/**
 	 * Validates the value of a field of this type. This closure receives the
 	 * field’s value as its first argument. Returns `true` for valid values,
 	 * throws exceptions with a code in the range of 400-499 for known validation
 	 * errors and returns `false` for unknown validation errors. Note that this
-	 * closure is called after Kirby Comments’s validation. If `null`, a return
-	 * value of `true` is assumed.
+	 * closure is called after Kirby Comments’s validation (which checks
+	 * `required` and `max-length`).
+	 * 
+	 * If `null`, a return value of `true` is assumed.
 	 * 
 	 * Signature: function validate($value: string, $page: Page)
 	 *
@@ -68,7 +77,9 @@ class CommentsFieldType
 	 * Sanitizes the value of a field of this type. This closure receives the
 	 * field’s value as its first argument and must return a value. Note that this
 	 * closure is called after Kirby Comments’s validation and after
-	 * `$this->validate`. If `null`, a return value of `$value` is assumed.
+	 * `$this->validate`.
+	 * 
+	 * If `null`, a return value of `$value` is assumed.
 	 * 
 	 * Signature: function sanitize($value: string, $page: Page)
 	 *
@@ -98,11 +109,12 @@ class CommentsFieldType
 	 * include a `name` key pointing to a string and can additionally contain any
 	 * of the following key-value pairs:
 	 *
-	 * - `title`: string
-	 * - `httpPostName`: string: If unset, `name` is used.
-	 * - `required`: bool: Defaults to `false`.
-	 * - `validate`: \Closure: Defaults to `null`.
-	 * - `sanitize`: \Closure: Defaults to `null`.
+	 * - `title : string`: If unset, `name` is used.
+	 * - `httpPostName : string`: If unset, `name` is used.
+	 * - `required : bool`: Defaults to `false`.
+	 * - `max-length : integer`: Defaults to 128.
+	 * - `validate : \Closure`: Defaults to `null`.
+	 * - `sanitize : \Closure`: Defaults to `null`.
 	 *
 	 * @param array $array
 	 * @return CommentsFieldType
@@ -117,6 +129,7 @@ class CommentsFieldType
 		$title = isset($array['title']) ? $array['title'] : $name;
 		$http_post_name = isset($array['httpPostName']) ? $array['httpPostName'] : $name;
 		$is_required = isset($array['required']) ? $array['required'] : false;
+		$max_length = isset($array['max-length']) ? $array['max-length'] : 128;
 		$validate = isset($array['validate']) ? $array['validate'] : null;
 		$sanitize = isset($array['sanitize']) ? $array['sanitize'] : null;
 		
@@ -130,15 +143,17 @@ class CommentsFieldType
 	 * @param string $title
 	 * @param string $http_post_name
 	 * @param bool $is_required
+	 * @param integer $max_length
 	 * @param Closure|null $validate
 	 * @param Closure|null $sanitize
 	 */
-	function __construct($name, $title, $http_post_name, $is_required, $validate, $sanitize)
+	function __construct($name, $title, $http_post_name, $is_required, $max_length, $validate, $sanitize)
 	{
 		$this->name = $name;
 		$this->title = $title;
 		$this->http_post_name = $http_post_name;
 		$this->is_required = $is_required;
+		$this->max_length = $max_length;
 		$this->validate = $validate;
 		$this->sanitize = $sanitize;
 	}
@@ -182,6 +197,16 @@ class CommentsFieldType
 	public function isRequired()
 	{
 		return $this->is_required;
+	}
+	
+	/**
+	 * Maximum allowed number of characters in the field.
+	 *
+	 * @return integer
+	 */
+	public function maxLength()
+	{
+		return $this->max_length;
 	}
 	
 	/**

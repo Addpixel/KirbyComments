@@ -210,7 +210,7 @@ class Comments implements Iterator, Countable
 						new DateTime(date('c', $comment_page->date()))
 					);
 				} catch (Exception $e) {
-					throw new Exception('Could not create comment from page.', 102, $e);
+					throw new Exception('Could not construct `Comment` from page.', 102, $e);
 				}
 			}
 		}
@@ -520,6 +520,14 @@ class Comments implements Iterator, Countable
 	/**
 	 * Returns the HTML-escaped value of the HTTP POST data with the name
 	 * `$name`.
+	 * 
+	 * When a user submits a form, the page is reloaded and all fields in the
+	 * form are cleared. In order to keep the text that the user has typed into
+	 * the fields, you have to set the `value` attribute of all input fields to
+	 * the value which was transmitted by the forms request.
+	 * 
+	 * This method helps you in doing so by returning `$default` if the form was
+	 * not submitted, or an HTML-escaped version of the value posted by the user.
 	 *
 	 * @param string $name HTTP POST name of the field.
 	 * @param string $default Default value to be used if unset.
@@ -670,6 +678,24 @@ class Comments implements Iterator, Countable
 	}
 	
 	/**
+	 * HTTP POST name of a custom field. Used as the key for the HTTP POST data
+	 * and as the value of the HTML input `name` attribute. `null` iff no custom
+	 * field with the name `$field_name` exists.
+	 *
+	 * @param string $field_name Name of the custom field.
+	 * @return null|string
+	 */
+	public function customFieldName($field_name)
+	{
+		$type = CommentsFieldType::named($field_name);
+		
+		if ($type !== null) {
+			return $type->httpPostName();
+		}
+		return null;
+	}
+	
+	/**
 	 * HTTP POST name of the honeypot field. Used as the key for the HTTP POST
 	 * data and as the value of the HTML input `name` attribute.
 	 *
@@ -689,24 +715,6 @@ class Comments implements Iterator, Countable
 	public function sessionIdName()
 	{
 		return Comments::option('form.session_id');
-	}
-	
-	/**
-	 * HTTP POST name of a custom field. Used as the key for the HTTP POST data
-	 * and as the value of the HTML input `name` attribute. `null` iff no custom
-	 * field with the name `$field_name` exists.
-	 *
-	 * @param string $field_name Name of the custom field.
-	 * @return null|string
-	 */
-	public function customFieldName($field_name)
-	{
-		$type = CommentsFieldType::named($field_name);
-		
-		if ($type !== null) {
-			return $type->httpPostName();
-		}
-		return null;
 	}
 	
 	/**
@@ -858,7 +866,8 @@ class Comments implements Iterator, Countable
 	//
 	
 	/**
-	 * Returns the comments managed by this `Comments` instance.
+	 * Returns the comments managed by this `Comments` instance sorted in
+	 * chronological order.
 	 *
 	 * @return Comment[]
 	 */

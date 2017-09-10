@@ -122,7 +122,7 @@ class Comment
 			$human_value = Comments::option('honeypot.human-value');
 			
 			if ($post_value !== $human_value) {
-				throw new Exception('Comment must be written by a human being.', 310);
+				throw new Exception('The comment must be written by a human being.', 310);
 			}
 		}
 		
@@ -145,14 +145,18 @@ class Comment
 			
 			$value = isset($_POST[$key]) ? $_POST[$key] : '';
 			
+			if (strlen($value) > $type->maxLength()) {
+				throw new Exception('The '.$type->title().' is too long.', 313);
+			}
+			
 			return new CommentsField($type, $value, $content_page, true);
 		}, CommentsFieldType::$instances);
 		
 		// Validate fields
 		if (gettype($id) !== 'integer') {
-			throw new Exception('The ID of a comment must be of the type integer.', 100);
+			throw new Exception('Expected comment ID of type integer.', 100);
 		} elseif ($id <= 0) {
-			throw new Exception('The ID of a comment must be bigger than 0.', 101);
+			throw new Exception('Expected comment ID of value greater than 0.', 101);
 		} elseif (Comments::option('form.name.required') && $name == '') {
 			throw new Exception('The name field is required.', 301);
 		} elseif (strlen($name) > Comments::option('form.name.max-length')) {
@@ -160,17 +164,17 @@ class Comment
 		} elseif (Comments::option('form.email.required') && $email_address == '') {
 			throw new Exception('The email address field is required.', 303);
 		} elseif ($email_address != '' && !v::email($email_address)) {
-			throw new Exception('The email address is not valid.', 304);
+			throw new Exception('The email address must be valid.', 304);
 		} elseif (strlen($email_address) > Comments::option('form.email.max-length')) {
 			throw new Exception('The email address is too long.', 305);
 		} elseif (preg_match('/^\s*javascript:/i', $website)) {
-			throw new Exception('The website address may not contain JavaScript code.', 306);
+			throw new Exception('The website address field must not contain JavaScript code.', 306);
 		} elseif (strlen($website) > Comments::option('form.website.max-length')) {
 			throw new Exception('The website address is too long.', 307);
 		} elseif ($message == '') {
-			throw new Exception('The message must not be empty.', 308);
+			throw new Exception('The message field is required.', 308);
 		} elseif (strlen($message) > Comments::option('form.message.max-length')) {
-			throw new Exception('The message is to long. (A maximum of '.Comments::option('form.message.max-length').' characters is allowed.)', 309);
+			throw new Exception('The message is too long. (A maximum of '.Comments::option('form.message.max-length').' characters is allowed.)', 309);
 		}
 		
 		return new Comment($content_page, $id, $name, $email_address, $website, $message, $custom_fields, $datetime, $is_preview);
@@ -229,7 +233,7 @@ class Comment
 	}
 	
 	/**
-	 * HTML escaped name of the comment author.
+	 * HTML escaped name of the comment author. `""` iff no name was specified.
 	 *
 	 * @return string
 	 */
@@ -242,9 +246,9 @@ class Comment
 	}
 	
 	/**
-	 * Unescaped name of the comment author.
+	 * Unescaped name of the comment author. `null` iff no name was specified.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function rawName()
 	{
@@ -252,7 +256,8 @@ class Comment
 	}
 	
 	/**
-	 * HTML escaped email address of the comment author.
+	 * HTML escaped email address of the comment author. `""` iff no email
+	 * address was specified.
 	 *
 	 * @return string
 	 */
@@ -265,7 +270,8 @@ class Comment
 	}
 	
 	/**
-	 * Unescaped email address on the comment author.
+	 * Unescaped email address on the comment author. `null` iff no email address
+	 * was specified.
 	 *
 	 * @return string|null
 	 */
@@ -275,7 +281,8 @@ class Comment
 	}
 	
 	/**
-	 * HTML escaped website address of the comment author.
+	 * HTML escaped website address of the comment author. `""` iff no website
+	 * address was specified.
 	 *
 	 * @return string
 	 */
@@ -288,9 +295,10 @@ class Comment
 	}
 	
 	/**
-	 * Unescaped website address of the comment author.
+	 * Unescaped website address of the comment author. `null` iff no website
+	 * address was specified.
 	 *
-	 * @return null|string
+	 * @return string|null
 	 */
 	public function rawWebsite()
 	{
@@ -354,7 +362,9 @@ class Comment
 	}
 	
 	/**
-	 * Formatted date and time of the publication of the comment.
+	 * Formatted date and/or time of the publication of the comment. The value of
+	 * `$format` must match a pattern for PHP’s `DateTime::format` method
+	 * (http://php.net/manual/de/datetime.format.php).
 	 *
 	 * @param string $format
 	 * @return string
@@ -367,7 +377,7 @@ class Comment
 	/**
 	 * Date and time of the publication of the comment.
 	 *
-	 * @return DateTime
+	 * @return \DateTime
 	 */
 	public function datetime()
 	{
