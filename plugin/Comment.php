@@ -315,7 +315,13 @@ class Comment
 	 */
 	public function message()
 	{
-		$message = markdown(htmlentities($this->message));
+		$message = $this->message;
+		
+		if (Comments::option('form.message.htmlentities')) {
+			$message = htmlentities($message);
+		}
+		
+		$message = markdown($message);
 		
 		if (Comments::option('form.message.smartypants')) {
 			$message = smartypants($message);

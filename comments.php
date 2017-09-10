@@ -42,6 +42,7 @@ Comments::init(array(
 	'form.website.max-length'          => 64,
 	'form.message'                     => 'message',
 	'form.message.allowed_tags'        => '<p><br><a><em><strong><code><pre>',
+	'form.message.htmlentities'        => true,
 	'form.message.smartypants'         => true,
 	'form.message.max-length'          => 1024,
 	'form.session_id'                  => 'session_id',

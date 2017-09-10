@@ -102,6 +102,7 @@ c::set('comments.pages.comments.title', function ($page) {
 | `form.website.max-length` | integer | `64` | Maximum length of the value in the website field. | |
 | `form.message` | string | `"message"` | POST name of the message field. | |
 | `form.message.allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | HTML tags that are allowed in a comment’s message. | |
+| `form.message.htmlentities` | bool | `true` | Whether to apply `htmlentities` to a message. Iff `true` is called before `markdown`. | * |
 | `form.message.smartypants` | bool | `true` | Whether to apply [SmartyPants](https://daringfireball.net/projects/smartypants/) to comment messages. Requires the [global smartypants option](https://getkirby.com/docs/cheatsheet/options/smartypants) to be `true`. | |
 | `form.message.max-length` | integer | `1024` | Maximum length of the value in the message field. | |
 | `form.session_id` | string | `"session_id"` | POST name of the session ID field. | |
