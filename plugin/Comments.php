@@ -500,10 +500,10 @@ class Comments implements Iterator, Countable
 	 */
 	public function isSuccessfulSubmission()
 	{
-		$is_error = !$this->status->isError();
+		$is_success = $this->status->isSuccess();
 		$is_submit = isset($_POST[Comments::option('form.submit')]);
 		
-		return !$is_error && $is_submit;
+		return $is_success && $is_submit;
 	}
 	
 	/**
