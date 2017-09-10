@@ -289,6 +289,16 @@ class Comments implements Iterator, Countable
 	public static function invokeHook($hook_name, $default, $arguments) {
 		$hook = c::get('comments.hooks.'.$hook_name, null);
 		
+		// Handle deprecation
+		if ($hook_name === 'get-content-page-title' && c::get('comments.setup.content-page.title', null) !== null) {
+			$f = c::get('comments.setup.content-page.title');
+			return $f($arguments[0]);
+		}
+		if ($hook_name === 'decide-comments-page-title' && c::get('comments.pages.comments.title', null) !== null) {
+			$f = c::get('comments.pages.comments.title');
+			return $f($arguments[0]);
+		}
+		
 		if ($hook !== null) {
 			return call_user_func_array($hook, $arguments);
 		}
@@ -370,8 +380,9 @@ class Comments implements Iterator, Countable
 			return $this->status;
 		}
 		
+		// Block comment hook
 		try {
-			if (Comments::invokeHook('block-comment', false, array($this, $new_comment))) {
+			if (Comments::invokeHook('decide-block-comment', false, array($this, $new_comment))) {
 				return $this->status;
 			}
 		} catch (Exception $e) {
@@ -388,12 +399,19 @@ class Comments implements Iterator, Countable
 					$dirname,
 					$template,
 					array(
-						'title' => Comments::option('pages.comments.title', $this->page),
+						'title' => Comments::invokeHook('decide-comments-page-title', null, array($this->page)),
 						'date'  => $now->format('Y-m-d H:i:s')
 					)
 				);
 			} catch (Exception $e) {
 				$this->status = new CommentsStatus(200, $e);
+				return $this->status;
+			}
+			
+			try {
+				Comments::invokeHook('did-create-comments-page', null, array($this, $comments_page));
+			} catch (Exception $e) {
+				$this->status = new CommentsStatus($e->getCode(), $e);
 				return $this->status;
 			}
 		}
@@ -448,6 +466,14 @@ class Comments implements Iterator, Countable
 			// Comment has been saved
 			//
 			
+			// Did save comment hook
+			try {
+				Comments::invokeHook('did-save-comment', null, array($this, $new_comment));
+			} catch (Exception $e) {
+				$this->status = new CommentsStatus($e->getCode(), $e);
+				return $this->status;
+			}
+			
 			if (Comments::option('email.enabled')) {
 				// Send email notifications
 				$email = new CommentsEmail(
@@ -468,6 +494,14 @@ class Comments implements Iterator, Countable
 		
 		if ($is_preview) {
 			$this->is_valid_preview = true;
+			
+			// Did preview comment hook
+			try {
+				Comments::invokeHook('did-preview-comment', null, array($this, $new_comment));
+			} catch (Exception $e) {
+				$this->status = new CommentsStatus($e->getCode(), $e);
+				return $this->status;
+			}
 		}
 		
 		return $this->status;

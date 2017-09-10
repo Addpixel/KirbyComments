@@ -80,7 +80,7 @@ class CommentsEmail
 			'comment.user.email' => $comment->email(),
 			'comment.user.website' => $comment->website(),
 			'comment.message' => $comment->rawMessage(),
-			'page.title' => Comments::option('setup.content-page.title', $comment->page()),
+			'page.title' => Comments::invokeHook('get-content-page-title', null, $comment->page()),
 			'page.url' => $comment->page()->url()
 		);
 		

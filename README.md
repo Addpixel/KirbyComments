@@ -85,7 +85,6 @@ c::set('comments.pages.comments.title', function ($page) {
 
 | Name | Type | Default | Description | * |
 |---|---|---|---|---|
-| `pages.comments.title` | Closure | `function ($page) { return 'Comments for “' . $page->title() . '”'; }` | Takes a `Page` on which a comment was posted and returns the title for the comments page as a `string`. | |
 | `pages.comments.dirname` | string | `"comments"` | Name of the folder of a comments page. | * |
 | `pages.comments.template` | string | `"comments"` | Name of the template and blueprint of a comments page. | * |
 | `pages.comment.dirname` | string | `"comment"` | Name of the folder of a comment page. | * |
@@ -114,8 +113,7 @@ c::set('comments.pages.comments.title', function ($page) {
 | `email.subject` | string | `"New Comment on {{ page.title }}"` | Subject of an email notification. | |
 | `email.undefined-value` | string | `"(not specified)"` | Text that is inserted for values that the comment’s author did not specify. | |
 | `session.key` | string | `"comments"` | Key used to store the comments session. | |
-| `custom-field` | array(array(string => string \| bool \| Closure)) | `array()` | Custom field definitions. | |
-| `setup.content-page.title` | Closure | `function ($page) { return $page->title(); }` | Takes a `Page` and returns its title as `string`. Is used for generating email notifications. | |
+| `custom-field` | array(array(string => string\|bool\|Closure)) | `array()` | Custom field definitions. | |
 
 \* Can not be changed after the first comment was published on the site.
 
@@ -780,7 +778,7 @@ If `null`, a return value of `$value` is assumed.
 
 Hooks allow to alter the behavior of Kirby Comments by running custom code at specific events. Hooks are defined in Kirby’s config.php and use the `comments.hooks.` prefix.
 
-#### `block-comment($comments : Comments, $comment : Comment) : bool`
+#### `decide-block-comment($comments : Comments, $comment : Comment) : bool`
 
 Blocks the creation of a comment for a return value of `true`. Blocking a comment causes:
 
@@ -795,7 +793,7 @@ This hook is invoked after a comment is created from the HTTP POST data. This ha
 ##### Example: Blocking URLs
 
 ```php
-c::set('comments.hooks.block-comment', function ($comments, $comment) {
+c::set('comments.hooks.decide-block-comment', function ($comments, $comment) {
   if (strpos($comment->rawWebsite(), 'http://www.5z8.info') !== false) {
     return true;
   }
@@ -806,10 +804,56 @@ c::set('comments.hooks.block-comment', function ($comments, $comment) {
 ##### Example: Blocking URLs With Custom Error Message
 
 ```php
-c::set('comments.hooks.block-comment', function ($comments, $comment) {
+c::set('comments.hooks.decide-block-comment', function ($comments, $comment) {
   if (strpos($comment->rawWebsite(), 'http://www.5z8.info') !== false) {
     throw new Exception('5z8.info links are not allowed.', 400);
   }
   return false;
 });
+```
+
+
+#### `did-create-comments-page($comments : Comments, $commentsPage: Page)`
+
+This hook is invoked after a comments page has been created.
+
+- `$comments`: Comments list of the new comments page.
+- `$commentsPage`: The new comments page.
+
+#### `did-preview-comment($comments : Comments, $comment : Comment)`
+
+This hook is invoked after a comment preview has been successfully generated.
+
+- `$comments`: Comments list containing the previewed comment.
+- `$comment`: The previewed comment.
+
+#### `did-save-comment($comments : Comments, $comment : Comment)`
+
+This hook is invoked after a comment has been saved as file.
+
+- `$comments`: Comments list containing the new comment.
+- `$comment`: The new comment.
+
+#### `decide-comments-page-title($page : Page) : string`
+
+Returns the title of the comments page which will be created as subpage of `$page`.
+
+##### Default
+
+```php
+function ($page) {
+  return 'Comments for “' . $page->title() . '”';
+}
+```
+
+#### `get-content-page-title($page : Page) : string`
+
+Returns the title of a content page. Most pages use the `title` field to store the title of the page, but some pages may use a different field as title and should return that instead.
+
+##### Default
+
+```php
+function ($page) {
+  return $page->title();
+}
 ```
