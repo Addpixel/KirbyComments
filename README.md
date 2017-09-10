@@ -2,7 +2,7 @@
 
 File-based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell. [Live-Demo](https://kirby-comments.addpixel.net/demos/comments).
 
-[![](https://kirby-comments.addpixel.net/kirbycomments.svg)](https://kirby-comments.addpixel.net/demos/comments)
+[![](https://addpixel.net/kirby-comments/banner.svg)](https://kirby-comments.addpixel.net/demos/comments)
 
 ## Features
 
