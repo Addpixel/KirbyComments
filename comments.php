@@ -57,6 +57,7 @@ Comments::init(array(
 	'email.undefined-value'     => '(not specified)',
 	'session.key'               => 'comments',
 	'custom-fields'             => array(),
+	'hooks.block-comment'       => null,
 	'setup.content-page.title'  => function ($page) {
 		return $page->title();
 	}

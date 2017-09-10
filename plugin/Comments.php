@@ -180,7 +180,7 @@ class Comments implements Iterator, Countable
 		$comments_page = $this->page->find($comments_page_dirname);
 		
 		// Check for existence of stored comments
-		if ($comments_page !== null) {
+		if ($comments_page != null) {
 			foreach ($comments_page->children() as $comment_page) {
 				try {
 					// Read custom fields
@@ -277,6 +277,24 @@ class Comments implements Iterator, Countable
 		}
 	}
 	
+	/**
+	 * Invokes a hook and returns its return value. Returns `null` if the hook is
+	 * undefined or `null`.
+	 *
+	 * @param string $hook_name
+	 * @param mixed|null $default
+	 * @param mixed[] $arguments
+	 * @return mixed|null
+	 */
+	public static function invokeHook($hook_name, $default, $arguments) {
+		$hook = c::get('comments.hooks.'.$hook_name, null);
+		
+		if ($hook !== null) {
+			return call_user_func_array($hook, $arguments);
+		}
+		return $default;
+	} 
+	
 	//
 	// Process Comment
 	//
@@ -352,7 +370,16 @@ class Comments implements Iterator, Countable
 			return $this->status;
 		}
 		
-		if ($comments_page === null) {
+		try {
+			if (Comments::invokeHook('block-comment', false, array($this, $new_comment))) {
+				return $this->status;
+			}
+		} catch (Exception $e) {
+			$this->status = new CommentsStatus($e->getCode(), $e);
+			return $this->status;
+		}
+		
+		if ($comments_page == null) {
 			// No comment was posted on `$this->page` yet; create comments page
 			try {
 				$dirname = Comments::option('pages.comments.dirname');
