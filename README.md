@@ -721,7 +721,7 @@ c::set('comments.custom-fields', array(
   array(
     'name' => 'my_custom_field',
     'title' => 'My Custom Field',
-    'httpPostName' => 'my_custom_field',
+    'http-post-name' => 'my_custom_field',
     'required' => true,
     'max-length' => 32,
     'validate' => function ($value, $page) {
@@ -751,7 +751,7 @@ Name of the field type. Must be usable as a YAML object key.
 
 Title of the field type. Describes the field type with one or two words.
 
-#### `httpPostName : string`
+#### `http-post-name : string`
 
 Name used to identify fields of this type over HTTP POST.
 

@@ -110,7 +110,7 @@ class CommentsFieldType
 	 * of the following key-value pairs:
 	 *
 	 * - `title : string`: If unset, `name` is used.
-	 * - `httpPostName : string`: If unset, `name` is used.
+	 * - `http-post-name : string`: If unset, `name` is used.
 	 * - `required : bool`: Defaults to `false`.
 	 * - `max-length : integer`: Defaults to 128.
 	 * - `validate : \Closure`: Defaults to `null`.
@@ -127,7 +127,7 @@ class CommentsFieldType
 		}
 		$name = $array['name'];
 		$title = isset($array['title']) ? $array['title'] : $name;
-		$http_post_name = isset($array['httpPostName']) ? $array['httpPostName'] : $name;
+		$http_post_name = isset($array['http-post-name']) ? $array['http-post-name'] : $name;
 		$is_required = isset($array['required']) ? $array['required'] : false;
 		$max_length = isset($array['max-length']) ? $array['max-length'] : 128;
 		$validate = isset($array['validate']) ? $array['validate'] : null;
