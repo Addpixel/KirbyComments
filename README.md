@@ -6,15 +6,16 @@ File-based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 
 ## Features
 
-- [X] file-based
-- [X] Kirby CLI installation & update support
-- [X] email notifications for new comments
-- [X] preview comments before submitting them
-- [X] use a honeypot to prevent spam
-- [X] block cross-site request forgery
-- [X] nesting
-- [X] custom fields
-- [X] tons of options
+- [X] File-based
+- [X] Kirby CLI Installation & Update Support
+- [X] Email-Notifications for new Comments
+- [X] Preview Comments Before Submitting Them
+- [X] Use a Honeypot to Prevent Spam
+- [X] Block Cross-site Request Forgery
+- [X] Hooks
+- [X] Nesting
+- [X] Custom Fields
+- [X] Tons of Options
 
 ## Installation
 
