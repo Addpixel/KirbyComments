@@ -504,9 +504,9 @@ Unprocessed message. **May contain unescaped HTML/Markdown code; use with cautio
 
 List of custom fields.
 
-#### `$comment->customField($field_name : string) : mixed|null`
+#### `$comment->customField($fieldName : string) : mixed|null`
 
-Unescaped value of the custom field with the name `$field_name`. `null` if no custom field with the name `$field_name` exists.
+Unescaped value of the custom field with the name `$fieldName`. `null` if no custom field with the name `$fieldName` exists.
 
 #### `$comment->date($format="Y-m-d" : string) : string`
 
@@ -585,9 +585,9 @@ Exception that has caused the status. `null` iff the status is not based upon an
 
 `true` iff the status is not in the Success domain.
 
-### `$fieldType : CommentsFieldType`
+### `$type : CommentsFieldType`
 
-Defines the name, title, HTTP POST name, properties of custom fields, and provides validation and sanitization mechanisms.
+Defines the name, title, HTTP POST name, properties of custom fields, and provides validation and sanitization mechanisms. Custom fields are constructed from an associative array and placed in your config.php.
 
 ```php
 c::set('comments.custom-fields', array(
@@ -607,7 +607,7 @@ c::set('comments.custom-fields', array(
 ));
 ```
 
-Custom fields are constructed from an associative array. The array must include a `name` key pointing to a string and can additionally contain any of the following key-value pairs:
+The array must include a `name` key pointing to a string and can additionally contain any of the following key-value pairs:
 
 - `title : string`: If unset, `name` is used.
 - `httpPostName : string`: If unset, `name` is used.
