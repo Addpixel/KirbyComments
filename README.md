@@ -733,44 +733,35 @@ c::set('comments.custom-fields', array(
 ));
 ```
 
-The array must include a `name` key pointing to a string and can additionally contain any of the following key-value pairs:
-
-- `title : string`: If unset, `name` is used.
-- `httpPostName : string`: If unset, `name` is used.
-- `required : bool`: Defaults to `false`.
-- `max-length : integer`: Defaults to `128`.
-- `validate : Closure`: Defaults to `null`.
-- `sanitize : Closure`: Defaults to `null`.
-
 #### `name : string`
 
-Name of the field type. Must be usable as a YAML object key.
+(**required**) Name of the field type. Must be usable as a YAML object key.
 
 #### `title : string`
 
-Title of the field type. Describes the field type with one or two words.
+(**optional**, defaults to `name`) Title of the field type. Describes the field type with one or two words.
 
 #### `http-post-name : string`
 
-Name used to identify fields of this type over HTTP POST.
+(**optional**, defaults to `name`) Name used to identify fields of this type over HTTP POST.
 
 #### `required : bool`
 
-`true` iff the value of fields of this type may not be an empty string or missing from the HTTP POST data.
+(**optional**, defaults to `false`) `true` iff the value of fields of this type may not be an empty string or missing from the HTTP POST data.
 
 #### `max-length : integer`
 
-Maximum allowed number of characters in the field.
+(**optional**, defaults to `128`) Maximum allowed number of characters in the field.
 
-#### `validate : function ($value : string, $page : Page) : string`
+#### `validate : Closure ($value : string, $page : Page) : string`
 
-Validates the value of a field of this type. This closure receives the field’s value as its first argument. Returns `true` for valid values, throws exceptions with a code in the range of 400-499 for known validation errors and returns `false` for unknown validation errors. Note that this closure is called after Kirby Comments’s validation (which checks `required` and `max-length`).
+(**optional**, defaults to `null`) Validates the value of a field of this type. This closure receives the field’s value as its first argument. Returns `true` for valid values, throws exceptions with a code in the range of 400-499 for known validation errors and returns `false` for unknown validation errors. Note that this closure is called after Kirby Comments’s validation (which checks `required` and `max-length`).
 
 If `null`, a return value of `true` is assumed.
 
-#### `sanitize : function ($value : string, $page, Page) : mixed|null`
+#### `sanitize : Closure ($value : string, $page, Page) : mixed|null`
 
-Sanitizes the value of a field of this type. This closure receives the field’s value as its first argument and must return a value. Note that this closure is called after Kirby Comments’s validation and after `validate`.
+(**optional**, defaults to `null`) Sanitizes the value of a field of this type. This closure receives the field’s value as its first argument and must return a value. Note that this closure is called after Kirby Comments’s validation and after `validate`.
 
 If `null`, a return value of `$value` is assumed.
 
