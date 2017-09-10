@@ -2,7 +2,7 @@
 
 File-based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell. [Live-Demo](https://kirby-comments.addpixel.net/demos/comments).
 
-[![](https://kirby-comments.addpixel.net/kirbycomments.svg)](https://kirby-comments.addpixel.net/demos/comments)
+[![](https://addpixel.net/kirby-comments/banner.svg)](https://kirby-comments.addpixel.net/demos/comments)
 
 ## Features
 
@@ -12,9 +12,8 @@ File-based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 - [X] preview comments before submitting them
 - [X] use a honeypot to prevent spam
 - [X] block cross-site request forgery
-- [X] standard, accessible markup
+- [X] custom fields
 - [X] tons of options
-- [X] blueprints
 
 ## Installation
 
@@ -196,8 +195,8 @@ You can read more about the comment’s status in the [API documentation](#statu
 ```html
 <?php foreach ($comments as $comment): ?>
   <div class="comment">
-    <h3>Comment by <?= $comment->name() ?></h3>
-    <div class="message"><?= $comment->message() ?></div>
+    <h3>Comment by <?php echo $comment->name() ?></h3>
+    <div class="message"><?php echo $comment->message() ?></div>
   </div>
 <?php endforeach ?>
 ```
@@ -222,28 +221,28 @@ Your form must fulfill the following criteria:
 
 - Submit as UTF-8 via HTTP POST
 - Submit to a page with a comments form (or simply to the same page)
-- Use Kirby Comments “name” and “value” methods for accessing the name and value of fields and buttons.
+- Use Kirby Comments *name* and *value* methods for accessing the name and value of fields and buttons.
 - Include a message field.
 - Include a hidden field with the session ID as value.
 - Include a preview and submit button, where the submit button is shown for valid previews only.
 
 A name field is required by default, but you can remove this constraint by adding `c::set('comments.form.name.required', false);` to your config.php.
 
-The following minimal example fulfills all of the above.
+The following minimal example fulfills all of the requirements above.
 
 ```html
 <form method="post" accept-charset="utf-8">
   <label for="name">Name</label>
-  <input type="text" id="name" name="<?= $comments->nameName() ?>" value="<?= $comments->nameValue() ?>">
+  <input type="text" id="name" name="<?php echo $comments->nameName() ?>" value="<?php echo $comments->nameValue() ?>">
   
   <label for="message">Message</label>
-  <textarea id="message" name="<?= $comments->messageName() ?>"><?= $comments->messageValue() ?></textarea>
+  <textarea id="message" name="<?php echo $comments->messageName() ?>"><?php echo $comments->messageValue() ?></textarea>
   
-  <input type="hidden" name="<?= $comments->sessionIdName() ?>" value="<?= $comments->sessionId() ?>">
+  <input type="hidden" name="<?php echo $comments->sessionIdName() ?>" value="<?php echo $comments->sessionId() ?>">
   
-  <input type="submit" name="<?= $comments->previewName() ?>" value="Preview">
+  <input type="submit" name="<?php echo $comments->previewName() ?>" value="Preview">
   <?php if ($comments->isValidPreview()): ?>
-    <input type="submit" name="<?= $comments->submitName() ?>" value="Submit">
+    <input type="submit" name="<?php echo $comments->submitName() ?>" value="Submit">
   <?php endif ?>
 </form>
 ```
@@ -270,7 +269,7 @@ To use the honeypot, include the following in your form:
 
 ```html
 <div class="hide-me">
-  <input type="text" name="<?= $comments->honeypotName() ?>" value="<?= $comments->honeypotValue() ?>">
+  <input type="text" name="<?php echo $comments->honeypotName() ?>" value="<?php echo $comments->honeypotValue() ?>">
 </div>
 ```
 
@@ -284,12 +283,12 @@ When submitting the form, the page will reload and your scroll position is lost.
 
 ```html
 <?php foreach ($comments as $comment): ?>
-  <div id="comment-<?= $comment->id() ?>">
+  <div id="comment-<?php echo $comment->id() ?>">
     ...
   </div>
 <?php endforeach ?>
 
-<form action="#comment-<?= $comments->nextCommentId() ?>" ...>
+<form action="#comment-<?php echo $comments->nextCommentId() ?>" ...>
   ...
 </form>
 ```
@@ -308,11 +307,102 @@ If you don’t want every comment to have an ID you can check for `$comment->isP
 </form>
 ```
 
+## Custom Fields
+
+Kirby Comments includes a *name*, *email address*, *website address*, and *message* field. Sometimes, however, you may want to associate additional information with a comment. Common use cases include fields for social-media usernames like a Twitter handle, hidden fields for implementing replies, or hidden fields for analytics (e.g. storing the user agent alongside the comment data).
+
+You can find the complete [custom fields documentation in the API reference](#type--commentsfieldtype).
+
+### Example: Twitter Handle
+
+In this custom fields guide we will build a custom field for storing the Twitter handle of the comment author. We want this field to
+
+- be optional (not required),
+- always start with an at-sign (`@`), and
+- only include characters that are valid Twitter-handle characters.
+
+#### Register Field
+
+Custom fields are registered in your config.php. The simplest implementation of a custom fields takes only a `name` parameter.
+
+```php
+c::set('comments.custom-fields', array(
+  array('name' => 'twitter_handle')
+));
+```
+
+This code already fulfills the first of our requirements, because custom fields are optional by default.
+
+#### Sanitizing Values
+
+Next, let’s ensure that the fields starts with an at-sign. This can be achieved by adding a `sanitize` function. The `sanitize` function takes the value of the field and the page the comment was posted on. For this example, we don’t need access to the page object.
+
+```php
+c::set('comments.custom-fields', array(
+  array(
+    'name' => 'twitter_handle',
+    'sanitize' => function ($value, $page) {
+      $trimmed = trim($value);
+      
+      if ($trimmed[0] === '@') {
+        return $trimmed;
+      }
+      return '@'.$trimmed;
+    }
+  )
+));
+```
+
+We define `sanitize` to remove spaces from both side of the string (`trim($value)`), return the trimmed version if it already starts with an at-sign and otherwise add an `@` before the trimmed value.
+
+#### Validating Values
+
+Lastly, we want to validate that the entered value does conform to Twitters username restrictions. Validating such specific patterns is a perfect scenario to use a regular expression.
+
+```php
+c::set('comments.custom-fields', array(
+  array(
+    'name' => 'twitter_handle',
+    'sanitize' => function ($value, $page) {
+      $trimmed = trim($value);
+      
+      if ($trimmed[0] === '@') {
+        return $trimmed;
+      }
+      return '@'.$trimmed;
+    },
+    'validate' => function ($value, $page) {
+      return preg_match('/^\s*@?[A-Za-z0-9_]{1,15}\s*$/', $value) === 1;
+    }
+  )
+));
+```
+
+`validate`, like `sanitize` receives a `$value` and a `$page` argument of which we only need the `$value` in this example. `validate` returns `true` if the regular expression matches and `false` otherwise.
+
+Note that `sanitize` is only called if `validate` returns `true`. This way, you don’t have validate values received by `sanitize`.
+
+Our custom field is ready to be used! Add it to the comments `<form>` so that users can fill it out:
+
+```html
+<?php $comments = $page->comments() ?>
+<from ...>
+...
+
+<label for="twitter-field">Twitter Handle</label>
+<input name="twitter_handle" value="<?php echo $comments->customFieldValue('twitter_handle') ?>" type="text" id="twitter-field">
+
+...
+</form>
+```
+
+Want do more with custom fields? Have a look at the [custom fields documentation in the API reference](#type--commentsfieldtype).
+
 ## API Documentation
 
 ### `$comments : Comments implements Iterator, Countable`
 
-The main object you will be using when working with Kirby Comments.
+`Comments` instances manage the comments of a specific Kirby page. This involves processing HTTP POST data for creating comment previews, submitting comments, storing comments as Kirby pages, reading those pages and reporting status.
 
 ```php
 $comments = $page->comments();
@@ -320,127 +410,143 @@ $comments = $page->comments();
 
 #### `$comments->process() : CommentsStatus`
 
-Processes the HTTP-POST data and creates new comments or generates preview comments. These comments are added to the list of comments contained by `$comments`.
+Processes comments based on the HTTP POST data of the HTTP request. This involves generating preview comments, storing published comments as Kirby pages, creating comments pages, validating user data and sending email notifications.
 
-This method may be called multiple times, but only executes once. The `CommentsStatus` object is returned on every call.
+This method may be called multiple times during a single HTTP request but execute only once. On repeated calls, the current status object is returned.
 
 #### `$comments->isEmpty() : bool`
 
-Whether `$comments` contains any comments (preview comments included).
+`true` iff no comment is managed by this `Comments` instance.
 
 #### `$comments->count() : integer`
 
-The number of comments managed by `$comments`. Comments loaded by calling `$comments->process()` (unpublished preview comments) are included.
+Number of comments managed `true` by this `Comments` instance.
 
 #### `$comments->nextCommentId() : integer`
 
-All comments have a per-page unique ID. The first comment has an ID of 1, the second an ID of 2, … This method returns the ID of the next comment. The *next* comment is the *next after all stored comments*, so previewing a comment does not change this value as the preview comment is described by the next-comment-id.
+The ID of the preview comment in case of a preview; the ID of the next, as of yet unwritten, comment otherwise. IDs start at 1 and increment on a per-page basis by 1.
 
-#### `$comments->userHasSubmitted() : bool`
+#### `$comments->isSuccessfulSubmission() : bool`
 
-Whether the user has successfully submitted a new comment.
+`true` iff the user has submitted a comment and no errors occurred.
 
 #### `$comments->value($name : string, $default="" : string) : string`
 
+Returns the HTML-escaped value of the HTTP POST data with the name `$name`.
+
 When a user submits a form, the page is reloaded and all fields in the form are cleared. In order to keep the text that the user has typed into the fields, you have to set the `value` attribute of all input fields to the value which was transmitted by the forms request.
 
-This method helps you in doing so, by returning `$default` if the form was not submitted, or an HTML-escaped version of the value posted by the user.
+This method helps you in doing so by returning `$default` if the form was not submitted, or an HTML-escaped version of the value posted by the user.
 
 ```html
-<input ... value="<?= $comments->value($comments->websiteName()) ?>">
+<input ... value="<?php echo $comments->value($comments->emailName()) ?>">
 ```
 
 #### `$comments->nameValue($default="" : string) : string`
 
-Convenience method for `$comments->value($comments->nameName(), $default)`.
+Convenience method for accessing `$this->value()` for the name field.
 
 #### `$comments->emailValue($default="" : string) : string`
 
-Convenience method for `$comments->value($comments->emailName(), $default)`.
+Convenience method for accessing `$this->value()` for the email field.
 
 #### `$comments->websiteValue($default="" : string) : string`
 
-Convenience method for `$comments->value($comments->websiteName(), $default)`.
+Convenience method for accessing `$this->value()` for the website field.
 
 #### `$comments->messageValue($default="" : string) : string`
 
-Convenience method for `$comments->value($comments->messageName(), $default)`.
+Convenience method for accessing `$this->value()` for the message field.
+
+#### `$comments->customFieldValue($field_name : string, $default="" : string) : string`
+
+Convenience method for accessing `$this->value()` for custom fields.
 
 #### `$comments->honeypotValue($default="" : string) : string`
 
-Convenience method for `$comments->value($comments->honeypotName(), $default)`.
+Convenience method for accessing `$this->value()` for the honeypot field.
 
 #### `$comments->submitName() : string`
 
-The HTTP-POST name for the submit button. The value is defined by the `form.submit` option.
+HTTP POST name of the submit button. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. The value is defined by the `form.submit` option.
 
 #### `$comments->previewName() : string`
 
-The HTTP-POST name for the preview button. The value is defined by the `form.preview` option.
+HTTP POST name of the preview button. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. The value is defined by the `form.preview` option.
 
 #### `$comments->nameName() : string`
 
-The HTTP-POST name for the name field. The value is defined by the `form.name` option. Yo dawg!
+HTTP POST name of the name field. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. The value is defined by the `form.name` option.
+
+#### `$comments->requiresName() : bool`
+
+`true` iff a comment author has to provide an email address. Corresponding option: `form.name.required`.
 
 #### `$comments->nameMaxLength() : integer`
 
-Maximum number of characters allowed in the name field. Corresponding option: `form.name.max-length`.
+Maximum allowed number of characters in the comment’s name field. Corresponding option: `form.name.max-length`.
 
 #### `$comments->emailName() : string`
 
-The HTTP-POST name for the email field. The value is defined by the `form.email` option.
+HTTP POST name of the email field. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. The value is defined by the `form.email` option.
 
-#### `$comments->requireEmailAddress() : bool`
+#### `$comments->requiresEmailAddress() : bool`
 
-Whether the plugin requires a (valid) email address. This behavior can be determined using the `form.email.required` option. The HTTP-POST name of the email field is defined by the `form.email` option.
+`true` iff a comment author has to provide an email address. Corresponding option: `form.name.required`.
 
 #### `$comments->emailMaxLength() : integer`
 
-Maximum number of characters allowed in the email address field. Corresponding option: `form.email.max-length`.
+Maximum allowed number of characters in the comment’s email field. Corresponding option: `form.email.max-length`.
 
 #### `$comments->websiteName() : string`
 
-The HTTP-POST name for the website field. The value is defined by the `form.website` option.
+HTTP POST name of the website field. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. The value is defined by the `form.website` option.
 
 #### `$comments->websiteMaxLength() : integer`
 
-Maximum number of characters allowed in the website field. Corresponding option: `form.website.max-length`.
+Maximum allowed number of characters in the comment’s website field. Corresponding option: `form.website.max-length`.
 
 #### `$comments->messageName() : string`
 
-The HTTP-POST name for the website field. The value is defined by the `form.message` option.
+HTTP POST name of the message field. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. The value is defined by the `form.message` option.
 
 #### `$comments->messageMaxLength() : integer`
 
-Maximum number of characters allowed in the message field. Corresponding option: `form.message.max-length`. 
+Maximum allowed number of characters in the comment’s message field. Corresponding option: `form.message.max-length`.
 
-#### `$comments->sessionIdName() : string`
+#### `$comments->customFieldName($field_name : string) : string|null`
 
-The HTTP-POST name for the session ID field. The value is defined by the `form.session_id` option.
-
-#### `$comments->sessionId() : string`
-
-The current session ID.
+HTTP POST name of a custom field. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. `null` iff no custom field with the name `$field_name` exists.
 
 #### `$comments->honeypotName() : string`
 
-The HTTP-POST name for the honeypot field. The value is defined by the `form.honeypot` option.
+HTTP POST name of the honeypot field. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. The value is defined by the `form.honeypot` option.
 
 #### `$comments->isUsingHoneypot() : bool`
 
-Whether the plugin should check the value of a honeypot field. This behavior can be determined using the `honeypot.enabled` option. The HTTP-POST name of the honeypot field is defined by the `form.honeypot` option.
+`true` iff the honeypot mechanism is enabled. Corresponding option: `honeypot.enabled`.
+
+#### `$comments->sessionIdName() : string`
+
+HTTP POST name of the session ID field. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. The value is defined by the `form.session_id` option.
+
+#### `$comments->sessionId() : string`
+
+ID of the current comments session.
 
 #### `$comments->isValidPreview() : bool`
 
-Whether the current preview is valid. `false`, if no preview is performed.
+`true` iff the current request is a preview and the preview is valid.
 
-#### `$comments->toArray() : array`
+#### `$comments->toArray() : Comment[]`
 
-Returns an array containing all comments managed by `$comments` in chronological order.
+Returns the comments managed by this `Comments` instance sorted in chronological order.
 
 ### `$comment : Comment`
 
-An individual comment.
+A `Comment` object stores information about the comment author, the comment’s message, and metadata like the publication date and the comment ID.
+
+Additionally, it provides methods for accessing its values in unescaped and escaped form for rendering templates.
 
 ```html
 <?php foreach ($comments as $comment): ?>
@@ -450,57 +556,71 @@ An individual comment.
 
 #### `$comment->id() : integer`
 
-The per-page unique identifier of the comment. IDs start at 1, not at 0.
+Unique identifier of the comment. The first comment on a page has an ID of 1, incrementing by 1 per page.
 
 #### `$comment->name() : string`
 
-The name of the author of the comment.
+HTML escaped name of the comment author. `""` iff no name was specified.
 
-#### `$comment->rawName() : string`
+#### `$comment->rawName() : string|null`
 
-The name of the author of the comment. **May contain unescaped HTML code; use with caution!**
+Unescaped name of the comment author. `null` iff no name was specified. **May contain unescaped HTML code; use with caution!**
 
 #### `$comment->email() : string`
 
-The email address of the author of the comment. `null` if no email address was specified.
+HTML escaped email address of the comment author. `""` iff no email address was specified.
 
-#### `$comment->rawEmail() : string`
+#### `$comment->rawEmail() : string|null`
 
-The email address of the author of the comment. `null` if no email address was specified. **May contain unescaped HTML code; use with caution!**
+Unescaped email address on the comment author. `null` iff no email address was specified. **May contain unescaped HTML code; use with caution!**
 
 #### `$comment->website() : string`
 
-The address of the website of the author of the comment. `null` if no website was specified.
+HTML escaped website address of the comment author. `""` iff no website address was specified.
 
 #### `$comment->rawWebsite() : string`
 
-The address of the website of the author of the comment. `null` if no website was specified. **May contain unescaped HTML code; use with caution!**
+Unescaped website address of the comment author. `null` iff no website address was specified. **May contain unescaped HTML code; use with caution!**
 
 #### `$comment->message() : string`
 
-The message of the comment. May contain HTML code, which is limited to the HTML-tags specified by the `form.message.allowed_tags` option.
+Formatted message which is processed using Markdown and optionally SmartyPants. Only HTML tags allowed by the `form.message.allowed_tags` option are kept. HTML tags and HTML entities included in the message are escaped before applying the Markdown formatter.
 
 #### `$comment->rawMessage() : string`
 
-The message of the comment. **May contain unescaped HTML/Markdown code; use with caution!**
+Unprocessed message. **May contain unescaped HTML/Markdown code; use with caution!**
 
-#### `$comment->date($format="Y-m-d") : string`
+#### `$comment->customFields() : CommentsField[]`
 
-The point in time when the comment was posted formatted as a string.
+List of custom fields.
+
+#### `$comment->customField($fieldName : string) : mixed|null`
+
+Unescaped value of the custom field with the name `$fieldName`. `null` if no custom field with the name `$fieldName` exists.
+
+#### `$comment->date($format="Y-m-d" : string) : string`
+
+Formatted date and/or time of the publication of the comment. The value of `$format` must match a pattern for PHP’s [`DateTime::format` method](http://php.net/manual/de/datetime.format.php).
 
 #### `$comment->datetime() : DateTime`
 
-The point in time when the comment was posted.
+Date and time of the publication of the comment.
+
+#### `$comment->page() : Page`
+
+Page on which the comment was posted or if the comment is in preview mode, the page on which the comment is previewed.
 
 #### `$comment->isPreview() : bool`
 
-Whether the comment is a preview. Iff `false`, the comment was loaded from the file system.
+`true` iff the comment is in preview mode and not stored as Kirby page.
 
 #### `$comment->isLinkable() : bool`
 
-Whether `$comment->website()` is not `null`.
+`true` iff the website address of the comment author is not `null`.
 
 ### `$status : CommentsStatus`
+
+A status describes the state of an object after an operation and can either be a success status or an error status. While only one success code (status code 0) exists, multiple errors codes (split into multiple domains) help to describe the exact nature of the problem.
 
 ```php
 $status = $comments->process();
@@ -508,48 +628,112 @@ $status = $comments->process();
 
 #### `$status->getCode() : integer`
 
-The status code which describes the state of the `$comments` object.
+Status code indicating the type of status. Have a look at the documentation for a complete table of status codes and their meaning.
 
 | Domain | Code | Description |
 |---|---|---|
-| – | 0 | Success. |
-| System | 100 | ID must be of type `"integer"`. |
-| System | 101 | ID must be greater than 0. |
-| System | 102 | Could not create `Comment` from page. |
+| Success | 0 | Success. |
+| System | 100 | Expected comment ID of type integer. |
+| System | 101 | Expected comment ID of value greater than 0. |
+| System | 102 | Could not construct `Comment` from page. |
 | Developer | 200 | Could not create comments page. |
 | Developer | 201 | Could not create comment page. |
 | Developer | 202 | Could not read email template file. |
-| Developer | 203 | Could not send email. |
-| Developer | 204 | Custom fields require a name. |
-| User | 300 | Session is invalid. |
-| User | 301 | Name field must not be empty. (Only when requiring name.) |
-| User | 302 | Name is too long. |
-| User | 303 | Email field must not be empty. (Only when requiring email address.) |
-| User | 304 | Email address must be valid. (Only when requiring email address or not empty.) |
-| User | 305 | Email address is too long. |
-| User | 306 | Website field must not contain JavaScript code. |
-| User | 307 | Website address is too long. |
-| User | 308 | Message field must not be empty. |
-| User | 309 | Message is too long. |
-| User | 310 | Commentator must be human. |
+| Developer | 203 | Could not send email notification about new comment. |
+| Developer | 204 | Custom field without name attribute. |
+| User | 300 | The current session is invalid. |
+| User | 301 | The name field is required. (Only when requiring name.) |
+| User | 302 | The name is too long. |
+| User | 303 | The email address field is required. (Only when requiring email address.) |
+| User | 304 | The email address must be valid. (Only when requiring email address or not empty.) |
+| User | 305 | The email address is too long. |
+| User | 306 | The website address field must not contain JavaScript code. |
+| User | 307 | The website address is too long. |
+| User | 308 | The message field is required. |
+| User | 309 | The message is too long. |
+| User | 310 | The comment must be written by a human being. |
 | User | 311 | Invalid custom field. |
-| User | 312 | Custom field is required. |
-| Custom Field | 4xx | Custom exceptions. |
+| User | 312 | The custom field is required. |
+| User | 313 | The custom field is too long. |
+| Custom | 4xx | Custom exceptions. |
 
-You can either show the user the default message (`$status->getMessage()`) or provide your own status descriptions by checking its code in a `switch` statement.
+You can either show the user the default message (`$status->getMessage()`) or provide your own status descriptions by checking the code in a `switch` statement.
 
 #### `$status->getMessage() : string`
 
-A short, English description of the status. May not be user-friendly.
+Message of the exception that caused this status iff `$this->exception` is not `null`; string describing the status code as such otherwise.
 
 #### `$status->getException() : Exception`
 
-The exception responsible for the status. Can be `null`, if no exception was involved in defining the status.
+Exception that has caused the status. `null` iff the status is not based upon an exception.
 
 #### `$status->isUserError() : bool`
 
-Whether the status was defined by illegal behavior by the user. The status code is in the *User* domain.
+`true` iff the status is in the User or Custom domain.
 
 #### `$status->isError() : bool`
 
-Whether the status represents an error. The status code is `>= 100`.
+`true` iff the status is not in the Success domain.
+
+### `$type : CommentsFieldType`
+
+Defines the name, title, HTTP POST name, properties of custom fields, and provides validation and sanitization mechanisms. Custom fields are constructed from an associative array and placed in your config.php.
+
+```php
+c::set('comments.custom-fields', array(
+  array(
+    'name' => 'my_custom_field',
+    'title' => 'My Custom Field',
+    'httpPostName' => 'my_custom_field',
+    'required' => true,
+    'max-length' => 32,
+    'validate' => function ($value, $page) {
+      ...
+    },
+    'sanitize' => function ($value, $page) {
+      ...
+    }
+  )
+));
+```
+
+The array must include a `name` key pointing to a string and can additionally contain any of the following key-value pairs:
+
+- `title : string`: If unset, `name` is used.
+- `httpPostName : string`: If unset, `name` is used.
+- `required : bool`: Defaults to `false`.
+- `max-length : integer`: Defaults to `128`.
+- `validate : Closure`: Defaults to `null`.
+- `sanitize : Closure`: Defaults to `null`.
+
+#### `name : string`
+
+Name of the field type. Must be usable as a YAML object key.
+
+#### `title : string`
+
+Title of the field type. Describes the field type with one or two words.
+
+#### `httpPostName : string`
+
+Name used to identify fields of this type over HTTP POST.
+
+#### `required : bool`
+
+`true` iff the value of fields of this type may not be an empty string or missing from the HTTP POST data.
+
+#### `max-length : integer`
+
+Maximum allowed number of characters in the field.
+
+#### `validate : function ($value : string, $page : Page) : string`
+
+Validates the value of a field of this type. This closure receives the field’s value as its first argument. Returns `true` for valid values, throws exceptions with a code in the range of 400-499 for known validation errors and returns `false` for unknown validation errors. Note that this closure is called after Kirby Comments’s validation (which checks `required` and `max-length`).
+
+If `null`, a return value of `true` is assumed.
+
+#### `sanitize : function ($value : string, $page, Page) : mixed|null`
+
+Sanitizes the value of a field of this type. This closure receives the field’s value as its first argument and must return a value. Note that this closure is called after Kirby Comments’s validation and after `validate`.
+
+If `null`, a return value of `$value` is assumed.
