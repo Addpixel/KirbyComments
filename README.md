@@ -308,6 +308,97 @@ If you don’t want every comment to have an ID you can check for `$comment->isP
 </form>
 ```
 
+## Custom Fields
+
+Kirby Comments includes a *name*, *email address*, *website address*, and *message* field. Sometimes, however, you may want to associate additional information with a comment. Common use cases include fields for social-media usernames like a Twitter handle, hidden fields for implementing replies, or hidden fields for analytics (e.g. storing the user agent alongside the comment data).
+
+You can find the complete [custom fields documentation in the API reference](#type--commentsfieldtype).
+
+### Example: Twitter Handle
+
+In this custom fields guide we will build a custom field for storing the Twitter handle of the comment author. We want this field to
+
+- be optional (not required),
+- always start with an at-sign (`@`), and
+- only include characters that are valid Twitter-handle characters.
+
+#### Register Field
+
+Custom fields are registered in your config.php. The simplest implementation of a custom fields takes only a `name` parameter.
+
+```php
+c::set('comments.custom-fields', array(
+  array('name' => 'twitter_handle')
+));
+```
+
+This code already fulfills the first of our requirements, because custom fields are optional by default.
+
+#### Sanitizing Values
+
+Next, let’s ensure that the fields starts with an at-sign. This can be achieved by adding a `sanitize` function. The `sanitize` function takes the value of the field and the page the comment was posted on. For this example, we don’t need access to the page object.
+
+```php
+c::set('comments.custom-fields', array(
+  array(
+    'name' => 'twitter_handle',
+    'sanitize' => function ($value, $page) {
+      $trimmed = trim($value);
+      
+      if ($trimmed[0] === '@') {
+        return $trimmed;
+      }
+      return '@'.$trimmed;
+    }
+  )
+));
+```
+
+We define `sanitize` to remove spaces from both side of the string (`trim($value)`), return the trimmed version if it already starts with an at-sign and otherwise add an `@` before the trimmed value.
+
+#### Validating Values
+
+Lastly, we want to validate that the entered value does conform to Twitters username restrictions. Validating such specific patterns is a perfect scenario to use a regular expression.
+
+```php
+c::set('comments.custom-fields', array(
+  array(
+    'name' => 'twitter_handle',
+    'sanitize' => function ($value, $page) {
+      $trimmed = trim($value);
+      
+      if ($trimmed[0] === '@') {
+        return $trimmed;
+      }
+      return '@'.$trimmed;
+    },
+    'validate' => function ($value, $page) {
+      return preg_match('/^\s*@?[A-Za-z0-9_]{1,15}\s*$/', $value) === 1;
+    }
+  )
+));
+```
+
+`validate`, like `sanitize` receives a `$value` and a `$page` argument of which we only need the `$value` in this example. `validate` returns `true` if the regular expression matches and `false` otherwise.
+
+Note that `sanitize` is only called if `validate` returns `true`. This way, you don’t have validate values received by `sanitize`.
+
+Our custom field is ready to be used! Add it to the comments `<form>` so that users can fill it out:
+
+```html
+<?php $comments = $page->comments() ?>
+<from ...>
+...
+
+<label for="twitter-field">Twitter Handle</label>
+<input name="twitter_handle" value="<?php echo $comments->customFieldValue('twitter_handle') ?>" type="text" id="twitter-field">
+
+...
+</form>
+```
+
+Want do more with custom fields? Have a look at the [custom fields documentation in the API reference](#type--commentsfieldtype).
+
 ## API Documentation
 
 ### `$comments : Comments implements Iterator, Countable`
