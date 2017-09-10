@@ -277,6 +277,24 @@ class Comments implements Iterator, Countable
 		}
 	}
 	
+	/**
+	 * Invokes a hook and returns its return value. Returns `null` if the hook is
+	 * undefined or `null`.
+	 *
+	 * @param string $hook_name
+	 * @param mixed|null $default
+	 * @param mixed[] $arguments
+	 * @return mixed|null
+	 */
+	public static function invokeHook($hook_name, $default, $arguments) {
+		$hook = c::get('comments.hooks.'.$hook_name, null);
+		
+		if ($hook !== null) {
+			return call_user_func_array($hook, $arguments);
+		}
+		return $default;
+	} 
+	
 	//
 	// Process Comment
 	//
@@ -348,6 +366,15 @@ class Comments implements Iterator, Countable
 			$new_comment = Comment::from_post($this->page, $new_comment_id, $now);
 		} catch (Exception $e) {
 			// Construction failed (most probably due to invalid user input)
+			$this->status = new CommentsStatus($e->getCode(), $e);
+			return $this->status;
+		}
+		
+		try {
+			if (Comments::invokeHook('block-comment', false, array($this, $new_comment))) {
+				return $this->status;
+			}
+		} catch (Exception $e) {
 			$this->status = new CommentsStatus($e->getCode(), $e);
 			return $this->status;
 		}
