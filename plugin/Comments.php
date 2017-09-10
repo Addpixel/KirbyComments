@@ -180,7 +180,7 @@ class Comments implements Iterator, Countable
 		$comments_page = $this->page->find($comments_page_dirname);
 		
 		// Check for existence of stored comments
-		if ($comments_page !== null) {
+		if ($comments_page != null) {
 			foreach ($comments_page->children() as $comment_page) {
 				try {
 					// Read custom fields
@@ -352,7 +352,7 @@ class Comments implements Iterator, Countable
 			return $this->status;
 		}
 		
-		if ($comments_page === null) {
+		if ($comments_page == null) {
 			// No comment was posted on `$this->page` yet; create comments page
 			try {
 				$dirname = Comments::option('pages.comments.dirname');
