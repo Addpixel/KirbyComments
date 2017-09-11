@@ -968,6 +968,7 @@ class Comments implements Iterator, Countable
 		
 		foreach ($this->comments as $comment) {
 			$anchor = $anchor_field === null ? $comment->id() : $comment->customField($anchor_field);
+			if ($anchor === null) { continue; }
 			if ($compare_stringvalue) { $anchor = strval($anchor); }
 			
 			$labeled_comments[$anchor] = new NestedComment($comment);
@@ -975,13 +976,13 @@ class Comments implements Iterator, Countable
 		
 		foreach ($this->comments as $comment) {
 			$anchor = $anchor_field === null ? $comment->id() : $comment->customField($anchor_field);
+			if ($anchor === null) { continue; }
 			$reference = $reference_field === null ? $comment->id() : $comment->customField($reference_field);
 			if ($compare_stringvalue) { $reference = strval($reference); }
 			
-			if (isset($labeled_comments[$reference])) {
+			if ($reference !== null && isset($labeled_comments[$reference])) {
 				$labeled_comments[$reference]->addChild($labeled_comments[$anchor]);
-			}
-			else {
+			} else {
 				$nested_comments[] = $labeled_comments[$anchor];
 			}
 		}
