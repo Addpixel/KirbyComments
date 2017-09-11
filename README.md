@@ -4,6 +4,22 @@ File-based comments stored as subpages. Easy to setup. Easy to use. Flexible as 
 
 [![](https://addpixel.net/kirby-comments/banner.svg)](https://kirby-comments.addpixel.net/demos/comments)
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Options](#options)
+- [Email Notifications](#email-notifications)
+- [Custom Markup](#custom-markup)
+- [Custom Fields](#custom-fields)
+- [API Documentation](#api-documentation)
+  - [`Comments`](#comments--comments-implements-iterator-countable)
+  - [`Comment`](#comment--comment)
+  - [`NestedComment`](#nested--nestedcomment-extends-comment)
+  - [`CommentsStatus`](#status--commentsstatus)
+  - [`CommentsFieldType`](#type--commentsfieldtype)
+  - [Hooks](#hooks)
+
 ## Features
 
 - [X] File-based
@@ -336,7 +352,7 @@ This code already fulfills the first of our requirements, because custom fields 
 
 #### Sanitizing Values
 
-Next, let’s ensure that the fields starts with an at-sign. This can be achieved by adding a `sanitize` function. The `sanitize` function takes the value of the field and the page the comment was posted on. For this example, we don’t need access to the page object.
+Next, let’s ensure that the field starts with an at-sign. This can be achieved by adding a `sanitize` function. The `sanitize` function takes the value of the field and the page the comment was posted on. (We don’t need the page object in this example.)
 
 ```php
 c::set('comments.custom-fields', array(
