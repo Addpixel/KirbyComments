@@ -234,17 +234,12 @@ class Comments implements Iterator, Countable
 	 * options are prefixed with `comments.`; the `$key` argument must not include
 	 * this prefix.
 	 * 
-	 * Returns the value of the option, unless the value is an instance of
-	 * `Closure`, in which case the return value of the closure given `$argument`
-	 * is returned.
-	 * 
 	 * Note that this method is used throughout the whole plugin.
 	 *
 	 * @param string $key
-	 * @param mixed|null $argument
 	 * @return mixed|null
 	 */
-	public static function option($key, $argument=null)
+	public static function option($key)
 	{
 		$value = null;
 		
@@ -260,21 +255,11 @@ class Comments implements Iterator, Countable
 			$tmp = c::get('comments.'.$deprecated_key, $default_value);
 			
 			if ($tmp !== $default_value) {
-				if ($deprecated_key === 'setup.page.title_key') {
-					$value = $argument->{$tmp}();
-				} else {
-					$value = $tmp;
-				}
+				$value = $tmp;
 			}
 		}
 		
-		$value = c::get('comments.'.$key, $value);
-		
-		if ($value instanceof Closure) {
-			return $value($argument);
-		} else {
-			return $value;
-		}
+		return c::get('comments.'.$key, $value);
 	}
 	
 	/**
@@ -282,14 +267,21 @@ class Comments implements Iterator, Countable
 	 * undefined or `null`.
 	 *
 	 * @param string $hook_name
-	 * @param mixed|null $default
 	 * @param mixed[] $arguments
 	 * @return mixed|null
 	 */
-	public static function invokeHook($hook_name, $default, $arguments) {
-		$hook = c::get('comments.hooks.'.$hook_name, null);
+	public static function invokeHook($hook_name, $arguments) {
+		$hook = Comments::option('hooks.'.$hook_name);
+		
+		if ($hook !== null) {
+			return call_user_func_array($hook, $arguments);
+		}
 		
 		// Handle deprecation
+		if ($hook_name === 'get-content-page-title' && c::get('comments.setup.page.title_key', null) !== null) {
+			$title_key = c::get('comments.setup.page.title_key');
+			return $arguments[0]->{$title_key}();
+		}
 		if ($hook_name === 'get-content-page-title' && c::get('comments.setup.content-page.title', null) !== null) {
 			$f = c::get('comments.setup.content-page.title');
 			return $f($arguments[0]);
@@ -299,10 +291,7 @@ class Comments implements Iterator, Countable
 			return $f($arguments[0]);
 		}
 		
-		if ($hook !== null) {
-			return call_user_func_array($hook, $arguments);
-		}
-		return $default;
+		return null;
 	} 
 	
 	//
@@ -382,7 +371,7 @@ class Comments implements Iterator, Countable
 		
 		// Block comment hook
 		try {
-			if (Comments::invokeHook('decide-block-comment', false, array($this, $new_comment))) {
+			if (Comments::invokeHook('decide-block-comment', array($this, $new_comment))) {
 				return $this->status;
 			}
 		} catch (Exception $e) {
@@ -399,7 +388,7 @@ class Comments implements Iterator, Countable
 					$dirname,
 					$template,
 					array(
-						'title' => Comments::invokeHook('decide-comments-page-title', null, array($this->page)),
+						'title' => Comments::invokeHook('decide-comments-page-title', array($this->page)),
 						'date'  => $now->format('Y-m-d H:i:s')
 					)
 				);
@@ -409,7 +398,7 @@ class Comments implements Iterator, Countable
 			}
 			
 			try {
-				Comments::invokeHook('did-create-comments-page', null, array($this, $comments_page));
+				Comments::invokeHook('did-create-comments-page', array($this, $comments_page));
 			} catch (Exception $e) {
 				$this->status = new CommentsStatus($e->getCode(), $e);
 				return $this->status;
@@ -468,7 +457,7 @@ class Comments implements Iterator, Countable
 			
 			// Did save comment hook
 			try {
-				Comments::invokeHook('did-save-comment', null, array($this, $new_comment));
+				Comments::invokeHook('did-save-comment', array($this, $new_comment));
 			} catch (Exception $e) {
 				$this->status = new CommentsStatus($e->getCode(), $e);
 				return $this->status;
@@ -497,7 +486,7 @@ class Comments implements Iterator, Countable
 			
 			// Did preview comment hook
 			try {
-				Comments::invokeHook('did-preview-comment', null, array($this, $new_comment));
+				Comments::invokeHook('did-preview-comment', array($this, $new_comment));
 			} catch (Exception $e) {
 				$this->status = new CommentsStatus($e->getCode(), $e);
 				return $this->status;

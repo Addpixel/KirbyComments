@@ -55,7 +55,9 @@ Comments::init(array(
 	'email.undefined-value'            => '(not specified)',
 	'session.key'                      => 'comments',
 	'custom-fields'                    => array(),
-	'hooks.decide-block-comment'       => null,
+	'hooks.decide-block-comment'       => function () {
+		return false;
+	},
 	'hooks.did-create-comments-page'   => null,
 	'hooks.did-preview-comment'        => null,
 	'hooks.did-save-comment'           => null,
