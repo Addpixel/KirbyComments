@@ -1,100 +1,131 @@
 <?php
 
 /**
- * Email
+ * CommentsEmail
+ * 
+ * Data and mechanisms used to send email notifications about new comments to
+ * a list of recipients.
+ * 
+ * @package   Kirby Comments
+ * @author    Florian Pircher <florian@addpixel.net>
+ * @link      https://addpixel.net/kirby-comments/
+ * @copyright Florian Pircher
+ * @license   https://addpixel.net/kirby-comments/LICENSE
  */
 class CommentsEmail
 {
-  /**
-   * A list of the recipients. An array of email addresses/strings.
-   *
-   * @var array
-   */
-  public $to;
-  /**
-   * The subject of the email.
-   *
-   * @var string
-   */
-  public $subject;
-  /**
-   * The message of the email. May contain placeholders.
-   *
-   * @var string
-   */
-  public $message;
-  /**
-   * The status of the email.
-   *
-   * @var CommentsStatus
-   */
-  private $status;
-  /**
-   * The comment about which this the email informs.
-   *
-   * @var Comment
-   */
-  private $comment;
-  
-  function __construct($to, $subject, $comment)
-  {
-    $this->comment = $comment;
-    $this->to = $to;
-    $this->subject = $this->format($subject);
-    $this->message = strip_tags($comment->message());
-    $this->status = new CommentsStatus(0);
-  }
-  
-  public function format($x)
-  {
-    $placeholders = array(
-      'comment.user.name' => $this->comment->name(),
-      'comment.user.email' => $this->comment->email(),
-      'comment.user.website' => $this->comment->website(),
-      'comment.message' => $this->comment->rawMessage(),
-      'page.title' => Comments::option('setup.content-page.title', $this->comment->content_page),
-      'page.url' => $this->comment->content_page->url()
-    );
-    
-    return preg_replace_callback('/\{\{\s*(\S+?)\s*\}\}/', function ($matches) use ($placeholders)
-    {
-      $identifer = $matches[1];
-      
-      if ($placeholders[$identifer]) {
-        return $placeholders[$identifer];
-      } else {
-        return Comments::option('email.undefined-value');
-      }
-    }, $x);
-  }
-  
-  public function send()
-  {
-    $template_file = 'email.template.txt';
-    $plugin_template_file = __DIR__."/../assets/$template_file";
-    $custom_template_file = __DIR__."/../../../../assets/plugins/comments/$template_file";
-    
-    $template = "";
-    
-    if (file_exists($custom_template_file)) {
-      $template = file_get_contents($custom_template_file);
-    } else {
-      $template = file_get_contents($plugin_template_file);
-    }
-    
-    if ($template === false) {
-      return new CommentsStatus(202);
-    }
-    
-    $body = $this->format($template);
-    $headers = 'Content-type: text/plain; charset=utf-8';
-    
-    foreach ($this->to as $to) {
-      if (!mail($to, $this->subject, $body, $headers)) {
-        return new CommentsStatus(203);
-      }
-    }
-    
-    return $this->status;
-  }
+	/**
+	 * List of email recipients.
+	 *
+	 * @var string[]
+	 */
+	private $to;
+	
+	/**
+	 * Subject of the email. May contain placeholders.
+	 *
+	 * @var string
+	 */
+	private $subject;
+	
+	/**
+	 * Message of the email. May contain placeholders.
+	 *
+	 * @var string
+	 */
+	private $message;
+	
+	/**
+	 * Status of the email.
+	 *
+	 * @var CommentsStatus
+	 */
+	private $status;
+	
+	/**
+	 * Comment about which the email informs the list of recipients.
+	 *
+	 * @var Comment
+	 */
+	private $comment;
+	
+	/**
+	 * CommentsEmail constructor.
+	 * 
+	 * @param string[] $to
+	 * @param string $subject
+	 * @param Comment $comment
+	 */
+	function __construct($to, $subject, $comment)
+	{
+		$this->comment = $comment;
+		$this->to = $to;
+		$this->message = strip_tags($comment->message());
+		$this->status = new CommentsStatus(0);
+		$this->subject = CommentsEmail::format($comment, $subject);
+	}
+	
+	/**
+	 * Replaces placeholders of the pattern `{{ some.key }}` with the
+	 * corresponding value using the data of a comment.
+	 *
+	 * @param Comment $comment
+	 * @param string $text Template string.
+	 * @return string
+	 */
+	private static function format($comment, $text)
+	{
+		$placeholders = array(
+			'comment.user.name' => $comment->rawName(),
+			'comment.user.email' => $comment->rawEmail(),
+			'comment.user.website' => $comment->rawWebsite(),
+			'comment.message' => $comment->rawMessage(),
+			'page.title' => Comments::invokeHook('get-content-page-title', array($comment->page())),
+			'page.url' => $comment->page()->url()
+		);
+		
+		return preg_replace_callback('/\{\{\s*(\S+?)\s*\}\}/', function ($matches) use ($placeholders)
+		{
+			$identifier = $matches[1];
+			
+			if ($placeholders[$identifier]) {
+				return $placeholders[$identifier];
+			} else {
+				return Comments::option('email.undefined-value');
+			}
+		}, $text);
+	}
+	
+	/**
+	 * Send the email to the recipients.
+	 *
+	 * @return CommentsStatus
+	 */
+	public function send()
+	{
+		$template_file = 'email.template.txt';
+		$plugin_template_file = __DIR__.'/../assets/'.$template_file;
+		$custom_template_file = __DIR__.'/../../../../assets/plugins/comments/'.$template_file;
+		
+		if (file_exists($custom_template_file)) {
+			$template = file_get_contents($custom_template_file);
+		} else {
+			$template = file_get_contents($plugin_template_file);
+		}
+		
+		if ($template === false) {
+			return new CommentsStatus(202);
+		}
+		
+		$body = CommentsEmail::format($this->comment, $template);
+		$headers = 'Content-type: text/plain; charset=utf-8';
+		
+		foreach ($this->to as $to) {
+			if (!mail($to, $this->subject, $body, $headers)) {
+				return new CommentsStatus(203);
+			}
+		}
+		
+		return $this->status;
+	}
 }
