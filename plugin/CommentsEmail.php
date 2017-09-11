@@ -76,9 +76,9 @@ class CommentsEmail
 	private static function format($comment, $text)
 	{
 		$placeholders = array(
-			'comment.user.name' => $comment->name(),
-			'comment.user.email' => $comment->email(),
-			'comment.user.website' => $comment->website(),
+			'comment.user.name' => $comment->rawName(),
+			'comment.user.email' => $comment->rawEmail(),
+			'comment.user.website' => $comment->rawWebsite(),
 			'comment.message' => $comment->rawMessage(),
 			'page.title' => Comments::invokeHook('get-content-page-title', array($comment->page())),
 			'page.url' => $comment->page()->url()
