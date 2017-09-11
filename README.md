@@ -82,7 +82,7 @@ You are by no means limited to the snippets shipped with Kirby Comments. For cre
 - [Kirby Comments options](#options)
 - [Custom markup](#custom-markup)
 - [Kirby Comments API](#api-documentation)
-- [source code of the snippets included in Kirby Comments](https://github.com/Addpixel/KirbyComments/tree/master/snippets)
+- [the source code of the snippets included in Kirby Comments](https://github.com/Addpixel/KirbyComments/tree/master/snippets)
 
 ## Options
 
@@ -403,7 +403,7 @@ Our custom field is ready to be used! Add it to the comments `<form>` so that us
 
 ```html
 <?php $comments = $page->comments() ?>
-<from ...>
+<form ...>
 ...
 
 <label for="twitter-field">Twitter Handle</label>
