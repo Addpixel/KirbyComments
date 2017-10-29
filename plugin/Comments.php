@@ -182,38 +182,7 @@ class Comments implements Iterator, Countable
 		// Check for existence of stored comments
 		if ($comments_page != null) {
 			foreach ($comments_page->children() as $comment_page) {
-				try {
-					// Read custom fields
-					$custom_fields = array();
-					
-					if ($comment_page->customfields()->exists()) {
-						$custom_fields_data = $comment_page->customfields()->yaml();
-						
-						foreach ($custom_fields_data as $field_name => $value) {
-							// Construct and add custom field
-							$type = CommentsFieldType::named($field_name);
-							// Ignore undefined custom fields
-							if ($type === null) { continue; }
-							
-							$field = new CommentsField($type, $value, $this->page, false);
-							$custom_fields[] = $field;
-						}
-					}
-					
-					// Read Main Fields
-					$this->comments[] = new Comment(
-						              $this->page,
-						intval(strval($comment_page->cid())),
-						       strval($comment_page->name()),
-						       strval($comment_page->email()),
-						       strval($comment_page->website()),
-						       strval($comment_page->text()),
-						              $custom_fields,
-						new DateTime(date('c', $comment_page->date()))
-					);
-				} catch (Exception $e) {
-					throw new Exception('Could not construct `Comment` from page.', 102, $e);
-				}
+				$this->comments[] = Comment::form_page($comment_page);
 			}
 		}
 		
@@ -358,6 +327,7 @@ class Comments implements Iterator, Countable
 		
 		// Prepare new comment
 		$new_comment = null;
+		$comment_page = null;
 		$new_comment_id = $this->nextCommentId();
 		
 		try {
@@ -419,13 +389,20 @@ class Comments implements Iterator, Countable
 				
 				// Save main fields
 				$contents = array(
-					'cid'     => $new_comment_id,
-					'date'    => $new_comment->date('Y-m-d H:i:s'),
-					'name'    => $new_comment->rawName(),
-					'email'   => $new_comment->rawEmail(),
-					'website' => $new_comment->rawWebsite(),
-					'text'    => $new_comment->rawMessage(),
+					'cid'  => $new_comment_id,
+					'date' => $new_comment->date('Y-m-d H:i:s'),
+					'text' => $new_comment->rawMessage()
 				);
+				
+				if ($new_comment->rawName() !== null) {
+					$contents['name'] = $new_comment->rawName();
+				}
+				if ($new_comment->rawEmail() !== null) {
+					$contents['email'] = $new_comment->rawEmail();
+				}
+				if ($new_comment->rawWebsite() !== null) {
+					$contents['website'] = $new_comment->rawWebsite();
+				}
 				
 				// Save custom fields
 				$custom_fields = $new_comment->customFields();
@@ -441,7 +418,7 @@ class Comments implements Iterator, Countable
 				}
 				
 				// Save comment as page
-				$comments_page->children()->create(
+				$comment_page = $comments_page->children()->create(
 					$dirname,
 					$template,
 					$contents
@@ -457,7 +434,7 @@ class Comments implements Iterator, Countable
 			
 			// Did save comment hook
 			try {
-				Comments::invokeHook('did-save-comment', array($this, $new_comment));
+				Comments::invokeHook('did-save-comment', array($this, $new_comment, $comment_page));
 			} catch (Exception $e) {
 				$this->status = new CommentsStatus($e->getCode(), $e);
 				return $this->status;

@@ -266,10 +266,10 @@ The following minimal example fulfills all of the requirements above.
 
 Note: The session ID ensures that no duplicated comment is submitted to the page by refreshing the page after having submitted a comment and prevents cross-site request forgery.
 
-For security reasons and to prevent spam, you should not render the form after a comment was submitted. For this, wrap your form in an `if` block checking `$comments->userHasSubmitted()`.
+For security reasons and to prevent spam, you should not render the form after a comment was submitted. For this, wrap your form in an `if` block checking `$comments->isSuccessfulSubmission()`.
 
 ```html
-<?php if ($comments->userHasSubmitted()): ?>
+<?php if ($comments->isSuccessfulSubmission()): ?>
   <p>Thank you for your comment!</p>
 <?php else: ?>
   <form ...>
@@ -296,7 +296,7 @@ Kirby Comments will block any comment submission with a honeypot value other tha
 
 #### Jumping to the Comment
 
-When submitting the form, the page will reload and your scroll position is lost. You can make the browser scroll automatically to the new comment by giving the new comment a unique ID and referencing it in the forms `action` attribute.
+When submitting the form, the page will reload and your scroll position is lost. You can make the browser scroll automatically to the new comment by giving the new comment a unique ID and referencing it in the form’s `action` attribute.
 
 ```html
 <?php foreach ($comments as $comment): ?>
@@ -835,12 +835,13 @@ This hook is invoked after a comment preview has been successfully generated.
 - `$comments`: Comments list containing the previewed comment.
 - `$comment`: The previewed comment.
 
-#### `did-save-comment($comments : Comments, $comment : Comment)`
+#### `did-save-comment($comments : Comments, $comment : Comment, $commentPage : Page)`
 
 This hook is invoked after a comment has been saved as file.
 
 - `$comments`: Comments list containing the new comment.
 - `$comment`: The new comment.
+- `$commentPage`: The Kirby page storing the data of the comment.
 
 #### `decide-comments-page-title($page : Page) : string`
 
