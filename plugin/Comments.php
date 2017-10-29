@@ -389,9 +389,9 @@ class Comments implements Iterator, Countable
 				
 				// Save main fields
 				$contents = array(
-					'cid'     => $new_comment_id,
-					'date'    => $new_comment->date('Y-m-d H:i:s'),
-					'text'    => $new_comment->rawMessage()
+					'cid'  => $new_comment_id,
+					'date' => $new_comment->date('Y-m-d H:i:s'),
+					'text' => $new_comment->rawMessage()
 				);
 				
 				if ($new_comment->rawName() !== null) {
