@@ -391,11 +391,18 @@ class Comments implements Iterator, Countable
 				$contents = array(
 					'cid'     => $new_comment_id,
 					'date'    => $new_comment->date('Y-m-d H:i:s'),
-					'name'    => $new_comment->rawName(),
-					'email'   => $new_comment->rawEmail(),
-					'website' => $new_comment->rawWebsite(),
-					'text'    => $new_comment->rawMessage(),
+					'text'    => $new_comment->rawMessage()
 				);
+				
+				if ($new_comment->rawName() !== null) {
+					$contents['name'] = $new_comment->rawName();
+				}
+				if ($new_comment->rawEmail() !== null) {
+					$contents['email'] = $new_comment->rawEmail();
+				}
+				if ($new_comment->rawWebsite() !== null) {
+					$contents['website'] = $new_comment->rawWebsite();
+				}
 				
 				// Save custom fields
 				$custom_fields = $new_comment->customFields();
