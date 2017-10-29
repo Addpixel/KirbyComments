@@ -296,7 +296,7 @@ Kirby Comments will block any comment submission with a honeypot value other tha
 
 #### Jumping to the Comment
 
-When submitting the form, the page will reload and your scroll position is lost. You can make the browser scroll automatically to the new comment by giving the new comment a unique ID and referencing it in the forms `action` attribute.
+When submitting the form, the page will reload and your scroll position is lost. You can make the browser scroll automatically to the new comment by giving the new comment a unique ID and referencing it in the form’s `action` attribute.
 
 ```html
 <?php foreach ($comments as $comment): ?>
