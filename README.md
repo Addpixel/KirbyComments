@@ -266,10 +266,10 @@ The following minimal example fulfills all of the requirements above.
 
 Note: The session ID ensures that no duplicated comment is submitted to the page by refreshing the page after having submitted a comment and prevents cross-site request forgery.
 
-For security reasons and to prevent spam, you should not render the form after a comment was submitted. For this, wrap your form in an `if` block checking `$comments->userHasSubmitted()`.
+For security reasons and to prevent spam, you should not render the form after a comment was submitted. For this, wrap your form in an `if` block checking `$comments->isSuccessfulSubmission()`.
 
 ```html
-<?php if ($comments->userHasSubmitted()): ?>
+<?php if ($comments->isSuccessfulSubmission()): ?>
   <p>Thank you for your comment!</p>
 <?php else: ?>
   <form ...>
