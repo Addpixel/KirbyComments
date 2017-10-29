@@ -835,12 +835,13 @@ This hook is invoked after a comment preview has been successfully generated.
 - `$comments`: Comments list containing the previewed comment.
 - `$comment`: The previewed comment.
 
-#### `did-save-comment($comments : Comments, $comment : Comment)`
+#### `did-save-comment($comments : Comments, $comment : Comment, $commentPage : Page)`
 
 This hook is invoked after a comment has been saved as file.
 
 - `$comments`: Comments list containing the new comment.
 - `$comment`: The new comment.
+- `$commentPage`: The Kirby page storing the data of the comment.
 
 #### `decide-comments-page-title($page : Page) : string`
 

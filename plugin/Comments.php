@@ -358,6 +358,7 @@ class Comments implements Iterator, Countable
 		
 		// Prepare new comment
 		$new_comment = null;
+		$comment_page = null;
 		$new_comment_id = $this->nextCommentId();
 		
 		try {
@@ -441,7 +442,7 @@ class Comments implements Iterator, Countable
 				}
 				
 				// Save comment as page
-				$comments_page->children()->create(
+				$comment_page = $comments_page->children()->create(
 					$dirname,
 					$template,
 					$contents
@@ -457,7 +458,7 @@ class Comments implements Iterator, Countable
 			
 			// Did save comment hook
 			try {
-				Comments::invokeHook('did-save-comment', array($this, $new_comment));
+				Comments::invokeHook('did-save-comment', array($this, $new_comment, $comment_page));
 			} catch (Exception $e) {
 				$this->status = new CommentsStatus($e->getCode(), $e);
 				return $this->status;
