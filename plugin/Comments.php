@@ -182,38 +182,7 @@ class Comments implements Iterator, Countable
 		// Check for existence of stored comments
 		if ($comments_page != null) {
 			foreach ($comments_page->children() as $comment_page) {
-				try {
-					// Read custom fields
-					$custom_fields = array();
-					
-					if ($comment_page->customfields()->exists()) {
-						$custom_fields_data = $comment_page->customfields()->yaml();
-						
-						foreach ($custom_fields_data as $field_name => $value) {
-							// Construct and add custom field
-							$type = CommentsFieldType::named($field_name);
-							// Ignore undefined custom fields
-							if ($type === null) { continue; }
-							
-							$field = new CommentsField($type, $value, $this->page, false);
-							$custom_fields[] = $field;
-						}
-					}
-					
-					// Read Main Fields
-					$this->comments[] = new Comment(
-						              $this->page,
-						intval(strval($comment_page->cid())),
-						       strval($comment_page->name()),
-						       strval($comment_page->email()),
-						       strval($comment_page->website()),
-						       strval($comment_page->text()),
-						              $custom_fields,
-						new DateTime(date('c', $comment_page->date()))
-					);
-				} catch (Exception $e) {
-					throw new Exception('Could not construct `Comment` from page.', 102, $e);
-				}
+				$this->comments[] = Comment::form_page($comment_page);
 			}
 		}
 		

@@ -195,6 +195,53 @@ class Comment
 	}
 	
 	/**
+	 * Constructs a `Comment` from a comment page.
+	 *
+	 * @param Page $page A comment page.
+	 * @return Comment
+	 * @throws Exception if no comment could be constructed from `$page`.
+	 */
+	public static function form_page($page) {
+		try {
+			$content_page = $page->parent()->parent();
+			
+			// Read custom fields
+			$custom_fields = array();
+			
+			if ($page->customfields()->exists()) {
+				$custom_fields_data = $page->customfields()->yaml();
+				
+				foreach ($custom_fields_data as $field_name => $value) {
+					// Construct and add custom field
+					$type = CommentsFieldType::named($field_name);
+					// Ignore undefined custom fields
+					if ($type === null) { continue; }
+					
+					$field = new CommentsField($type, $value, $content_page, false);
+					$custom_fields[] = $field;
+				}
+			}
+			
+			$name = $page->name()->exists() ? $page->name()->value() : null;
+			$email_address = $page->email()->exists() ? $page->email()->value() : null;
+			$website = $page->website()->exists() ? $page->website()->value() : null;
+			
+			return new Comment(
+				$content_page,
+				$page->cid()->int(),
+				$name,
+				$email_address,
+				$website,
+				$page->text()->value(),
+				$custom_fields,
+				new DateTime(date('c', $page->date()))
+			);
+		} catch (Exception $e) {
+			throw new Exception('Could not construct `Comment` from page.', 102, $e);
+		}
+	}
+	
+	/**
 	 * Comment constructor. Trims the `$name`, `$email_address`, `$website` and
 	 * `$message` values and strips HTML tags from the name, email address and
 	 * website.
