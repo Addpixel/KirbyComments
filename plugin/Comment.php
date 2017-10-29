@@ -107,6 +107,20 @@ class Comment
 	}
 	
 	/**
+	 * Returns `null` for a value of `null` or a whitespace only string. Other
+	 * values are escaped using `strip_tags(trim($value))`.
+	 *
+	 * @param string|null $value
+	 * @return string|null
+	 */
+	private static function null_empty_escape($value) {
+		if ($value === null || trim($value) === '') {
+			return null;
+		}
+		return strip_tags(trim($value));
+	}
+	
+	/**
 	 * Constructs a `Comment` from `$_POST`.
 	 *
 	 * @param Page $content_page
@@ -187,9 +201,9 @@ class Comment
 	 *
 	 * @param Page $content_page
 	 * @param integer $id
-	 * @param string $name
-	 * @param string $email_address
-	 * @param string $website
+	 * @param string|null $name
+	 * @param string|null $email_address
+	 * @param string|null $website
 	 * @param string $message
 	 * @param CommentsField[string] $custom_fields
 	 * @param \DateTime $datetime
@@ -199,23 +213,15 @@ class Comment
 	{
 		$this->content_page  = $content_page;
 		$this->id            = $id;
-		$this->name          = trim(strip_tags($name));
-		$this->email_address = trim(strip_tags($email_address));
-		$this->website       = trim(strip_tags($website));
+		$this->name          = Comment::null_empty_escape($name);
+		$this->email_address = Comment::null_empty_escape($email_address);
+		$this->website       = Comment::null_empty_escape($website);
 		$this->message       = trim($message);
 		$this->custom_fields = $custom_fields;
 		$this->datetime      = $datetime;
 		$this->is_preview    = $is_preview === true;
 		
-		if ($this->email_address === '') {
-			// Replace empty string value with `null`
-			$this->email_address = null;
-		}
-		
-		if ($this->website === '') {
-			// Replace empty string value with `null`
-			$this->website = null;
-		} elseif (!preg_match('/^https?:/', $this->website)) {
+		if ($this->website !== null && !preg_match('/^https?:/', $this->website)) {
 			// Make address absolute (e.g. "example.org" to "http://example.org")
 			$this->website = 'http://'.$this->website;
 		}
