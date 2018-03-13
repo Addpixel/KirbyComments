@@ -857,7 +857,7 @@ function ($page) {
 
 #### `get-content-page-title($page : Page) : string`
 
-Returns the title of a content page. Most pages use the `title` field to store the title of the page, but some pages may use a diferent field as title and should return that instead.
+Returns the title of a content page. Most pages use the `title` field to store the title of the page, but some pages may use a different field as title and should return that instead.
 
 ##### Default
 
