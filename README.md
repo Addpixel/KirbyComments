@@ -45,7 +45,7 @@ $ kirby plugin:install Addpixel/KirbyComments
 
 1. Download [the latest release](https://github.com/Addpixel/KirbyComments/releases) as a zip-file.
 2. Decompress the zip file and rename the folder to *comments*.
-3. Move the folder *comments* into site/plugins.
+3. Move the folder *comments* into `site/plugins`.
 
 When updating, simply delete the old *comments* folder and replace it with the new one.
 
@@ -82,11 +82,11 @@ You are by no means limited to the snippets shipped with Kirby Comments. For cre
 - [Kirby Comments options](#options)
 - [Custom markup](#custom-markup)
 - [Kirby Comments API](#api-documentation)
-- [the source code of the snippets included in Kirby Comments](https://github.com/Addpixel/KirbyComments/tree/master/snippets)
+- [Source code of the snippets included in Kirby Comments](https://github.com/Addpixel/KirbyComments/tree/master/snippets)
 
 ## Options
 
-Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your site/config/config.php.
+Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your `site/config/config.php`.
 
 ```php
 // Enable email notifications
@@ -118,7 +118,7 @@ c::set('comments.pages.comments.title', function ($page) {
 | `form.website.max-length` | integer | `64` | Maximum length of the value in the website field. | |
 | `form.message` | string | `"message"` | POST name of the message field. | |
 | `form.message.allowed_tags` | string | `"<p><br><a><em><strong><code><pre>"` | HTML tags that are allowed in a comment’s message. | |
-| `form.message.htmlentities` | bool | `true` | Whether to apply `htmlentities` to a message. Iff `true` is called before `markdown`. | * |
+| `form.message.htmlentities` | bool | `true` | Whether to apply `htmlentities` to a message. If `true` is called before `markdown`. | * |
 | `form.message.smartypants` | bool | `true` | Whether to apply [SmartyPants](https://daringfireball.net/projects/smartypants/) to comment messages. Requires the [global smartypants option](https://getkirby.com/docs/cheatsheet/options/smartypants) to be `true`. | |
 | `form.message.max-length` | integer | `1024` | Maximum length of the value in the message field. | |
 | `form.session_id` | string | `"session_id"` | POST name of the session ID field. | |
@@ -139,7 +139,7 @@ c::set('comments.pages.comments.title', function ($page) {
 Kirby Comments can notify you about new comments. Set the `email.enabled` option to `true` and specify at least one recipient using the `email.to` option.
 
 - **email subject:** value of the `email.subject` option
-- **email body:** contents of assets/email.template.txt. Do not edit the email.template.txt file in the plugins folder as it will be replaced when updating Kirby Comments. Instead, create a new file at yoursite/assets/plugins/comments/email.template.txt (create folders as needed). This location is based on [the recommended plugin assets location](https://getkirby.com/docs/developer-guide/plugins/assets#customizing-plugin-assets).
+- **email body:** contents of assets/email.template.txt. Do not edit the email.template.txt file in the plugins folder as it will be replaced when updating Kirby Comments. Instead, create a new file at your `site/assets/plugins/comments/email.template.txt` (create folders as needed). This location is based on [the recommended plugin assets location](https://getkirby.com/docs/developer-guide/plugins/assets#customizing-plugin-assets).
 
 The email’s body and subject can contain placeholders which will be replaced with the corresponding value. Placeholders have a name, start with `{{` and end with `}}`.
 
@@ -433,7 +433,7 @@ This method may be called multiple times during a single HTTP request but execut
 
 #### `$comments->isEmpty() : bool`
 
-`true` iff no comment is managed by this `Comments` instance.
+`true` if no comment is managed by this `Comments` instance.
 
 #### `$comments->count() : integer`
 
@@ -445,7 +445,7 @@ The ID of the preview comment in case of a preview; the ID of the next, as of ye
 
 #### `$comments->isSuccessfulSubmission() : bool`
 
-`true` iff the user has submitted a comment and no errors occurred.
+`true` if the user has submitted a comment and no errors occurred.
 
 #### `$comments->value($name : string, $default="" : string) : string`
 
@@ -497,7 +497,7 @@ HTTP POST name of the name field. Used as the key for the HTTP POST data and as 
 
 #### `$comments->requiresName() : bool`
 
-`true` iff a comment author has to provide an email address. Corresponding option: `form.name.required`.
+`true` if a comment author has to provide an email address. Corresponding option: `form.name.required`.
 
 #### `$comments->nameMaxLength() : integer`
 
@@ -509,7 +509,7 @@ HTTP POST name of the email field. Used as the key for the HTTP POST data and as
 
 #### `$comments->requiresEmailAddress() : bool`
 
-`true` iff a comment author has to provide an email address. Corresponding option: `form.name.required`.
+`true` if a comment author has to provide an email address. Corresponding option: `form.name.required`.
 
 #### `$comments->emailMaxLength() : integer`
 
@@ -533,7 +533,7 @@ Maximum allowed number of characters in the comment’s message field. Correspon
 
 #### `$comments->customFieldName($field_name : string) : string|null`
 
-HTTP POST name of a custom field. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. `null` iff no custom field with the name `$field_name` exists.
+HTTP POST name of a custom field. Used as the key for the HTTP POST data and as the value of the HTML input `name` attribute. `null` if no custom field with the name `$field_name` exists.
 
 #### `$comments->honeypotName() : string`
 
@@ -541,7 +541,7 @@ HTTP POST name of the honeypot field. Used as the key for the HTTP POST data and
 
 #### `$comments->isUsingHoneypot() : bool`
 
-`true` iff the honeypot mechanism is enabled. Corresponding option: `honeypot.enabled`.
+`true` if the honeypot mechanism is enabled. Corresponding option: `honeypot.enabled`.
 
 #### `$comments->sessionIdName() : string`
 
@@ -553,7 +553,7 @@ ID of the current comments session.
 
 #### `$comments->isValidPreview() : bool`
 
-`true` iff the current request is a preview and the preview is valid.
+`true` if the current request is a preview and the preview is valid.
 
 #### `$comments->toArray() : Comment[]`
 
@@ -563,7 +563,7 @@ Returns the comments managed by this `Comments` instance sorted in chronological
 
 Nests comments based on a reference-to-anchor relationship.
 
-The anchor must be unique for every comment while zero or more references may point to the same anchor. A comment is added as a child iff its reference matches the anchor of another comment. A comment may not reference its own anchor. If the reference of a comment does not match any anchor it is placed at the top level.
+The anchor must be unique for every comment while zero or more references may point to the same anchor. A comment is added as a child if its reference matches the anchor of another comment. A comment may not reference its own anchor. If the reference of a comment does not match any anchor it is placed at the top level.
 
 If `$reference_field` or `$anchor_field` are `null`, the comment’s ID is used instead.
 
@@ -587,27 +587,27 @@ Unique identifier of the comment. The first comment on a page has an ID of 1, in
 
 #### `$comment->name() : string`
 
-HTML escaped name of the comment author. `""` iff no name was specified.
+HTML escaped name of the comment author. `""` if no name was specified.
 
 #### `$comment->rawName() : string|null`
 
-Unescaped name of the comment author. `null` iff no name was specified. **May contain unescaped HTML code; use with caution!**
+Unescaped name of the comment author. `null` if no name was specified. **May contain unescaped HTML code; use with caution!**
 
 #### `$comment->email() : string`
 
-HTML escaped email address of the comment author. `""` iff no email address was specified.
+HTML escaped email address of the comment author. `""` if no email address was specified.
 
 #### `$comment->rawEmail() : string|null`
 
-Unescaped email address on the comment author. `null` iff no email address was specified. **May contain unescaped HTML code; use with caution!**
+Unescaped email address on the comment author. `null` if no email address was specified. **May contain unescaped HTML code; use with caution!**
 
 #### `$comment->website() : string`
 
-HTML escaped website address of the comment author. `""` iff no website address was specified.
+HTML escaped website address of the comment author. `""` if no website address was specified.
 
 #### `$comment->rawWebsite() : string`
 
-Unescaped website address of the comment author. `null` iff no website address was specified. **May contain unescaped HTML code; use with caution!**
+Unescaped website address of the comment author. `null` if no website address was specified. **May contain unescaped HTML code; use with caution!**
 
 #### `$comment->message() : string`
 
@@ -639,11 +639,11 @@ Page on which the comment was posted or if the comment is in preview mode, the p
 
 #### `$comment->isPreview() : bool`
 
-`true` iff the comment is in preview mode and not stored as Kirby page.
+`true` if the comment is in preview mode and not stored as Kirby page.
 
 #### `$comment->isLinkable() : bool`
 
-`true` iff the website address of the comment author is not `null`.
+`true` if the website address of the comment author is not `null`.
 
 ### `$nested : NestedComment extends Comment`
 
@@ -653,7 +653,7 @@ Nest comments using [`$comments->nestByField()`](#comments-nestbyfieldreference_
 
 #### `$nested->parent() : NestedComment`
 
-Parent comment in the nested structure. `null` iff the comment is nested on the top level.
+Parent comment in the nested structure. `null` if the comment is nested on the top level.
 
 #### `$nested->children() : NestedComment[]`
 
@@ -661,7 +661,7 @@ List of comments nested directly underneath this comment.
 
 #### `$nested->hasChildren() : bool`
 
-`true` iff the comment has nested children.
+`true` if the comment has nested children.
 
 #### `$nested->addChild($child : NestedComment)`
 
@@ -710,23 +710,23 @@ You can either show the user the default message (`$status->getMessage()`) or pr
 
 #### `$status->getMessage() : string`
 
-Message of the exception that caused this status iff `$this->exception` is not `null`; string describing the status code as such otherwise.
+Message of the exception that caused this status if `$this->exception` is not `null`; string describing the status code as such otherwise.
 
 #### `$status->getException() : Exception`
 
-Exception that has caused the status. `null` iff the status is not based upon an exception.
+Exception that has caused the status. `null` if the status is not based upon an exception.
 
 #### `$status->isUserError() : bool`
 
-`true` iff the status is in the User or Custom domain.
+`true` if the status is in the User or Custom domain.
 
 #### `$status->isSuccess() : bool`
 
-`true` iff the status is in the Success domain.
+`true` if the status is in the Success domain.
 
 #### `$status->isError() : bool`
 
-`true` iff the status is not in the Success domain.
+`true` if the status is not in the Success domain.
 
 ### `$type : CommentsFieldType`
 
@@ -764,7 +764,7 @@ c::set('comments.custom-fields', array(
 
 #### `required : bool`
 
-(**optional**, defaults to `false`) `true` iff the value of fields of this type may not be an empty string or missing from the HTTP POST data.
+(**optional**, defaults to `false`) `true` if the value of fields of this type may not be an empty string or missing from the HTTP POST data.
 
 #### `max-length : integer`
 
