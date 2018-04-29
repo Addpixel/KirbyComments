@@ -136,9 +136,11 @@ class Comments implements Iterator, Countable
 	 * if no instance exists for the given page, returns a reference to an
 	 * existing instance otherwise. Page equality is determined based on their
 	 * URI.
-	 * 
+	 *
 	 * @param Page $page
 	 * @return Comments
+	 * @throws Exception Throws if a comment could not be constructed based on a
+	 * existing comment page.
 	 */
 	static public function for_page($page)
 	{
