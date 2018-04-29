@@ -392,7 +392,7 @@ c::set('comments.custom-fields', array(
 
 `validate`, like `sanitize` receives a `$value` and a `$page` argument of which we only need the `$value` in this example. `validate` returns `true` if the regular expression matches and `false` otherwise.
 
-Note that `sanitize` is only called if `validate` returns `true`. This way, you don’t have validate values received by `sanitize`.
+Note that `sanitize` is only called if `validate` returns `true`. This way, you don’t have to validate values received by `sanitize`.
 
 Our custom field is ready to be used! Add it to the comments `<form>` so that users can fill it out:
 
@@ -408,13 +408,13 @@ Our custom field is ready to be used! Add it to the comments `<form>` so that us
 </form>
 ```
 
-Want do more with custom fields? Have a look at the [custom fields documentation in the API reference](#type--commentsfieldtype).
+Do you want to do more with custom fields? Have a look at the [custom fields documentation in the API reference](#type--commentsfieldtype).
 
 ## API Documentation
 
 ### `$comments : Comments implements Iterator, Countable`
 
-`Comments` instances manage the comments of a specific Kirby page. This involves processing HTTP POST data for creating comment previews, submitting comments, storing comments as Kirby pages, reading those pages and reporting status.
+A `Comments` instance manages the comments of a specific Kirby page. This involves processing HTTP POST data for creating comment previews, submitting comments, storing comments as Kirby pages, reading those pages and reporting status.
 
 ```php
 $comments = $page->comments();
