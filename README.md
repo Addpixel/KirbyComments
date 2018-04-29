@@ -420,6 +420,10 @@ A `Comments` instance manages the comments of a specific Kirby page. This involv
 $comments = $page->comments();
 ```
 
+#### `$comments->page() : Page`
+
+Kirby page on which the comments are posted.
+
 #### `$comments->process() : CommentsStatus`
 
 Processes comments based on the HTTP POST data of the HTTP request. This involves generating preview comments, storing published comments as Kirby pages, creating comments pages, validating user data and sending email notifications.

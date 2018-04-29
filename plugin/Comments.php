@@ -959,6 +959,20 @@ class Comments implements Iterator, Countable
 	}
 	
 	//
+	// Properties
+	//
+	
+	/**
+	 * Kirby page on which the comments are posted.
+	 *
+	 * @return Page
+	 */
+	public function getPage()
+	{
+		return $this->page;
+	}
+	
+	//
 	// Iterator
 	//
 	
