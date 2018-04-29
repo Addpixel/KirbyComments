@@ -488,7 +488,7 @@ class Comments implements Iterator, Countable
 	}
 	
 	/**
-	 * Number of comments managed `true` by this `Comments` instance.
+	 * Number of comments managed by this `Comments` instance.
 	 *
 	 * @return int
 	 */

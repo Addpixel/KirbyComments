@@ -432,7 +432,7 @@ This method may be called multiple times during a single HTTP request but execut
 
 #### `$comments->count() : integer`
 
-Number of comments managed `true` by this `Comments` instance.
+Number of comments managed by this `Comments` instance.
 
 #### `$comments->nextCommentId() : integer`
 
