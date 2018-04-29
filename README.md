@@ -1,6 +1,6 @@
 # Kirby Comments
 
-File-based comments stored as subpages. Easy to setup. Easy to use. Flexible as hell. [Live-Demo](https://kirby-comments.addpixel.net/demos/comments).
+File-based comments stored as subpages. [Live-Demo](https://kirby-comments.addpixel.net/demos/comments).
 
 [![](https://addpixel.net/kirby-comments/banner.svg)](https://kirby-comments.addpixel.net/demos/comments)
 
@@ -92,11 +92,6 @@ Options may be set by calling `c::set('comments.OPTION_NAME', $value)` in your s
 // Enable email notifications
 c::set('comments.email.enabled', true);
 c::set('comments.email.to', array('name@example.org'));
-
-// Customize the title of the comments page
-c::set('comments.pages.comments.title', function ($page) {
-  return 'Kommentare zu „' . $page->title() . '“';
-});
 ```
 
 | Name | Type | Default | Description | * |
@@ -770,9 +765,9 @@ c::set('comments.custom-fields', array(
 
 (**optional**, defaults to `128`) Maximum allowed number of characters in the field.
 
-#### `validate : Closure ($value : string, $page : Page) : string`
+#### `validate : Closure ($value : string, $page : Page) : bool`
 
-(**optional**, defaults to `null`) Validates the value of a field of this type. This closure receives the field’s value as its first argument. Returns `true` for valid values, throws exceptions with a code in the range of 400-499 for known validation errors and returns `false` for unknown validation errors. Note that this closure is called after Kirby Comments’s validation (which checks `required` and `max-length`).
+(**optional**, defaults to `null`) Validates the value of a field of this type. This closure receives the field’s value as its first argument. Returns `true` for valid values, throws exceptions with a code in the range of 400–499 for known validation errors and returns `false` for unknown validation errors. Note that this closure is called after Kirby Comments’s validation (which checks `required` and `max-length`).
 
 If `null`, a return value of `true` is assumed.
 
