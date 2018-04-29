@@ -984,4 +984,5 @@ class Comments implements Iterator, Countable
 	{
 		return isset($this->comments[$this->iterator_index]);
 	}
+	
 }
