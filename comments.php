@@ -4,7 +4,6 @@
  * Kirby Comments
  * 
  * File-based comments stored as subpages.
- * Easy to setup. Easy to use. Flexible as hell.
  *
  * @package   Kirby Comments
  * @author    Florian Pircher <florian@addpixel.net>
