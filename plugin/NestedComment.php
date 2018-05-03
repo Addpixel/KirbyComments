@@ -28,7 +28,7 @@ class NestedComment extends Comment
 	 *
 	 * @var NestedComment[]
 	 */
-	private $children;
+	private $children = array();
 	
 	/**
 	 * Constructs a nested comment from a normal comment.
