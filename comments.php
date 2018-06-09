@@ -2,7 +2,7 @@
 
 /**
  * Kirby Comments
- * 
+ *
  * File-based comments stored as subpages.
  *
  * @package   Kirby Comments
@@ -50,6 +50,7 @@ Comments::init(array(
 	'honeypot.human-value'             => '',
 	'email.enabled'                    => false,
 	'email.to'                         => array(),
+	'email.from'                       => '',
 	'email.subject'                    => 'New Comment on {{ page.title }}',
 	'email.undefined-value'            => '(not specified)',
 	'session.key'                      => 'comments',
