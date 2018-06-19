@@ -2,7 +2,7 @@
 
 /**
  * Kirby Comments
- *
+ * 
  * File-based comments stored as subpages.
  *
  * @package   Kirby Comments
