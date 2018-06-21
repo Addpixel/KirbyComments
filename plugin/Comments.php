@@ -446,6 +446,7 @@ class Comments implements Iterator, Countable
 				// Send email notifications
 				$email = new CommentsEmail(
 					Comments::option('email.to'),
+					Comments::option('email.from'),
 					Comments::option('email.subject'),
 					$new_comment
 				);

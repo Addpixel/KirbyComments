@@ -22,6 +22,13 @@ class CommentsEmail
 	private $to;
 	
 	/**
+	 * 'From' email address.
+	 *
+	 * @var string
+	 */
+	private $from;
+
+/**
 	 * Subject of the email. May contain placeholders.
 	 *
 	 * @var string
@@ -56,10 +63,11 @@ class CommentsEmail
 	 * @param string $subject
 	 * @param Comment $comment
 	 */
-	function __construct($to, $subject, $comment)
+	function __construct($to, $from, $subject, $comment)
 	{
 		$this->comment = $comment;
 		$this->to = $to;
+		$this->from = $from;
 		$this->message = strip_tags($comment->message());
 		$this->status = new CommentsStatus(0);
 		$this->subject = CommentsEmail::format($comment, $subject);
@@ -120,10 +128,19 @@ class CommentsEmail
 		$body = CommentsEmail::format($this->comment, $template);
 		$headers = 'Content-type: text/plain; charset=utf-8';
 		
-		foreach ($this->to as $to) {
-			if (!mail($to, $this->subject, $body, $headers)) {
-				return new CommentsStatus(203);
+		foreach ( $this->to as $to ) {
+
+			$email = email( array(
+				'to'      => $to,
+				'from'    => $this->from,
+				'subject' => $this->subject,
+				'body'    => $body
+			 ) );
+
+			if ( ! $email->send() ) {
+				return new CommentsStatus( 203 );
 			}
+			
 		}
 		
 		return $this->status;
