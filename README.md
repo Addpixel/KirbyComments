@@ -1,6 +1,6 @@
 # Kirby Comments
 
-File-based comments stored as subpages. [Live-Demo](https://kirby-comments.addpixel.net/demos/comments).
+File-based comments stored as subpages.
 
 [![](https://addpixel.net/kirby-comments/banner.svg)](https://kirby-comments.addpixel.net/demos/comments)
 
